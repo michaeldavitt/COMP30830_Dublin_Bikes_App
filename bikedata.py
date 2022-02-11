@@ -14,3 +14,4 @@ for k in range(len(bike_data)):
 df = pd.DataFrame(bike_data)
 df = df.drop(df.columns[[1, 2, 4, 5, 6, 10]], axis=1)
 print(df)
+## Need to run this API every two minutes.
