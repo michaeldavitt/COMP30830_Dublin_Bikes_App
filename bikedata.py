@@ -1,17 +1,72 @@
 import json
 import requests
+import traceback
+import time
+import datetime
 import pandas as pd
-bike_api = 'https://api.jcdecaux.com/vls/v1/stations?contract=dublin&apiKey='
+import sqlalchemy as sqla
+from sqlalchemy import create_engine
+
+# Get API creds
 with open('bike_key.txt') as f:
-    bike_key = ''.join(f.readlines())
-response = requests.get(bike_api+bike_key)
-bike_data = json.loads(response.text)  # to convert the response to a list
+    API_KEY = ''.join(f.readlines())
+NAME = "Dublin"
+STATIONS = 'https://api.jcdecaux.com/vls/v1/stations'
 
-for k in range(len(bike_data)):
-    bike_data[k]['lat'] = bike_data[k]['position']['lat']
-    bike_data[k]['lng'] = bike_data[k]['position']['lng']
 
-df = pd.DataFrame(bike_data)
-df = df.drop(df.columns[[1, 2, 4, 5, 6, 10]], axis=1)
-print(df)
-## Need to run this API every two minutes.
+# Connect to SQL database
+# Create variables to store credentials
+URL = "database-1.ctesjcult8dm.eu-west-1.rds.amazonaws.com"
+PORT = "3306"
+# Using sys here in case dbikes database has not been created yet
+DB = "dbikes"
+USER = "admin"
+
+with open('mysql_password.txt') as f:
+    PASSWORD = ''.join(f.readlines())
+
+engine = create_engine(
+    "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
+
+
+def write_to_file(text, now):
+
+    # Replace the special characters with underscore for the filename
+    chars = " -:."
+    filename = "data/bikes_{}".format(now)
+    for c in chars:
+        filename = filename.replace(c, "_")
+
+    # Write the data into a text file
+    with open(filename, "w") as f:
+        f.write(text)
+
+
+def availability_to_db(stations):
+    for station in stations:
+        vals = (int(station.get("number")), int(station.get("available_bikes")), int(
+            station.get("available_bike_stands")), int(station.get("last_update")))
+        engine.execute(
+            "insert into availability values(%s, %s, %s, %s)", vals)
+
+    return
+
+
+def main():
+    while True:
+        try:
+            now = datetime.datetime.now()
+            r = requests.get(STATIONS, params={
+                             "apiKey": API_KEY, "contract": NAME})
+            bike_data = json.loads(r.text)
+
+            write_to_file(r.text, now)
+            availability_to_db(bike_data)
+            time.sleep(2*60)
+
+        except:
+            print(traceback.format_exc())
+
+
+if __name__ == "__main__":
+    main()

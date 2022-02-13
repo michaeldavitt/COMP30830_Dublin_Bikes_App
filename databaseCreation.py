@@ -1,14 +1,10 @@
 # Import required libraries
 import sqlalchemy as sqla
 from sqlalchemy import create_engine
-import traceback
-import glob
-import os
 from pprint import pprint
 import simplejson as json
 import requests
-import time
-# from IPython.display import display
+import traceback
 
 # Create variables to store credentials
 URL = "database-1.ctesjcult8dm.eu-west-1.rds.amazonaws.com"
@@ -53,7 +49,6 @@ CREATE TABLE IF NOT EXISTS station (
 try:
     res = engine.execute("DROP TABLE IF EXISTS station")
     res = engine.execute(sql)
-    print(res.fetchall())
 except Exception as e:
     print(e)
 
@@ -68,6 +63,38 @@ CREATE TABLE IF NOT EXISTS availability (
 
 try:
     res = engine.execute(sql)
-    print(res.fetchall())
 except Exception as e:
     print(e)
+
+
+# Populate the static stations table - assuming that these values will only need to be created once and won't change
+# Get API creds
+with open('bike_key.txt') as f:
+    API_KEY = ''.join(f.readlines())
+NAME = "Dublin"
+STATIONS = 'https://api.jcdecaux.com/vls/v1/stations'
+
+
+def stations_to_db(stations):
+    for station in stations:
+        vals = (station.get("address"), int(station.get("banking")), station.get("bike_stands"), int(station.get("bonus")), station.get(
+            "contract_name"), station.get("name"), int(station.get("number")), station.get("lat"), station.get("lng"), station.get("status"))
+        engine.execute(
+            "insert into station values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", vals)
+
+    return
+
+
+try:
+    r = requests.get(STATIONS, params={
+        "apiKey": API_KEY, "contract": NAME})
+    bike_data = json.loads(r.text)
+    for k in range(len(bike_data)):
+        bike_data[k]['lat'] = bike_data[k]['position']['lat']
+        bike_data[k]['lng'] = bike_data[k]['position']['lng']
+
+    stations_to_db(bike_data)
+
+
+except:
+    print(traceback.format_exc())
