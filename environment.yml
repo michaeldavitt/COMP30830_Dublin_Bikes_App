@@ -1,0 +1,15 @@
+name: comp30830
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python
+  - scikit-learn
+  - pandas
+  - autopep8
+  - psutil
+  - sqlalchemy
+  - simplejson
+  - requests
+  - mysql-connector-python
+prefix: C:\Users\micha\anaconda3\envs\comp30830
