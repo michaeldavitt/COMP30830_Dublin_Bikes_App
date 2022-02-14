@@ -4,3 +4,6 @@ bike_key.txt
 mysql_password.txt
 weather_key.txt
 __pycache__/
+data/
+Sprint_backlogs/
+Wireframe/

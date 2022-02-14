@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS availability (
     number INTEGER,
     available_bikes INTEGER,
     available_stands INTEGER,
-    last_update INTEGER
+    last_update VARCHAR(256)
 )
 """
 

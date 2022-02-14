@@ -45,7 +45,7 @@ def write_to_file(text, now):
 def availability_to_db(stations):
     for station in stations:
         vals = (int(station.get("number")), int(station.get("available_bikes")), int(
-            station.get("available_bike_stands")), int(station.get("last_update")))
+            station.get("available_bike_stands")), station.get("last_update"))
         engine.execute(
             "insert into availability values(%s, %s, %s, %s)", vals)
 
