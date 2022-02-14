@@ -67,8 +67,32 @@ except Exception as e:
     print(e)
 
 
+sql = """
+CREATE TABLE IF NOT EXISTS real_time_weather (
+    dt INTEGER,
+    surinse INTEGER,
+    sunset INTEGER,
+    temperature INTEGER,
+    feels_like INTEGER,
+    pressure INTEGER,
+    humidity INTEGER,
+    clouds INTEGER,
+    visibility INTEGER,
+    main VARCHAR(100),
+    description VARCHAR(100),
+    icon VARCHAR(6)
+)
+"""
+
+try:
+    res = engine.execute("DROP TABLE IF EXISTS reatl_time_weather")
+    res = engine.execute(sql)
+except Exception as e:
+    print(e)
+
+
 # Populate the static stations table - assuming that these values will only need to be created once and won't change
-# Get API creds
+# # Get API creds
 with open('bike_key.txt') as f:
     API_KEY = ''.join(f.readlines())
 NAME = "Dublin"
