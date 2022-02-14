@@ -5,7 +5,9 @@ import time
 import requests
 import json
 import traceback
+
 weather_api = 'https://api.openweathermap.org/data/2.5/onecall?lat=53.3065282883422&lon=-6.225434257607019&exclude={part}&appid='
+
 with open('weather_key.txt') as f:
     weather_key = ''.join(f.readlines())
 while True:
