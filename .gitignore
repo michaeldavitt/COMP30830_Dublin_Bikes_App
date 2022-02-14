@@ -2,3 +2,5 @@
 bike_key.txt
 .idea/
 mysql_password.txt
+weather_key.txt
+__pycache__/
