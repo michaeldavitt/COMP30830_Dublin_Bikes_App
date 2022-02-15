@@ -10,7 +10,7 @@ from sqlalchemy import create_engine
 # Get API creds
 with open('bike_key.txt') as f:
     API_KEY = ''.join(f.readlines())
-    API_KEY = str(API_KEY).split()
+    API_KEY = str(API_KEY).split()[0]
 
 NAME = "Dublin"
 STATIONS = 'https://api.jcdecaux.com/vls/v1/stations'
@@ -26,7 +26,7 @@ USER = "admin"
 
 with open('mysql_password.txt') as f:
     PASSWORD = ''.join(f.readlines())
-    # PASSWORD = str(PASSWORD).split()
+    PASSWORD = str(PASSWORD).split()[0]
 
 engine = create_engine(
     "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)

@@ -1,7 +1,6 @@
 name: comp30830
 channels:
   - defaults
-  - conda-forge
 dependencies:
   - python
   - scikit-learn

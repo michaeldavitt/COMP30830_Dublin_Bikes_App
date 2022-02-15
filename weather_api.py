@@ -12,13 +12,14 @@ import json
 import traceback
 from bikedata import PASSWORD
 import datetime
-
+import sys
 
 weather_api = 'https://api.openweathermap.org/data/2.5/onecall?lat=53.3065282883422&lon=-6.225434257607019&exclude={part}&appid='
 
 with open('weather_key.txt') as f:
     weather_key = ''.join(f.readlines())
     weather_key = str(weather_key).split()[0]
+
 # Connect to SQL database
 
 URL = "database-1.ctesjcult8dm.eu-west-1.rds.amazonaws.com"
@@ -28,6 +29,7 @@ USER = "admin"
 
 with open('mysql_password.txt') as f:
     PASSWORD = ''.join(f.readlines())
+    PASSWORD = str(PASSWORD).split()[0]
 
 engine = create_engine(
     "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
@@ -63,8 +65,7 @@ def main():
 
             write_to_file(r.text, now)
             weather_to_db(weather_data)
-            break
-            # time.sleep(5*60)
+            time.sleep(5*60)
 
         except:
             print(traceback.format_exc())

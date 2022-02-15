@@ -7,6 +7,7 @@ from pprint import pprint
 import simplejson as json
 import requests
 import traceback
+import sys
 
 # Create variables to store credentials
 URL = "database-1.ctesjcult8dm.eu-west-1.rds.amazonaws.com"
@@ -17,7 +18,7 @@ USER = "admin"
 
 with open('mysql_password.txt') as f:
     PASSWORD = ''.join(f.readlines())
-    # PASSWORD = str(PASSWORD).split()
+    PASSWORD = str(PASSWORD).split()[0]
 
 engine = create_engine(
     "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
@@ -126,7 +127,7 @@ except Exception as e:
 # # Get API creds
 with open('bike_key.txt') as f:
     API_KEY = ''.join(f.readlines())
-    API_KEY = str(API_KEY).split()
+    API_KEY = str(API_KEY).split()[0]
 
 NAME = "Dublin"
 STATIONS = 'https://api.jcdecaux.com/vls/v1/stations'
