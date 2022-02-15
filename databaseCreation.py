@@ -1,4 +1,6 @@
 # Import required libraries
+from ast import Pass
+from sklearn.linear_model import PassiveAggressiveClassifier
 import sqlalchemy as sqla
 from sqlalchemy import create_engine
 from pprint import pprint
@@ -15,6 +17,7 @@ USER = "admin"
 
 with open('mysql_password.txt') as f:
     PASSWORD = ''.join(f.readlines())
+    # PASSWORD = str(PASSWORD).split()
 
 engine = create_engine(
     "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
@@ -59,7 +62,7 @@ CREATE TABLE IF NOT EXISTS availability (
     available_bikes INTEGER,
     available_stands INTEGER,
     last_update VARCHAR(256),
-    CONSTRAINT availability_pk PRIMARY KEY (number, last_update)
+    FOREIGN KEY (number) REFERENCES station(number)
 )
 """
 
@@ -123,6 +126,8 @@ except Exception as e:
 # # Get API creds
 with open('bike_key.txt') as f:
     API_KEY = ''.join(f.readlines())
+    API_KEY = str(API_KEY).split()
+
 NAME = "Dublin"
 STATIONS = 'https://api.jcdecaux.com/vls/v1/stations'
 

@@ -11,6 +11,7 @@ from sqlalchemy import create_engine
 with open('bike_key.txt') as f:
     API_KEY = ''.join(f.readlines())
     API_KEY = str(API_KEY).split()
+
 NAME = "Dublin"
 STATIONS = 'https://api.jcdecaux.com/vls/v1/stations'
 
@@ -25,6 +26,7 @@ USER = "admin"
 
 with open('mysql_password.txt') as f:
     PASSWORD = ''.join(f.readlines())
+    # PASSWORD = str(PASSWORD).split()
 
 engine = create_engine(
     "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
