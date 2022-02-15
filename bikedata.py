@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 # Get API creds
 with open('bike_key.txt') as f:
     API_KEY = ''.join(f.readlines())
+    API_KEY = str(API_KEY).split()
 NAME = "Dublin"
 STATIONS = 'https://api.jcdecaux.com/vls/v1/stations'
 

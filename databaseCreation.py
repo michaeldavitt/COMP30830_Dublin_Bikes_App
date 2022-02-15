@@ -42,7 +42,8 @@ CREATE TABLE IF NOT EXISTS station (
     number INTEGER,
     position_lat REAL,
     position_lng REAL,
-    status VARCHAR(256)
+    status VARCHAR(256),
+    CONSTRAINT station_pk PRIMARY KEY (number)
 )
 """
 
@@ -57,11 +58,13 @@ CREATE TABLE IF NOT EXISTS availability (
     number INTEGER,
     available_bikes INTEGER,
     available_stands INTEGER,
-    last_update VARCHAR(256)
+    last_update VARCHAR(256),
+    CONSTRAINT availability_pk PRIMARY KEY (number, last_update)
 )
 """
 
 try:
+    res = engine.execute("DROP TABLE IF EXISTS availability")
     res = engine.execute(sql)
 except Exception as e:
     print(e)
@@ -69,7 +72,7 @@ except Exception as e:
 
 sql = """
 CREATE TABLE IF NOT EXISTS real_time_weather (
-    dt INTEGER,
+    dt VARCHAR(256),
     surinse INTEGER,
     sunset INTEGER,
     temperature INTEGER,
@@ -80,12 +83,37 @@ CREATE TABLE IF NOT EXISTS real_time_weather (
     visibility INTEGER,
     main VARCHAR(100),
     description VARCHAR(100),
-    icon VARCHAR(6)
+    icon VARCHAR(6),
+    CONSTRAINT real_time_weather_pk PRIMARY KEY (dt)
 )
 """
 
 try:
-    res = engine.execute("DROP TABLE IF EXISTS reatl_time_weather")
+    res = engine.execute("DROP TABLE IF EXISTS real_time_weather")
+    res = engine.execute(sql)
+except Exception as e:
+    print(e)
+
+sql = """
+CREATE TABLE IF NOT EXISTS weather_forecast (
+    dt VARCHAR(256),
+    surinse INTEGER,
+    sunset INTEGER,
+    temperature INTEGER,
+    feels_like INTEGER,
+    pressure INTEGER,
+    humidity INTEGER,
+    clouds INTEGER,
+    visibility INTEGER,
+    main VARCHAR(100),
+    description VARCHAR(100),
+    icon VARCHAR(6),
+    CONSTRAINT weather_forecast_pk PRIMARY KEY (dt)
+)
+"""
+
+try:
+    res = engine.execute("DROP TABLE IF EXISTS weather_forecast")
     res = engine.execute(sql)
 except Exception as e:
     print(e)

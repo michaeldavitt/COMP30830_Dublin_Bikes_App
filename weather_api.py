@@ -1,4 +1,4 @@
-# to get the instantaneous weather data from the api
+# to get the instantaneous weather data from the api 
 # latitude and longitude have been given as a location in dublin
 # can be changed later on when required to do so
 import json
@@ -18,6 +18,8 @@ weather_api = 'https://api.openweathermap.org/data/2.5/onecall?lat=53.3065282883
 
 with open('weather_key.txt') as f:
     weather_key = ''.join(f.readlines())
+    weather_key = str(weather_key).split()
+#Connect to SQL database
 
 URL = "database-1.ctesjcult8dm.eu-west-1.rds.amazonaws.com"
 PORT = "3306"
@@ -29,6 +31,7 @@ with open('mysql_password.txt') as f:
 
 engine = create_engine(
     "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
+
 
 
 def write_to_file(text, now):
@@ -43,13 +46,10 @@ def write_to_file(text, now):
     with open(filename, "w") as f:
         f.write(text)
 
-
 def weather_to_db(weather):
     weatherData = weather.get("current")
-    vals = (weatherData.get("dt"), int(weatherData.get("sunrise")), int(weatherData.get("sunset")), int(weatherData.get("temp")), int(weatherData.get("feels_like")), int(weatherData.get("pressure")), int(weatherData.get(
-        "humidity")), int(weatherData.get("clouds")), int(weatherData.get("visibility")), weatherData.get("weather")[0].get("main"), weatherData.get("weather")[0].get("description"), weatherData.get("weather")[0].get("icon"))
-    engine.execute(
-        "insert into real_time_weather values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", vals)
+    vals = (int(weatherData.get("dt")), int(weatherData.get("sunrise")), int(weatherData.get("sunset")), int(weatherData.get("temp")), int(weatherData.get("feels_like")), int(weatherData.get("pressure")),int(weatherData.get("humidity")),int(weatherData.get("clouds")), int(weatherData.get("visibility")), weatherData.get("weather")[0].get("main"), weatherData.get("weather")[0].get("description"), weatherData.get("weather")[0].get("icon"))
+    engine.execute("insert into real_time_weather values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", vals)
 
 
 def main():
