@@ -94,29 +94,29 @@ try:
 except Exception as e:
     print(e)
 
-sql = """
-CREATE TABLE IF NOT EXISTS weather_forecast (
-    dt VARCHAR(256),
-    surinse INTEGER,
-    sunset INTEGER,
-    temperature INTEGER,
-    feels_like INTEGER,
-    pressure INTEGER,
-    humidity INTEGER,
-    clouds INTEGER,
-    visibility INTEGER,
-    main VARCHAR(100),
-    description VARCHAR(100),
-    icon VARCHAR(6),
-    CONSTRAINT weather_forecast_pk PRIMARY KEY (dt)
-)
-"""
+# sql = """
+# CREATE TABLE IF NOT EXISTS weather_forecast (
+#     dt VARCHAR(256),
+#     surinse INTEGER,
+#     sunset INTEGER,
+#     temperature INTEGER,
+#     feels_like INTEGER,
+#     pressure INTEGER,
+#     humidity INTEGER,
+#     clouds INTEGER,
+#     visibility INTEGER,
+#     main VARCHAR(100),
+#     description VARCHAR(100),
+#     icon VARCHAR(6),
+#     CONSTRAINT weather_forecast_pk PRIMARY KEY (dt)
+# )
+# """
 
-try:
-    res = engine.execute("DROP TABLE IF EXISTS weather_forecast")
-    res = engine.execute(sql)
-except Exception as e:
-    print(e)
+# try:
+#     res = engine.execute("DROP TABLE IF EXISTS weather_forecast")
+#     res = engine.execute(sql)
+# except Exception as e:
+#     print(e)
 
 
 # Populate the static stations table - assuming that these values will only need to be created once and won't change
