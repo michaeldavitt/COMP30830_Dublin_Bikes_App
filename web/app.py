@@ -16,7 +16,8 @@ def connect_to_database():
         PASSWORD = str(PASSWORD).split()[0]
     engine = create_engine(
         "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
-    return engine
+    conn = engine.connect()
+    return conn
 
 
 def get_db():
@@ -27,10 +28,11 @@ def get_db():
 
 
 # @app.teardown_appcontext
-# def close_connection(exception):
-#     db = getattr(g, '_database', None)
-#     if db is not None:
-#         db.close()
+@app.route("/shutdown")
+def close_connection():
+    db = get_db()
+    if db is not None:
+        db.close()
 
 
 @app.route("/available/<int:station_id>")
