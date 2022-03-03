@@ -26,20 +26,21 @@ def get_db():
     return db
 
 
-@app.teardown_appcontext
-def close_connection(exception):
-    db = getattr(g, '_database', None)
-    if db is not None:
-        db.close()
+# @app.teardown_appcontext
+# def close_connection(exception):
+#     db = getattr(g, '_database', None)
+#     if db is not None:
+#         db.close()
 
 
-@app.route("/available_bikes/<int:station_id>")
+@app.route("/available/<int:station_id>")
 def get_stations(station_id):
     engine = get_db()
     data = []
     rows = engine.execute(
-        "SELECT available_bikes FROM dbikes.availability WHERE number = {} and last_update = 1646213750000".format(station_id))
+        "SELECT available_bikes FROM dbikes.availability WHERE number = {} Limit 5".format(station_id))
     for row in rows:
+        print(row)
         data.append(dict(row))
 
     return jsonify(available=data)
