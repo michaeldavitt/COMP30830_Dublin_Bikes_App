@@ -4,9 +4,77 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test</title>
+    <title>Document</title>
+
+    <style>
+    /* container to center map */
+        #container {
+            height: 100vh;
+            display: flex;
+            justify-content:center;
+            align-items: center;
+        }
+        #map{
+            height: 80vh;
+            width: 80vw;
+        }
+        html,body{
+            margin: 0;
+            padding: 0;
+        }
+
+    </style>
+
 </head>
 <body>
-    <h1>{{ user.name }}</h1>
+    <div id="container">
+        <div id="map"></div>
+    </div>
+    <script>
+        function initMap(){
+            const dublin = { lat: 53.353510834205224, lng: -6.267703651900617};
+            let mapOptions = {
+                // center : new google.maps.LatLng('53.353510834205224', '-6.267703651900617'),
+                center: dublin, 
+                zoom: 10
+            }
+            let map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+            const contentString =
+            '<div id="content">' +
+            '<div id="siteNotice">' +
+            "</div>" +
+            '<h2 id="firstHeading" class="firstHeading">Dublin</h2>' +
+            '<div id="bodyContent">' +
+            "<p><b>Dublin</b>, capital of the Republic of Ireland, is on Ireland’s " + 
+            "east coast at the mouth of the River Liffey. Its historic buildings include " +
+            "Dublin Castle, dating to the 13th century, and imposing St Patrick’s Cathedral, "+ 
+            "founded in 1191. City parks include landscaped St Stephen’s Green and huge Phoenix" +
+            " Park, containing Dublin Zoo. The National Museum of Ireland explores Irish heritage" + 
+            " and culture.</p>" +
+            '<p>Attribution: Dublin, <a href="https://en.wikipedia.org/wiki/Dublin">' +
+            "</div>" +
+            "</div>";
+
+            const infowindow = new google.maps.InfoWindow({
+            content: contentString,
+            });
+            const marker = new google.maps.Marker({
+                position: dublin,
+                map,
+                title: "Uluru (Ayers Rock)",
+            });
+
+            marker.addListener("click", () => {
+                infowindow.open({
+                anchor: marker,
+                map,
+                shouldFocus: false,
+                });
+            });
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcP0f3zq0S9Dlaxb6aTkdAfhANCosV230&callback=initMap"></script>
+
 </body>
 </html>
