@@ -53,8 +53,6 @@ user = {"name": "John Doe"}
 def index():
     return render_template("index.html", user=user)
 
-    return engine
-
 
 if __name__ == "__main__":
     app.run(debug=True)
