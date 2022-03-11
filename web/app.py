@@ -1,3 +1,4 @@
+import functools
 from flask import Flask, render_template, g, jsonify
 from numpy import number
 from sqlalchemy import create_engine
@@ -50,10 +51,27 @@ def get_stations(station_id):
 
 user = {"name": "John Doe"}
 
+@app.route("/coordinates")
+# @functools.lru_cache(maxsize=128)
+def get_coordinates():
+    engine = get_db()
+    rows = engine.execute("SELECT * FROM dbikes.station").fetchall()
+    stations=[dict(row.items()) for row in rows]
+    return stations
+
+    # for i in range(len(rows)):
+
+    #     station_coordinates[i] = {"address": rows[i][0], "bike_stands": rows[i][2], "number": rows[i][6], "position_lat":rows[i][7], "position_lng": rows[i][8], "status":rows[i][9]}
+
+    # return "hi"
+    # for row in rows:
+    #     station_coordinates[row[2]] = [row[0], row[1]]
+    # return station_coordinates
+    
 
 @app.route("/")
 def index():
-    return render_template("index.html", user=user)
+    return render_template("index.html", user=user, stations=get_coordinates())
 
 
 if __name__ == "__main__":

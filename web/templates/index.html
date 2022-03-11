@@ -44,12 +44,17 @@
             </ul>
         </div>
     </nav>
-
+    <!-- {% for key in  station_coordinates %}
+    <div>
+       <h1>{{key, station_coordinates[key][0], station_coordinates[key][1]}}</h1> 
+    </div>
+    {% endfor %} -->
+    
     <div id="container">
         <div id="map"></div>
     </div>
     <script>
-        function initMap(){
+        function initMap(){      
             const dublin = { lat: 53.353510834205224, lng: -6.267703651900617};
             let mapOptions = {
                 // center : new google.maps.LatLng('53.353510834205224', '-6.267703651900617'),
@@ -74,22 +79,28 @@
             "</div>" +
             "</div>";
 
-            const infowindow = new google.maps.InfoWindow({
-            content: contentString,
-            });
-            const marker = new google.maps.Marker({
-                position: dublin,
-                map,
-                title: "Uluru (Ayers Rock)",
-            });
+           
 
-            marker.addListener("click", () => {
+            var coordinates = JSON.parse('{{stations | tojson}}');
+            
+            for(row in coordinates){
+                const marker = new google.maps.Marker({  
+                    position:  {lat: coordinates[row].position_lat, lng: coordinates[row].position_lng},
+                    map : map,
+                    title : coordinates[row].address,
+                });
+                const infowindow = new google.maps.InfoWindow({
+                    // contenString = '<div id="content"><h1>' + coordinates[row].address + '<h1></div>';
+                    content: '<div id="content"><h4>' + coordinates[row].address + '<h4></div>',
+                });
+                marker.addListener("click", () => {
                 infowindow.open({
                 anchor: marker,
                 map,
                 shouldFocus: false,
                 });
-            });
+                });
+            }           
         }
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcP0f3zq0S9Dlaxb6aTkdAfhANCosV230&callback=initMap"></script>
