@@ -27,7 +27,34 @@
 
     <!-- Main content -->
     <div class="container">
-        <p>{{ station_info }}</p>
+        <h1 id="station_title"></h1>
+        <ul id="station_info">
+
+        </ul>
     </div>
+
+    <!-- Script for outputting station information -->
+    <script>
+        function displayStationInfo(){
+            var stationInfo = JSON.parse('{{station_info | tojson}}');
+
+            // Display header
+            const stationHeader = document.createTextNode("Information for station: " + stationInfo[0]["address"])
+            document.getElementById("station_title").appendChild(stationHeader);
+            
+            // Display all other information
+            const stationInfoList = document.getElementById("station_info");
+            console.log(stationInfo);
+
+            for (key in stationInfo[0]){
+                const listItem = document.createElement("li");
+                const listText = document.createTextNode(key + ": " + stationInfo[0][key]);
+                listItem.appendChild(listText);
+                stationInfoList.appendChild(listItem)
+            }
+        }
+
+        displayStationInfo();
+    </script>
 </body>
 </html>

@@ -27,7 +27,7 @@
 
     <!-- Main content -->
     <div id="container">
-        <input type="text" id="myInput" onkeyup="filterStationList()" placeholder="Search for names..">
+        <input type="text" id="myInput" onkeyup="filterStationList()" placeholder="Search for stations..">
 
         <ul id="station_list"></ul>
     </div>
@@ -36,7 +36,6 @@
     <script>
         // Load in the station information
         var stations = JSON.parse('{{stations | tojson}}');
-        console.log(stations);
 
         // Isolate the station list
         stationList = document.getElementById("station_list");
