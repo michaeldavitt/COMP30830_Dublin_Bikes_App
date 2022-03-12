@@ -73,7 +73,7 @@ def index():
 @app.route("/stations")
 def stations_page():
     """Function that displays stations.html when the user navigates to stations"""
-    return render_template("stations.html")
+    return render_template("stations.html", stations=get_station_info())
 
 
 if __name__ == "__main__":

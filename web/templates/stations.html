@@ -25,5 +25,32 @@
         </div>
     </nav>
 
+    <!-- Main content -->
+    <div id="container">
+        <ul id="station_list">
+
+        </ul>
+    </div>
+
+    <!-- Script to get station information -->
+    <script>
+        // Load in the station information
+        var stations = JSON.parse('{{stations | tojson}}');
+        console.log(stations);
+
+        // Isolate the station list
+        stationList = document.getElementById("station_list");
+
+        // Loop through each station
+        for (station_num in stations){
+            // Create a new list item
+            const node = document.createElement("li");
+            const textnode = document.createTextNode(stations[station_num].address);
+            node.appendChild(textnode);
+            stationList.appendChild(node);
+        }
+
+    </script>
+
 </body>
 </html>
