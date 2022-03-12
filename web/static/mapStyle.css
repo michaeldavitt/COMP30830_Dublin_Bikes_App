@@ -1,0 +1,17 @@
+/* container to center map */
+#container {
+    height: 100vh;
+    display: flex;
+    justify-content:center;
+    align-items: center;
+}
+
+#map {
+    height: 100vh;
+    width: 100vw;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+}

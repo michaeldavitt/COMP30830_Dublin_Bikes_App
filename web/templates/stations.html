@@ -1,86 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <title>Stations</title>
-</head>
-<body>
-    <!-- Navigation bar reference: https://www.youtube.com/watch?v=23bpce-5s8I -->
-    <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
-        <a href="/" class="navbar-brand" style="font-size: 35px; padding-left: 10px;">Dublin Bikes</a>
-        <button class="navbar-toggler me-3" type="button" 
-        data-bs-toggle="collapse" data-bs-target="#navbarMenu" 
-        aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle Navigation"
-        >
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarMenu">
-            <ul class="navbar-nav text-center ms-auto me-5">
-                <li class="nav-item"><a href="/" class="nav-link">Plan Your Journey</a></li>
-                <li class="nav-item"><a href="stations" class="nav-link">View Stations</a></li>
-            </ul>
-        </div>
-    </nav>
-
+{% extends "base.html" %}
+{% block content %}
     <!-- Main content -->
     <div id="container">
-        <input type="text" id="myInput" onkeyup="filterStationList()" placeholder="Search for stations..">
-
-        <ul id="station_list"></ul>
+        <div class="row">
+            <input type="text" id="myInput" onkeyup="filterStationList()" placeholder="Search for stations..">
+        </div>
+        <div class="row">
+            <ul id="station_list"></ul>
+        </div>
     </div>
 
-    <!-- Script to get station information -->
+    <!-- Code to get station information -->
     <script>
         // Load in the station information
         var stations = JSON.parse('{{stations | tojson}}');
 
-        // Isolate the station list
-        stationList = document.getElementById("station_list");
-
-        function createStationList(){
-            // Loop through each station
-            for (station_num in stations){
-                // Create a new list item
-                const listItem = document.createElement("li");
-                const linkItem = document.createElement("a")
-                linkItem.href = "station/" + stations[station_num].number;
-                const stationInfo = document.createTextNode(stations[station_num].address);
-                linkItem.appendChild(stationInfo);
-                listItem.appendChild(linkItem);
-                stationList.appendChild(listItem);
-            }
-        }
-        
-        createStationList();
-
-        // Filter the stations list - reference: https://www.w3schools.com/howto/howto_js_filter_lists.asp
-        function filterStationList() {
-            // Declare variables
-            var input, filter, ul, li, a, i, txtValue;
-            input = document.getElementById('myInput');
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("station_list");
-            li = ul.getElementsByTagName('li');
-
-            // Loop through all list items, and hide those who don't match the search query
-            for (i = 0; i < li.length; i++) {
-                a = li[i].getElementsByTagName("a")[0];
-                txtValue = a.textContent || a.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    li[i].style.display = "";
-                } else {
-                    li[i].style.display = "none";
-                }
-            }
-        }
-
     </script>
-
-    <!-- Bootstrap JS to make hamburger menu toggling work -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
-</body>
-</html>
+    <script src="static/stationInfoCode.js"></script>
+    <script>createStationList()</script>
+{% endblock %}
