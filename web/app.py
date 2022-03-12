@@ -70,5 +70,11 @@ def index():
     return render_template("index.html", stations=get_station_info(), GMAPS_API_KEY=get_maps_api_key())
 
 
+@app.route("/stations")
+def stations_page():
+    """Function that displays stations.html when the user navigates to stations"""
+    return render_template("stations.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True)
