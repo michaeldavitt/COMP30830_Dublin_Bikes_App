@@ -55,6 +55,14 @@ def get_station_info():
     return stations
 
 
+def get_specific_station(station_id):
+    """Function to get information for a specific station"""
+    engine = get_db()
+    rows = engine.execute(
+        "SELECT * FROM dbikes.station WHERE number=" + str(station_id)).fetchall()
+    return [dict(row.items()) for row in rows]
+
+
 def get_maps_api_key():
     """Function to securely obtain API key for Google Maps"""
     with open('google_maps_api_key.txt') as f:
@@ -68,6 +76,18 @@ def get_maps_api_key():
 def index():
     """Function that displays index.html when the user first enters the site"""
     return render_template("index.html", stations=get_station_info(), GMAPS_API_KEY=get_maps_api_key())
+
+
+@app.route("/stations")
+def stations_page():
+    """Function that displays stations.html when the user navigates to stations"""
+    return render_template("stations.html", stations=get_station_info())
+
+
+@app.route("/station/<int:station_id>")
+def station(station_id):
+    """Function that outputs information for a specific station"""
+    return render_template("specific_station.html", station_info=get_specific_station(station_id))
 
 
 if __name__ == "__main__":
