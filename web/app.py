@@ -76,5 +76,10 @@ def stations_page():
     return render_template("stations.html", stations=get_station_info())
 
 
+@app.route("/station/<int:station_id>")
+def station(station_id):
+    return "Retrieving info for station: {}".format(station_id)
+
+
 if __name__ == "__main__":
     app.run(debug=True)
