@@ -86,6 +86,7 @@ def stations_page():
 
 @app.route("/station/<int:station_id>")
 def station(station_id):
+    """Function that outputs information for a specific station"""
     return render_template("specific_station.html", station_info=get_specific_station(station_id))
 
 
