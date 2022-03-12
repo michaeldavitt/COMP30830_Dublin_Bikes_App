@@ -1,10 +1,8 @@
 *.pdf
-bike_key.txt
 .idea/
-mysql_password.txt
-weather_key.txt
 __pycache__/
 data/
 Sprint_backlogs/
 Wireframe/
 nohup.out
+*.txt

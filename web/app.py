@@ -55,10 +55,19 @@ def get_station_info():
     return stations
 
 
+def get_maps_api_key():
+    """Function to securely obtain API key for Google Maps"""
+    with open('google_maps_api_key.txt') as f:
+        key = ''.join(f.readlines())
+        key = str(key).split()[0]
+
+    return key
+
+
 @app.route("/")
 def index():
     """Function that displays index.html when the user first enters the site"""
-    return render_template("index.html", stations=get_station_info())
+    return render_template("index.html", stations=get_station_info(), GMAPS_API_KEY=get_maps_api_key())
 
 
 if __name__ == "__main__":
