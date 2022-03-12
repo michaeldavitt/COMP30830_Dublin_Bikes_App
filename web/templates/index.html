@@ -56,37 +56,50 @@
     <script>
 
         // Function to display a map of Dublin on the homepage
-        function initMap(){      
+        function initMap() { 
+            
+            // Displays the map and zooms in on Dublin city center
             const dublin = { lat: 53.353510834205224, lng: -6.267703651900617};
             let mapOptions = {
                 // center : new google.maps.LatLng('53.353510834205224', '-6.267703651900617'),
                 center: dublin, 
                 zoom: 13.5
             }
+
+            // Puts new map into HTML div
             let map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
+            // Loads in the bike station information for each station
             var coordinates = JSON.parse('{{stations | tojson}}');
             
+            // Loops through each bike station
             for(row in coordinates){
+
+                // Creates a marker on the map for each station
                 const marker = new google.maps.Marker({  
                     position:  {lat: coordinates[row].position_lat, lng: coordinates[row].position_lng},
                     map : map,
                     title : coordinates[row].address,
                 });
+
+                // Creates a pop-up window for each station
                 const infowindow = new google.maps.InfoWindow({
-                    // contenString = '<div id="content"><h1>' + coordinates[row].address + '<h1></div>';
                     content: '<div id="content"><h4>' + coordinates[row].address + '<h4></div>',
                 });
+
+                // Add function that displays pop-up window when a marker is clicked for each station marker
                 marker.addListener("click", () => {
-                infowindow.open({
-                anchor: marker,
-                map,
-                shouldFocus: false,
-                });
+                    infowindow.open({
+                    anchor: marker,
+                    map,
+                    shouldFocus: false,
+                    });
                 });
             }           
         }
     </script>
+
+    <!-- Connect to the google maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDcP0f3zq0S9Dlaxb6aTkdAfhANCosV230&callback=initMap"></script>
 
 </body>
