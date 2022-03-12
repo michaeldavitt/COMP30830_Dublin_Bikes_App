@@ -52,18 +52,19 @@
         <div id="map"></div>
     </div>
 
+    <!-- Adding the clustering library to the page -->
+    <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
+
     <!-- JS code to create map and display station information -->
     <script>
-
         // Function to display a map of Dublin on the homepage
         function initMap() { 
             
             // Displays the map and zooms in on Dublin city center
-            const dublin = { lat: 53.353510834205224, lng: -6.267703651900617};
+            const dublin = { lat: 53.353510834205224, lng: -6.267703651900617}; 
             let mapOptions = {
-                // center : new google.maps.LatLng('53.353510834205224', '-6.267703651900617'),
                 center: dublin, 
-                zoom: 13.5
+                zoom: 13.5,
             }
 
             // Puts new map into HTML div
@@ -71,31 +72,36 @@
 
             // Loads in the bike station information for each station
             var coordinates = JSON.parse('{{stations | tojson}}');
-            
-            // Loops through each bike station
-            for(row in coordinates){
 
                 // Creates a marker on the map for each station
-                const marker = new google.maps.Marker({  
-                    position:  {lat: coordinates[row].position_lat, lng: coordinates[row].position_lng},
+                const markers = coordinates.map((position, i) => {
+                    const marker = new google.maps.Marker({
+                    position:  {lat: coordinates[i].position_lat, lng: coordinates[i].position_lng},
                     map : map,
-                    title : coordinates[row].address,
-                });
-
-                // Creates a pop-up window for each station
-                const infowindow = new google.maps.InfoWindow({
-                    content: '<div id="content"><h4>' + coordinates[row].address + '<h4></div>',
-                });
-
-                // Add function that displays pop-up window when a marker is clicked for each station marker
-                marker.addListener("click", () => {
-                    infowindow.open({
-                        anchor: marker,
-                        map,
-                        shouldFocus: false,
+                    title : coordinates[i].address,
                     });
+
+
+
+                    // Creates a pop-up window for each station
+                    const infowindow = new google.maps.InfoWindow({
+                        content: '<div id="content"><h4>' + coordinates[i].address + '<h4></div>',
+                    });
+
+                    // Add function that displays pop-up window when a marker is clicked for each station marker
+                    marker.addListener("click", () => {
+                        infowindow.open({
+                            anchor: marker,
+                            map,
+                            shouldFocus: false,
+                        });
+                    });
+                    return marker;
                 });
-            }           
+                
+
+            // Cluster markers together
+            const markerCluster = new markerClusterer.MarkerClusterer({ map, markers });          
         }
     </script>
 
@@ -104,6 +110,5 @@
 
     <!-- Bootstrap JS to make hamburger menu toggling work -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-
 </body>
 </html>
