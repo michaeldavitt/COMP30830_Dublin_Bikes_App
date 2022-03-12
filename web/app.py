@@ -43,8 +43,7 @@ def close_connection(exception):
         db.close()
 
 
-@app.route("/coordinates")
-def get_coordinates():
+def get_station_info():
     """Function to get the static station information
 
     Reads from our station table in the dbikes database
@@ -59,7 +58,7 @@ def get_coordinates():
 @app.route("/")
 def index():
     """Function that displays index.html when the user first enters the site"""
-    return render_template("index.html", stations=get_coordinates())
+    return render_template("index.html", stations=get_station_info())
 
 
 if __name__ == "__main__":
