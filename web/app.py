@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, jsonify
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
@@ -43,6 +43,7 @@ def close_connection(exception):
         db.close()
 
 
+@app.route("/station_info")
 def get_station_info():
     """Function to get the static station information
 
@@ -52,7 +53,7 @@ def get_station_info():
     engine = get_db()
     rows = engine.execute("SELECT * FROM dbikes.station").fetchall()
     stations = [dict(row.items()) for row in rows]
-    return stations
+    return jsonify(stations)
 
 
 def get_specific_station(station_id):
@@ -75,7 +76,7 @@ def get_maps_api_key():
 @app.route("/")
 def index():
     """Function that displays index.html when the user first enters the site"""
-    return render_template("index.html", stations=get_station_info(), GMAPS_API_KEY=get_maps_api_key())
+    return render_template("index.html", GMAPS_API_KEY=get_maps_api_key())
 
 
 @app.route("/stations")
