@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
     <!-- Load in the CSS -->
-    <link href="static/mapStyle.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='mapStyle.css') }}" rel="stylesheet">
     
     <!-- Container for the map -->
     <div id="container">
@@ -12,8 +12,7 @@
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
     <!-- JS code to create map and display station information -->
-    <script>var coordinates = JSON.parse('{{stations | tojson}}');</script>
-    <script src="static/mapCode.js"></script>
+    <script src="{{ url_for('static', filename='mapCode.js') }}"></script>
 
     <!-- Connect to the google maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&callback=initMap"></script>

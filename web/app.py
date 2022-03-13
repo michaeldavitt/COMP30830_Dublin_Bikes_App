@@ -1,4 +1,4 @@
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, jsonify
 from sqlalchemy import create_engine
 
 app = Flask(__name__)
@@ -43,6 +43,7 @@ def close_connection(exception):
         db.close()
 
 
+@app.route("/station_info")
 def get_station_info():
     """Function to get the static station information
 
@@ -52,15 +53,25 @@ def get_station_info():
     engine = get_db()
     rows = engine.execute("SELECT * FROM dbikes.station").fetchall()
     stations = [dict(row.items()) for row in rows]
-    return stations
+    return jsonify(stations)
 
 
+@app.route("/station_info/<int:station_id>")
 def get_specific_station(station_id):
     """Function to get information for a specific station"""
     engine = get_db()
     rows = engine.execute(
         "SELECT * FROM dbikes.station WHERE number=" + str(station_id)).fetchall()
-    return [dict(row.items()) for row in rows]
+    return jsonify([dict(row.items()) for row in rows])
+
+
+@app.route("/availability/<int:station_id>")
+def get_specific_station_availability(station_id):
+    """Function to get realtime availability information for a specific station"""
+    engine = get_db()
+    rows = engine.execute(
+        f"SELECT * FROM dbikes.availability WHERE number = {station_id} ORDER BY last_update DESC LIMIT 1").fetchall()
+    return jsonify([dict(row.items()) for row in rows])
 
 
 def get_maps_api_key():
@@ -72,22 +83,23 @@ def get_maps_api_key():
     return key
 
 
+@app.route("/index")
 @app.route("/")
 def index():
     """Function that displays index.html when the user first enters the site"""
-    return render_template("index.html", stations=get_station_info(), GMAPS_API_KEY=get_maps_api_key())
+    return render_template("index.html", GMAPS_API_KEY=get_maps_api_key())
 
 
 @app.route("/stations")
-def stations_page():
+def stations():
     """Function that displays stations.html when the user navigates to stations"""
-    return render_template("stations.html", stations=get_station_info())
+    return render_template("stations.html")
 
 
 @app.route("/station/<int:station_id>")
 def station(station_id):
     """Function that outputs information for a specific station"""
-    return render_template("specific_station.html", station_info=get_specific_station(station_id))
+    return render_template("specific_station.html", station_id=station_id)
 
 
 if __name__ == "__main__":

@@ -2,17 +2,31 @@
 stationList = document.getElementById("station_list");
 
 function createStationList(){
-    // Loop through each station
-    for (station_num in stations){
-        // Create a new list item
-        const listItem = document.createElement("li");
-        const linkItem = document.createElement("a")
-        linkItem.href = "station/" + stations[station_num].number;
-        const stationInfo = document.createTextNode(stations[station_num].address);
-        linkItem.appendChild(stationInfo);
-        listItem.appendChild(linkItem);
-        stationList.appendChild(listItem);
-    }
+    var jqxhr = $.getJSON("/station_info", function(data){
+        console.log("success", data);
+        var stations = data;
+
+        // Loop through each station
+        for (station_num in stations){
+            // Create a new list item
+            const listItem = document.createElement("li");
+            const linkItem = document.createElement("a")
+            linkItem.href = "station/" + stations[station_num].number;
+            const stationInfo = document.createTextNode(stations[station_num].address);
+            linkItem.appendChild(stationInfo);
+            listItem.appendChild(linkItem);
+            stationList.appendChild(listItem);
+        }
+    })
+    .done(function(){
+        console.log("second success");
+    })
+    .fail(function(){
+        console.log("error");
+    })
+    .always(function(){
+        console.log("complete");
+    })
 }
 
 // Filter the stations list - reference: https://www.w3schools.com/howto/howto_js_filter_lists.asp
@@ -37,18 +51,56 @@ function filterStationList() {
 }
 
 function displayStationInfo(){
-    // Display header
-    const stationHeader = document.createTextNode("Information for station: " + stationInfo[0]["address"])
-    document.getElementById("station_title").appendChild(stationHeader);
-    
-    // Display all other information
-    const stationInfoList = document.getElementById("station_info");
-    console.log(stationInfo);
 
-    for (key in stationInfo[0]){
-        const listItem = document.createElement("li");
-        const listText = document.createTextNode(key + ": " + stationInfo[0][key]);
-        listItem.appendChild(listText);
-        stationInfoList.appendChild(listItem)
-    }
+    var jqxhr = $.getJSON("/station_info/" + station_id, function(data){
+        console.log("success", data);
+        var stationInfo = data;
+
+        // Display header
+        const stationHeader = document.createTextNode("Information for station: " + stationInfo[0]["address"])
+        document.getElementById("station_title").appendChild(stationHeader);
+        
+        // Display all other information
+        const stationInfoList = document.getElementById("station_info");
+        console.log(stationInfo);
+
+        for (key in stationInfo[0]){
+            const listItem = document.createElement("li");
+            const listText = document.createTextNode(key + ": " + stationInfo[0][key]);
+            listItem.appendChild(listText);
+            stationInfoList.appendChild(listItem)
+        }
+
+        // Display real time availability information
+        var jqxhr = $.getJSON("/availability/" + station_id, function(data){
+            console.log("success", data);
+            var availability = data;
+    
+            for (key in availability[0]){
+                const listItem = document.createElement("li");
+                const listText = key + ": " + availability[0][key];
+                listItem.innerHTML = listText;
+                stationInfoList.appendChild(listItem)
+            }
+
+        })
+        .done(function(){
+            console.log("second success");
+        })
+        .fail(function(){
+            console.log("error");
+        })
+        .always(function(){
+            console.log("complete");
+        })
+    })
+    .done(function(){
+        console.log("second success");
+    })
+    .fail(function(){
+        console.log("error");
+    })
+    .always(function(){
+        console.log("complete");
+    })
 }

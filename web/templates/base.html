@@ -5,13 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="{{ url_for('static', filename='jquery-3.6.0.js') }}"></script>
     <title>Dublin Bikes</title>
 
 </head>
 <body>
     <!-- Navigation bar reference: https://www.youtube.com/watch?v=23bpce-5s8I -->
     <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
-        <a href="/" class="navbar-brand" style="font-size: 35px; padding-left: 10px;">Dublin Bikes</a>
+        <a href="{{ url_for('index') }}" class="navbar-brand" style="font-size: 35px; padding-left: 10px;">Dublin Bikes</a>
         <button class="navbar-toggler me-3" type="button" 
         data-bs-toggle="collapse" data-bs-target="#navbarMenu" 
         aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle Navigation"
@@ -20,8 +21,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav text-center ms-auto me-5">
-                <li class="nav-item"><a href="/" class="nav-link">Plan Your Journey</a></li>
-                <li class="nav-item"><a href="/stations" class="nav-link">View Stations</a></li>
+                <li class="nav-item"><a href="{{ url_for('index') }}" class="nav-link">Plan Your Journey</a></li>
+                <li class="nav-item"><a href="{{ url_for('stations') }}" class="nav-link">View Stations</a></li>
             </ul>
         </div>
     </nav>
