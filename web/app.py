@@ -65,6 +65,15 @@ def get_specific_station(station_id):
     return jsonify([dict(row.items()) for row in rows])
 
 
+@app.route("/availability/<int:station_id>")
+def get_specific_station_availability(station_id):
+    """Function to get realtime availability information for a specific station"""
+    engine = get_db()
+    rows = engine.execute(
+        f"SELECT * FROM dbikes.availability WHERE number = {station_id} ORDER BY last_update DESC LIMIT 1").fetchall()
+    return jsonify([dict(row.items()) for row in rows])
+
+
 def get_maps_api_key():
     """Function to securely obtain API key for Google Maps"""
     with open('google_maps_api_key.txt') as f:
