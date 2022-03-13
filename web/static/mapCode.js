@@ -66,7 +66,6 @@ function initMap() {
 function updateInfoWindow(station_id){
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
         var availabilityData = data;
-
         // Adds number of available bikes for the given station
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
         bikeAvailabilityElement = infoWindowDiv.getElementsByClassName("bike_availability")[0];

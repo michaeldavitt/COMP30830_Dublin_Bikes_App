@@ -104,3 +104,31 @@ function displayStationInfo(){
         console.log("complete");
     })
 }
+
+
+// Function to create the charts
+function displayCharts(){
+    var jqxhr = $.getJSON("/availability/" + station_id, function(data){
+        var availabilityData = data;
+
+        // Create the data table.
+        var chart_data = new google.visualization.DataTable();
+        chart_data.addColumn("string", "Description");
+        chart_data.addColumn("number", "Available Units");
+        chart_data.addRows([
+        ["Available Stands", availabilityData[0]["available_stands"]],
+        ["Available Bikes", availabilityData[0]["available_bikes"]],
+        ]);
+
+
+        // Set chart options.
+        var options = {
+                title : "Bikes availability",
+                width : 700,
+                height : 500};
+
+        // Instantiate and draw a chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById("chartDiv"));
+        chart.draw(chart_data, options);
+    });    
+}

@@ -7,10 +7,25 @@
         <ul id="station_info"></ul>
     </div>
 
+    <div id="chartDiv"></div>
+
     <!-- Script for outputting station information -->
     <script>
         var station_id = '{{ station_id }}';
     </script>
     <script src="{{ url_for('static', filename='stationInfoCode.js') }}"></script>
     <script>displayStationInfo()</script>
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(displayCharts);</script>
+
+    <!-- Code to create the charts -->
+    <script>displayCharts()</script>
 {% endblock %}
