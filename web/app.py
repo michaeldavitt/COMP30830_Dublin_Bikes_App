@@ -56,12 +56,13 @@ def get_station_info():
     return jsonify(stations)
 
 
+@app.route("/station_info/<int:station_id>")
 def get_specific_station(station_id):
     """Function to get information for a specific station"""
     engine = get_db()
     rows = engine.execute(
         "SELECT * FROM dbikes.station WHERE number=" + str(station_id)).fetchall()
-    return [dict(row.items()) for row in rows]
+    return jsonify([dict(row.items()) for row in rows])
 
 
 def get_maps_api_key():
@@ -82,13 +83,13 @@ def index():
 @app.route("/stations")
 def stations_page():
     """Function that displays stations.html when the user navigates to stations"""
-    return render_template("stations.html", stations=get_station_info())
+    return render_template("stations.html")
 
 
 @app.route("/station/<int:station_id>")
 def station(station_id):
     """Function that outputs information for a specific station"""
-    return render_template("specific_station.html", station_info=get_specific_station(station_id))
+    return render_template("specific_station.html", station_id=station_id)
 
 
 if __name__ == "__main__":

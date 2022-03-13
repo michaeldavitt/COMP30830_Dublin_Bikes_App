@@ -8,7 +8,9 @@
     </div>
 
     <!-- Script for outputting station information -->
-    <script> var stationInfo = JSON.parse('{{station_info | tojson}}'); </script>
+    <script>
+        var station_id = '{{ station_id }}';
+    </script>
     <script src="../static/stationInfoCode.js"></script>
     <script>displayStationInfo()</script>
 {% endblock %}

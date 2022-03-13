@@ -51,18 +51,33 @@ function filterStationList() {
 }
 
 function displayStationInfo(){
-    // Display header
-    const stationHeader = document.createTextNode("Information for station: " + stationInfo[0]["address"])
-    document.getElementById("station_title").appendChild(stationHeader);
-    
-    // Display all other information
-    const stationInfoList = document.getElementById("station_info");
-    console.log(stationInfo);
 
-    for (key in stationInfo[0]){
-        const listItem = document.createElement("li");
-        const listText = document.createTextNode(key + ": " + stationInfo[0][key]);
-        listItem.appendChild(listText);
-        stationInfoList.appendChild(listItem)
-    }
+    var jqxhr = $.getJSON("/station_info/" + station_id, function(data){
+        console.log("success", data);
+        var stationInfo = data;
+
+        // Display header
+        const stationHeader = document.createTextNode("Information for station: " + stationInfo[0]["address"])
+        document.getElementById("station_title").appendChild(stationHeader);
+        
+        // Display all other information
+        const stationInfoList = document.getElementById("station_info");
+        console.log(stationInfo);
+
+        for (key in stationInfo[0]){
+            const listItem = document.createElement("li");
+            const listText = document.createTextNode(key + ": " + stationInfo[0][key]);
+            listItem.appendChild(listText);
+            stationInfoList.appendChild(listItem)
+        }
+    })
+    .done(function(){
+        console.log("second success");
+    })
+    .fail(function(){
+        console.log("error");
+    })
+    .always(function(){
+        console.log("complete");
+    })
 }
