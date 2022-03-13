@@ -70,6 +70,29 @@ function displayStationInfo(){
             listItem.appendChild(listText);
             stationInfoList.appendChild(listItem)
         }
+
+        // Display real time availability information
+        var jqxhr = $.getJSON("/availability/" + station_id, function(data){
+            console.log("success", data);
+            var availability = data;
+    
+            for (key in availability[0]){
+                const listItem = document.createElement("li");
+                const listText = key + ": " + availability[0][key];
+                listItem.innerHTML = listText;
+                stationInfoList.appendChild(listItem)
+            }
+
+        })
+        .done(function(){
+            console.log("second success");
+        })
+        .fail(function(){
+            console.log("error");
+        })
+        .always(function(){
+            console.log("complete");
+        })
     })
     .done(function(){
         console.log("second success");
