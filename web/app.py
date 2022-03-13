@@ -74,6 +74,7 @@ def get_maps_api_key():
     return key
 
 
+@app.route("/index")
 @app.route("/")
 def index():
     """Function that displays index.html when the user first enters the site"""
@@ -81,7 +82,7 @@ def index():
 
 
 @app.route("/stations")
-def stations_page():
+def stations():
     """Function that displays stations.html when the user navigates to stations"""
     return render_template("stations.html")
 

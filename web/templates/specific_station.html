@@ -11,6 +11,6 @@
     <script>
         var station_id = '{{ station_id }}';
     </script>
-    <script src="../static/stationInfoCode.js"></script>
+    <script src="{{ url_for('static', filename='stationInfoCode.js') }}"></script>
     <script>displayStationInfo()</script>
 {% endblock %}
