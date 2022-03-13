@@ -65,14 +65,20 @@ function initMap() {
 // Function which sends station information to the info window popup
 function updateInfoWindow(station_id){
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
-        console.log("success", data)
         var availabilityData = data;
 
+        // Adds number of available bikes for the given station
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
-        availabilityHeader = document.createElement("h4");
-        availability = document.createTextNode("Available Bikes: " + availabilityData[0]["available_bikes"]);
-        availabilityHeader.appendChild(availability);
-        infoWindowDiv.appendChild(availabilityHeader);
+        bikeAvailabilityElement = document.createElement("p");
+        bikeAvailability = document.createTextNode("Available Bikes: " + availabilityData[0]["available_bikes"]);
+        bikeAvailabilityElement.appendChild(bikeAvailability);
+        infoWindowDiv.appendChild(bikeAvailabilityElement);
+
+        // Adds number of available parking spaces for the given station
+        parkingAvailabilityElement = document.createElement("p");
+        parkingAvailability = document.createTextNode("Available Parking Spaces: " + availabilityData[0]["available_stands"]);
+        parkingAvailabilityElement.appendChild(parkingAvailability);
+        infoWindowDiv.appendChild(parkingAvailabilityElement);
     })
     .done(function(){
         console.log("second success");
