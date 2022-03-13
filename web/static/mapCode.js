@@ -2,7 +2,7 @@
 function initMap() { 
     var jqxhr = $.getJSON("/station_info", function(data){
         console.log("success", data);
-        var coordinates = data;
+        var station_info = data;
 
         // Displays the map and zooms in on Dublin city center
         const dublin = { lat: 53.353510834205224, lng: -6.267703651900617}; 
@@ -16,18 +16,18 @@ function initMap() {
 
 
             // Creates a marker on the map for each station
-            const markers = coordinates.map((position, i) => {
+            const markers = station_info.map((position, i) => {
                 const marker = new google.maps.Marker({
-                position:  {lat: coordinates[i].position_lat, lng: coordinates[i].position_lng},
+                position:  {lat: station_info[i].position_lat, lng: station_info[i].position_lng},
                 map : map,
-                title : coordinates[i].address,
+                title : station_info[i].address,
                 });
 
 
 
                 // Creates a pop-up window for each station
                 const infowindow = new google.maps.InfoWindow({
-                    content: '<div id="content"><h4>' + coordinates[i].address + '<h4></div>',
+                    content: '<div id="content"><h4>' + station_info[i].address + '<h4></div>',
                 });
 
                 // Add function that displays pop-up window when a marker is clicked for each station marker
