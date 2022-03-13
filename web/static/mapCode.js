@@ -31,7 +31,7 @@ function initMap() {
                     station_info[i].number +
                     '" "class="station_popup"><h4>' + 
                     station_info[i].address + 
-                    '</h4></div>',
+                    '</h4><p class="bike_availability"></p><p class="parking_availability"></p></div>',
                 });
 
                 // Add function that displays pop-up window when a marker is clicked for each station marker
@@ -69,15 +69,15 @@ function updateInfoWindow(station_id){
 
         // Adds number of available bikes for the given station
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
-        bikeAvailabilityElement = document.createElement("p");
-        bikeAvailability = document.createTextNode("Available Bikes: " + availabilityData[0]["available_bikes"]);
-        bikeAvailabilityElement.appendChild(bikeAvailability);
+        bikeAvailabilityElement = infoWindowDiv.getElementsByClassName("bike_availability")[0];
+        bikeAvailability = "Available Bikes: " + availabilityData[0]["available_bikes"];
+        bikeAvailabilityElement.innerHTML = bikeAvailability;
         infoWindowDiv.appendChild(bikeAvailabilityElement);
 
         // Adds number of available parking spaces for the given station
-        parkingAvailabilityElement = document.createElement("p");
-        parkingAvailability = document.createTextNode("Available Parking Spaces: " + availabilityData[0]["available_stands"]);
-        parkingAvailabilityElement.appendChild(parkingAvailability);
+        parkingAvailabilityElement = infoWindowDiv.getElementsByClassName("parking_availability")[0];
+        parkingAvailability = "Available Parking Spaces: " + availabilityData[0]["available_stands"];
+        parkingAvailabilityElement.innerHTML = parkingAvailability;
         infoWindowDiv.appendChild(parkingAvailabilityElement);
     })
     .done(function(){
