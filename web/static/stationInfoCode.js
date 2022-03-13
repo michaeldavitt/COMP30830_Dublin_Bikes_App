@@ -2,17 +2,31 @@
 stationList = document.getElementById("station_list");
 
 function createStationList(){
-    // Loop through each station
-    for (station_num in stations){
-        // Create a new list item
-        const listItem = document.createElement("li");
-        const linkItem = document.createElement("a")
-        linkItem.href = "station/" + stations[station_num].number;
-        const stationInfo = document.createTextNode(stations[station_num].address);
-        linkItem.appendChild(stationInfo);
-        listItem.appendChild(linkItem);
-        stationList.appendChild(listItem);
-    }
+    var jqxhr = $.getJSON("/station_info", function(data){
+        console.log("success", data);
+        var stations = data;
+
+        // Loop through each station
+        for (station_num in stations){
+            // Create a new list item
+            const listItem = document.createElement("li");
+            const linkItem = document.createElement("a")
+            linkItem.href = "station/" + stations[station_num].number;
+            const stationInfo = document.createTextNode(stations[station_num].address);
+            linkItem.appendChild(stationInfo);
+            listItem.appendChild(linkItem);
+            stationList.appendChild(listItem);
+        }
+    })
+    .done(function(){
+        console.log("second success");
+    })
+    .fail(function(){
+        console.log("error");
+    })
+    .always(function(){
+        console.log("complete");
+    })
 }
 
 // Filter the stations list - reference: https://www.w3schools.com/howto/howto_js_filter_lists.asp
