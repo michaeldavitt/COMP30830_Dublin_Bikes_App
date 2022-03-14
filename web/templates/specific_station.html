@@ -22,10 +22,15 @@
 
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['corechart']});
-
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(displayCharts);</script>
+    
+    </script>
 
     <!-- Code to create the charts -->
-    <script>displayCharts()</script>
+    <script>
+        var now = new Date();
+        var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        var today = days[now.getDay()];
+        console.log(today);
+        displayBikeAvailabilityChart(today);
+    </script>
 {% endblock %}

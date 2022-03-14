@@ -18,14 +18,8 @@ function createStationList(){
             stationList.appendChild(listItem);
         }
     })
-    .done(function(){
-        console.log("second success");
-    })
     .fail(function(){
         console.log("error");
-    })
-    .always(function(){
-        console.log("complete");
     })
 }
 
@@ -84,48 +78,42 @@ function displayStationInfo(){
             }
 
         })
-        .done(function(){
-            console.log("second success");
-        })
         .fail(function(){
             console.log("error");
         })
-        .always(function(){
-            console.log("complete");
-        })
-    })
-    .done(function(){
-        console.log("second success");
     })
     .fail(function(){
         console.log("error");
     })
-    .always(function(){
-        console.log("complete");
-    })
 }
 
 
-// Function to create the charts
-function displayCharts(){
-    var jqxhr = $.getJSON("/hourly_availability/available_stands/" + station_id + "/Tuesday", function(data){
+// Function to create the bike availability chart
+function displayBikeAvailabilityChart(day){
+    var day = day;
+    var jqxhr = $.getJSON("/hourly_availability/available_bikes/" + station_id + "/" + day, function(data){
+        console.log("success", data);
+        console.log("/hourly_availability/available_bikes/" + station_id + "/" + day);
         var availabilityData = data;
 
         // Create the data table.
         var chart_data = new google.visualization.DataTable();
         chart_data.addColumn("string", "Hour");
-        chart_data.addColumn("number", "Availability");
+        chart_data.addColumn("number", "# Bikes");
         chart_data.addRows(availabilityData["data"]);
 
 
         // Set chart options.
         var options = {
-                title : "Available Parking Spaces",
+                title : "Available Bikes",
                 width : 1800,
                 height : 500};
 
         // Instantiate and draw a chart, passing in some options.
         var chart = new google.visualization.ColumnChart(document.getElementById("chartDiv"));
         chart.draw(chart_data, options);
+    })
+    .fail(function(){
+        console.log("Error");
     });    
 }
