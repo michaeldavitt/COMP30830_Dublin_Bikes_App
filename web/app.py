@@ -76,8 +76,12 @@ def get_specific_station_availability(station_id):
     return jsonify([dict(row.items()) for row in rows])
 
 
-@app.route("/daily_availability/<int:station_id>/<day>")
-def get_occupancy(station_id, day="Monday"):
+@app.route("/hourly_availability/<bikes_or_stands>/<int:station_id>/<day>")
+def get_hourly_availability(station_id, bikes_or_stands, day):
+    """Function that gets hourly availability data for a specific day
+
+    Can choose to get either bike or parking space availability data
+    """
     engine = get_db()
     df = pd.read_sql_query(
         f"select * from availability where number = {station_id}", engine)
@@ -85,10 +89,7 @@ def get_occupancy(station_id, day="Monday"):
     df["Day_of_week"] = df["last_update_date"].dt.day_name()
     df = df[df["Day_of_week"] == day]
     df["Hour"] = df["last_update_date"].dt.hour
-    # df["Average_Hourly_Availability"] = df.groupby(
-    #     ["Hour"])["available_stands"].mean()
-
-    hourly_availability = df.groupby(["Hour"])["available_stands"].mean()
+    hourly_availability = df.groupby(["Hour"])[bikes_or_stands].mean()
     return jsonify(data=list(zip(hourly_availability.index, hourly_availability)))
 
 
