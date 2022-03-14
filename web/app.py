@@ -90,7 +90,7 @@ def get_hourly_availability(station_id, bikes_or_stands, day):
     df = df[df["Day_of_week"] == day]
     df["Hour"] = df["last_update_date"].dt.hour
     hourly_availability = df.groupby(["Hour"])[bikes_or_stands].mean()
-    return jsonify(data=list(zip(hourly_availability.index, hourly_availability)))
+    return jsonify(data=list(zip(map(lambda x: str(x), hourly_availability.index), hourly_availability)))
 
 
 def get_maps_api_key():
