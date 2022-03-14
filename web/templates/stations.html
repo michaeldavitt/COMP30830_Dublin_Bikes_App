@@ -12,6 +12,6 @@
     </div>
 
     <!-- Code to get station information -->
-    <script src="static/stationInfoCode.js"></script>
+    <script src="{{ url_for('static', filename='stationInfoCode.js') }}"></script>
     <script>createStationList()</script>
 {% endblock %}
