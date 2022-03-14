@@ -76,19 +76,20 @@ def get_specific_station_availability(station_id):
     return jsonify([dict(row.items()) for row in rows])
 
 
-@app.route("/occupancy/<int:station_id>") 
-def get_occupancy(station_id): 
-    engine = get_db() 
-    df = pd.read_sql_query("select * from availability where number = %(number)s", engine, params={"number": 
-    station_id}) 
+@app.route("/daily_availability/<int:station_id>/<day>")
+def get_occupancy(station_id, day="Monday"):
+    engine = get_db()
+    df = pd.read_sql_query(
+        f"select * from availability where number = {station_id}", engine)
     df['last_update_date'] = pd.to_datetime(df.last_update, unit='ms')
-    # df["Day_of_week"] = df["last_update_date"].dt.day_name()
-    # df = df[df["Day_of_week"] == day]
-    df.set_index('last_update_date', inplace=True) 
-    res = df['available_stands'].resample('H').mean() 
-    #res['dt'] = df.index 
-    print(res) 
-    return jsonify(data=list(zip(map(lambda x: x.isoformat(), res.index), res.values)))
+    df["Day_of_week"] = df["last_update_date"].dt.day_name()
+    df = df[df["Day_of_week"] == day]
+    df["Hour"] = df["last_update_date"].dt.hour
+    # df["Average_Hourly_Availability"] = df.groupby(
+    #     ["Hour"])["available_stands"].mean()
+
+    hourly_availability = df.groupby(["Hour"])["available_stands"].mean()
+    return jsonify(data=list(zip(hourly_availability.index, hourly_availability)))
 
 
 def get_maps_api_key():
