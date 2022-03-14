@@ -132,3 +132,12 @@ function displayCharts(){
         chart.draw(chart_data, options);
     });    
 }
+
+function testing(){
+    var jqxhr = $.getJSON("/occupancy/" + station_id, function(data){
+        var availabilityData = data;
+        console.log(availabilityData)
+        console.log(availabilityData["data"][0][0].getDay());     
+
+    });
+}

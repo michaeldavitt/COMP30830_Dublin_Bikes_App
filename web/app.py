@@ -1,5 +1,7 @@
 from flask import Flask, render_template, g, jsonify
+from itsdangerous import json
 from sqlalchemy import create_engine
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -72,6 +74,21 @@ def get_specific_station_availability(station_id):
     rows = engine.execute(
         f"SELECT * FROM dbikes.availability WHERE number = {station_id} ORDER BY last_update DESC LIMIT 1").fetchall()
     return jsonify([dict(row.items()) for row in rows])
+
+
+@app.route("/occupancy/<int:station_id>") 
+def get_occupancy(station_id): 
+    engine = get_db() 
+    df = pd.read_sql_query("select * from availability where number = %(number)s", engine, params={"number": 
+    station_id}) 
+    df['last_update_date'] = pd.to_datetime(df.last_update, unit='ms')
+    # df["Day_of_week"] = df["last_update_date"].dt.day_name()
+    # df = df[df["Day_of_week"] == day]
+    df.set_index('last_update_date', inplace=True) 
+    res = df['available_stands'].resample('H').mean() 
+    #res['dt'] = df.index 
+    print(res) 
+    return jsonify(data=list(zip(map(lambda x: x.isoformat(), res.index), res.values)))
 
 
 def get_maps_api_key():
