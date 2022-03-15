@@ -60,13 +60,28 @@ function displayStationInfo(){
         var jqxhr = $.getJSON("/availability/" + station_id, function(data){
             console.log("success", data);
             var availability = data;
-    
-            for (key in availability[0]){
-                const listItem = document.createElement("li");
-                const listText = key + ": " + availability[0][key];
-                listItem.innerHTML = listText;
-                stationInfoList.appendChild(listItem)
-            }
+
+            // Display currently available bikes
+            var availableBikesElement = document.createElement("div");
+            availableBikesElement.className = "col-sm-6 availability_data";
+            var availableBikesHeader = document.createElement("p");
+            availableBikesHeader.innerHTML = "Currently Available Bikes";
+            var availableBikesCount = document.createElement("p");
+            availableBikesCount.innerHTML = availability[0]["available_bikes"];
+            availableBikesElement.appendChild(availableBikesHeader);
+            availableBikesElement.appendChild(availableBikesCount);
+            stationInfoList.appendChild(availableBikesElement);
+
+            // Display currently available stations
+            var availableStationsElement = document.createElement("div");
+            availableStationsElement.className = "col-sm-6 availability_data";
+            var availableStationsHeader = document.createElement("p");
+            availableStationsHeader.innerHTML = "Currently Available Parking Spaces";
+            var availableStationsCount = document.createElement("p");
+            availableStationsCount.innerHTML = availability[0]["available_stands"];
+            availableStationsElement.appendChild(availableStationsHeader);
+            availableStationsElement.appendChild(availableStationsCount);
+            stationInfoList.appendChild(availableStationsElement);
 
         })
         .fail(function(){
