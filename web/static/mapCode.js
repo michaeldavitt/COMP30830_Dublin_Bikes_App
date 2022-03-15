@@ -51,15 +51,9 @@ function initMap() {
         const markerCluster = new markerClusterer.MarkerClusterer({ map, markers });   
 
     })
-    .done(function(){
-        console.log("second success");
-    })
     .fail(function(){
         console.log("error");
-    })
-    .always(function(){
-        console.log("complete")
-    })         
+    })        
 }
 
 // Function which sends station information to the info window popup
@@ -79,13 +73,7 @@ function updateInfoWindow(station_id){
         parkingAvailabilityElement.innerHTML = parkingAvailability;
         infoWindowDiv.appendChild(parkingAvailabilityElement);
     })
-    .done(function(){
-        console.log("second success");
-    })
     .fail(function(){
         console.log("error");
-    })
-    .always(function(){
-        console.log("complete");
     })
 }
