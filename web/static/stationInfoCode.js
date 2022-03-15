@@ -51,19 +51,10 @@ function displayStationInfo(){
         var stationInfo = data;
 
         // Display header
-        const stationHeader = document.createTextNode("Information for station: " + stationInfo[0]["address"])
+        const stationHeader = document.createTextNode(stationInfo[0]["address"])
         document.getElementById("station_title").appendChild(stationHeader);
         
-        // Display all other information
         const stationInfoList = document.getElementById("station_info");
-        console.log(stationInfo);
-
-        for (key in stationInfo[0]){
-            const listItem = document.createElement("li");
-            const listText = document.createTextNode(key + ": " + stationInfo[0][key]);
-            listItem.appendChild(listText);
-            stationInfoList.appendChild(listItem)
-        }
 
         // Display real time availability information
         var jqxhr = $.getJSON("/availability/" + station_id, function(data){
@@ -92,8 +83,6 @@ function displayStationInfo(){
 function displayBikeAvailabilityChart(day){
     var day = day;
     var jqxhr = $.getJSON("/hourly_availability/available_bikes/" + station_id + "/" + day, function(data){
-        console.log("success", data);
-        console.log("/hourly_availability/available_bikes/" + station_id + "/" + day);
         var availabilityData = data;
 
         // Create the data table.
@@ -105,8 +94,8 @@ function displayBikeAvailabilityChart(day){
 
         // Set chart options.
         var options = {
-                title : "Available Bikes",
-                width : 1800,
+                title : "Average Available Bikes on " + day,
+                width : 1900,
                 height : 500};
 
         // Instantiate and draw a chart, passing in some options.
