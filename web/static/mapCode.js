@@ -1,5 +1,7 @@
 // Function to display a map of Dublin on the homepage
 function initMap() { 
+    var currentlyOpenPopup;
+
     var jqxhr = $.getJSON("/station_info", function(data){
         console.log("success", data);
         var station_info = data;
@@ -26,7 +28,7 @@ function initMap() {
 
 
                 // Creates a pop-up window for each station
-                const infowindow = new google.maps.InfoWindow({
+                marker.infowindow = new google.maps.InfoWindow({
                     content: '<div id="station_popup_' +
                     station_info[i].number +
                     '" "class="station_popup"><h4>' + 
@@ -36,12 +38,21 @@ function initMap() {
 
                 // Add function that displays pop-up window when a marker is clicked for each station marker
                 marker.addListener("click", () => {
+                    if (currentlyOpenPopup){
+                        console.log(currentlyOpenPopup);
+                        currentlyOpenPopup.infowindow.close({
+                            anchor: currentlyOpenPopup,
+                            map,
+                            shouldFocus: false,
+                        });
+                    }
                     updateInfoWindow(marker.title);
-                    infowindow.open({
+                    marker.infowindow.open({
                         anchor: marker,
                         map,
                         shouldFocus: false,
                     });
+                    currentlyOpenPopup = marker;
                 });
                 return marker;
             });
