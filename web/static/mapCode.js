@@ -7,10 +7,10 @@ function initMap() {
         var station_info = data;
 
         // Displays the map and zooms in on Dublin city center
-        const dublin = { lat: 53.353510834205224, lng: -6.267703651900617}; 
+        const dublin = { lat: 53.345, lng: -6.266155}; 
         let mapOptions = {
             center: dublin, 
-            zoom: 13.5,
+            zoom: 14,
         }
 
         // Puts new map into HTML div
