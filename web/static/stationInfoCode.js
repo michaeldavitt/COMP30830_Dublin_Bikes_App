@@ -95,11 +95,39 @@ function displayBikeAvailabilityChart(day){
         // Set chart options.
         var options = {
                 title : "Average Available Bikes on " + day,
-                width : 1900,
+                width : 1000,
                 height : 500};
 
         // Instantiate and draw a chart, passing in some options.
-        var chart = new google.visualization.ColumnChart(document.getElementById("chartDiv"));
+        var chart = new google.visualization.ColumnChart(document.getElementById("chartDivBikes"));
+        chart.draw(chart_data, options);
+    })
+    .fail(function(){
+        console.log("Error");
+    });    
+}
+
+// Function to create the bike availability chart
+function displayStationeAvailabilityChart(day){
+    var day = day;
+    var jqxhr = $.getJSON("/hourly_availability/available_stands/" + station_id + "/" + day, function(data){
+        var availabilityData = data;
+
+        // Create the data table.
+        var chart_data = new google.visualization.DataTable();
+        chart_data.addColumn("string", "Hour");
+        chart_data.addColumn("number", "# Spaces");
+        chart_data.addRows(availabilityData["data"]);
+
+
+        // Set chart options.
+        var options = {
+                title : "Average Available Parking Spaces on " + day,
+                width : 1000,
+                height : 500};
+
+        // Instantiate and draw a chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById("chartDivStations"));
         chart.draw(chart_data, options);
     })
     .fail(function(){

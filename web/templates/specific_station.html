@@ -29,9 +29,34 @@
             <input type="radio" class="form-check-input" id="Sunday_Bikes" name="Radio_Bikes" value="Sunday" onclick="displayBikeAvailabilityChart(value)"><label class="form-check-label" for="Sunday_Bikes">Sunday</label>
         </div>
 
+        <div id="chartDivBikes"></div>
+
+        <!-- Option to select day for parking space availability chart -->
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Monday_Stands" name="Radio_Stands" value="Monday" onclick="displayStationeAvailabilityChart(value)"><label class="form-check-label" for="Monday_Stands">Monday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Tuesday_Stands" name="Radio_Stands" value="Tuesday" onclick="displayStationeAvailabilityChart(value)"><label class="form-check-label" for="Tuesday_Stands">Tuesday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Wednesday_Stands" name="Radio_Stands" value="Wednesday" onclick="displayStationeAvailabilityChart(value)"><label class="form-check-label" for="Wednesday_Stands">Wednesday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Thursday_Stands" name="Radio_Stands" value="Thursday" onclick="displayStationeAvailabilityChart(value)"><label class="form-check-label" for="Thursday_Stands">Thursday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Friday_Stands" name="Radio_Stands" value="Friday" onclick="displayStationeAvailabilityChart(value)"><label class="form-check-label" for="Friday_Stands">Friday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Saturday_Stands" name="Radio_Stands" value="Saturday" onclick="displayStationeAvailabilityChart(value)"><label class="form-check-label" for="Saturday_Stands">Saturday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Sunday_Stands" name="Radio_Stands" value="Sunday" onclick="displayStationeAvailabilityChart(value)"><label class="form-check-label" for="Sunday_Stands">Sunday</label>
+        </div>
+        <div id="chartDivStations"></div>
     </div>
 
-    <div id="chartDiv"></div>
+    
 
     <!-- Script for outputting station information -->
     <script>
@@ -55,6 +80,8 @@
         var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
         var today = days[now.getDay()];
         document.getElementById(today + "_Bikes").checked = true;
+        document.getElementById(today + "_Stands").checked = true;
         displayBikeAvailabilityChart(today);
+        displayStationeAvailabilityChart(today);
     </script>
 {% endblock %}
