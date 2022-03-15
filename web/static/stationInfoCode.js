@@ -18,14 +18,8 @@ function createStationList(){
             stationList.appendChild(listItem);
         }
     })
-    .done(function(){
-        console.log("second success");
-    })
     .fail(function(){
         console.log("error");
-    })
-    .always(function(){
-        console.log("complete");
     })
 }
 
@@ -57,50 +51,101 @@ function displayStationInfo(){
         var stationInfo = data;
 
         // Display header
-        const stationHeader = document.createTextNode("Information for station: " + stationInfo[0]["address"])
+        const stationHeader = document.createTextNode(stationInfo[0]["address"])
         document.getElementById("station_title").appendChild(stationHeader);
         
-        // Display all other information
         const stationInfoList = document.getElementById("station_info");
-        console.log(stationInfo);
-
-        for (key in stationInfo[0]){
-            const listItem = document.createElement("li");
-            const listText = document.createTextNode(key + ": " + stationInfo[0][key]);
-            listItem.appendChild(listText);
-            stationInfoList.appendChild(listItem)
-        }
 
         // Display real time availability information
         var jqxhr = $.getJSON("/availability/" + station_id, function(data){
             console.log("success", data);
             var availability = data;
-    
-            for (key in availability[0]){
-                const listItem = document.createElement("li");
-                const listText = key + ": " + availability[0][key];
-                listItem.innerHTML = listText;
-                stationInfoList.appendChild(listItem)
-            }
 
-        })
-        .done(function(){
-            console.log("second success");
+            // Display currently available bikes
+            var availableBikesElement = document.createElement("div");
+            availableBikesElement.className = "col-sm-6 availability_data";
+            var availableBikesHeader = document.createElement("p");
+            availableBikesHeader.innerHTML = "Currently Available Bikes";
+            var availableBikesCount = document.createElement("p");
+            availableBikesCount.innerHTML = availability[0]["available_bikes"];
+            availableBikesElement.appendChild(availableBikesHeader);
+            availableBikesElement.appendChild(availableBikesCount);
+            stationInfoList.appendChild(availableBikesElement);
+
+            // Display currently available stations
+            var availableStationsElement = document.createElement("div");
+            availableStationsElement.className = "col-sm-6 availability_data";
+            var availableStationsHeader = document.createElement("p");
+            availableStationsHeader.innerHTML = "Currently Available Parking Spaces";
+            var availableStationsCount = document.createElement("p");
+            availableStationsCount.innerHTML = availability[0]["available_stands"];
+            availableStationsElement.appendChild(availableStationsHeader);
+            availableStationsElement.appendChild(availableStationsCount);
+            stationInfoList.appendChild(availableStationsElement);
+
         })
         .fail(function(){
             console.log("error");
         })
-        .always(function(){
-            console.log("complete");
-        })
-    })
-    .done(function(){
-        console.log("second success");
     })
     .fail(function(){
         console.log("error");
     })
-    .always(function(){
-        console.log("complete");
+}
+
+
+// Function to create the bike availability chart
+function displayBikeAvailabilityChart(day){
+    var day = day;
+    var jqxhr = $.getJSON("/hourly_availability/available_bikes/" + station_id + "/" + day, function(data){
+        var availabilityData = data;
+
+        // Create the data table.
+        var chart_data = new google.visualization.DataTable();
+        chart_data.addColumn("string", "Hour");
+        chart_data.addColumn("number", "# Bikes");
+        chart_data.addRows(availabilityData["data"]);
+
+
+        // Set chart options.
+        var options = {
+                title : "Average Available Bikes on " + day,
+                width : 1000,
+                height : 500};
+
+        // Instantiate and draw a chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById("chartDivBikes"));
+        chart.draw(chart_data, options);
     })
+    .fail(function(){
+        console.log("Error");
+    });    
+}
+
+// Function to create the bike availability chart
+function displayStationeAvailabilityChart(day){
+    var day = day;
+    var jqxhr = $.getJSON("/hourly_availability/available_stands/" + station_id + "/" + day, function(data){
+        var availabilityData = data;
+
+        // Create the data table.
+        var chart_data = new google.visualization.DataTable();
+        chart_data.addColumn("string", "Hour");
+        chart_data.addColumn("number", "# Spaces");
+        chart_data.addRows(availabilityData["data"]);
+
+
+        // Set chart options.
+        var options = {
+                title : "Average Available Parking Spaces on " + day,
+                width : 1000,
+                height : 500};
+
+        // Instantiate and draw a chart, passing in some options.
+        var chart = new google.visualization.ColumnChart(document.getElementById("chartDivStations"));
+        chart.draw(chart_data, options);
+    })
+    .fail(function(){
+        console.log("Error");
+    });    
 }
