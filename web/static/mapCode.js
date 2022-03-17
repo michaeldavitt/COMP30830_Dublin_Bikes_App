@@ -97,7 +97,6 @@ function getPanel(){
     else{
         panel.style.display = "none";
     }
-    
 }
 
 function showPopup(){
@@ -105,6 +104,4 @@ function showPopup(){
     var test = document.getElementById("departing").value;
     document.getElementById("departurepopup").classList.toggle("active");
     document.getElementById("departureText").innerHTML = test;
-    console.log(test);
-
 }
