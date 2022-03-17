@@ -3,17 +3,26 @@
     <!-- Load in the CSS -->
     <link href="{{ url_for('static', filename='mapStyle.css') }}" rel="stylesheet">
     
-    <!-- Container for the map -->
+    <!-- Container for the map and for the side bar-->
     <div id="container">
         <div id="sideBar">
             <form action="">
                 <label for="departing">Departing From: </label><br>
-                <input type="text" id="departing" name="departingStation"><br>
+                <input type="text" id="departing" name="departingStation" value =""><br>
                 <label for="destination">Destination: </label><br>
-                <input type="text" id="destination" name="destinationStation"><br>
-                <input type="time" name=""eta><br>
-                <input type="submit" value="Plan Your Journey">
+                <input type="text" id="destination" name="destinationStation" value=""><br>
+                <input type="time" name="eta" value=""><br>
+                <input type="button" value="Plan Your Journey" onclick="showPopup()">
             </form>           
+        </div>
+        <!-- container for the departure popups -->
+        <div class="popup" id="departurepopup">
+            <div class="overlay"></div>
+            <div class="content">
+                <div class="close-btn" onclick="showPopup()">&times;</div>
+                <h1>Choose a station for departure</h1>
+                <p id="departureText"></p>
+            </div>
         </div>
         <div id="map"></div>    
     </div>

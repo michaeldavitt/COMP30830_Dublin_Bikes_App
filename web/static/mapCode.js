@@ -99,3 +99,12 @@ function getPanel(){
     }
     
 }
+
+function showPopup(){
+    getPanel();
+    var test = document.getElementById("departing").value;
+    document.getElementById("departurepopup").classList.toggle("active");
+    document.getElementById("departureText").innerHTML = test;
+    console.log(test);
+
+}
