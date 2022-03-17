@@ -5,7 +5,17 @@
     
     <!-- Container for the map -->
     <div id="container">
-        <div id="map"></div>
+        <div id="sideBar">
+            <form action="">
+                <label for="departing">Departing From: </label><br>
+                <input type="text" id="departing" name="departingStation"><br>
+                <label for="destination">Destination: </label><br>
+                <input type="text" id="destination" name="destinationStation"><br>
+                <input type="time" name=""eta><br>
+                <input type="submit" value="Plan Your Journey">
+            </form>           
+        </div>
+        <div id="map"></div>    
     </div>
 
     <!-- Adding the clustering library to the page -->

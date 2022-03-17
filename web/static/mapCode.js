@@ -88,3 +88,14 @@ function updateInfoWindow(station_id){
         console.log("error");
     })
 }
+
+function getPanel(){
+    var panel = document.getElementById("sideBar");
+    if(panel.style.display === "none"){
+        panel.style.display = "block";
+    }
+    else{
+        panel.style.display = "none";
+    }
+    
+}
