@@ -154,28 +154,51 @@ function showPopup(){
 
     // build request
     const origin1 = startingLocation;
-    const origin2 = stationCoordinates;
     const destination1 = destinationLocation;
     
-    const request = {
-        origins: [origin1, destination1],
-        destinations: [origin2[0]],
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        avoidHighways: false,
-        avoidTolls: false,
-    };
-    // console.log(request);
+    for (i - 0; i< stationCoordinates; i++){
+        const request = {
+            origins: [origin1, destination1],
+            destinations: [stationCoordinates[i]],
+            travelMode: google.maps.TravelMode.DRIVING,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false,
+        };
+        
+        console.log(stationCoordinates[i]);
 
-    // get distance matrix response
-  service.getDistanceMatrix(request).then((response) => {
-    // put response
-    document.getElementById("response").innerText = JSON.stringify(
-      response,
-      null,
-      2
-    );
-    console.log(response);
-  });
+        // get distance matrix response
+        service.getDistanceMatrix(request).then((response) => {
+        // put response
+            document.getElementById("response").innerText = JSON.stringify(
+                response,
+                null,
+                2
+            );
+
+            console.log(response);
+        });
+      console.log(response);
+    }
+//     const request = {
+//         origins: [origin1, destination1],
+//         destinations: [stationCoordinates[0]],
+//         travelMode: google.maps.TravelMode.DRIVING,
+//         unitSystem: google.maps.UnitSystem.METRIC,
+//         avoidHighways: false,
+//         avoidTolls: false,
+//     };
+
+//     // get distance matrix response
+//   service.getDistanceMatrix(request).then((response) => {
+//     // put response
+//     document.getElementById("response").innerText = JSON.stringify(
+//       response,
+//       null,
+//       2
+//     );
+//     console.log(response);
+//   });
 
 }  
