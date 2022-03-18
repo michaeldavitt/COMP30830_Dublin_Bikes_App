@@ -85,7 +85,7 @@ function initAutocomplete() {
     const arriving_input = document.getElementById("destination");
     const options = {
         bounds: defaultBounds,
-        // componentRestrictions: { country: "ire" },
+        componentRestrictions: { country: ["IE"] },
         fields: ["place_id", "geometry", "name"],
         strictBounds: false,
         // types: ["geocode"],
