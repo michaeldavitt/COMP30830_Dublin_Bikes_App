@@ -87,8 +87,7 @@ function initAutocomplete() {
         bounds: defaultBounds,
         componentRestrictions: { country: ["IE"] },
         fields: ["place_id", "geometry", "name"],
-        strictBounds: false,
-        // types: ["geocode"],
+        strictBounds: true,
     };
 
     departingAutocomplete = new google.maps.places.Autocomplete(departing_input, options);
@@ -117,6 +116,7 @@ function updateInfoWindow(station_id){
     })
 }
 
+// Function to display the side bar where the user will input their start/end location
 function getPanel(){
     var panel = document.getElementById("sideBar");
     if(panel.style.display === "none"){
@@ -127,6 +127,7 @@ function getPanel(){
     }
 }
 
+// Function to display the centre popup when the user has submitted their start/end point in the journey planner
 function showPopup(){
     getPanel();
     var test = document.getElementById("departing").value;
