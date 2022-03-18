@@ -23,6 +23,7 @@ html, body {
 }
 
 /* plan your journey popups style */
+/* Reference for the popup style - https://www.youtube.com/watch?v=iE_6pQ3RlZU&ab_channel=Codingflag */
 
 .popup .overlay{
     position: fixed;
