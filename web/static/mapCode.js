@@ -137,13 +137,45 @@ function showPopup(){
     document.getElementById("departurepopup").classList.toggle("active");
     document.getElementById("departureText").innerHTML = startingLocation;
 
+    var destinationLocation = document.getElementById("destination").value;
+
     // Get station coordinates
     const stationCoordinates = [];
     for (i=0; i<station_info.length; i++) {
         station_lat = station_info[i].position_lat;
         station_long = station_info[i].position_lng;
-        stationCoordinates.push([station_lat, station_long]);
+        stationCoordinates.push({lat: station_lat, lng: station_long});
     }
-
     console.log(stationCoordinates);
-}
+
+    // Initialize service
+    const geocoder = new google.maps.Geocoder();
+    const service = new google.maps.DistanceMatrixService();
+
+    // build request
+    const origin1 = startingLocation;
+    const origin2 = stationCoordinates;
+    const destination1 = destinationLocation;
+    
+    const request = {
+        origins: [origin1, destination1],
+        destinations: [origin2[0]],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false,
+    };
+    // console.log(request);
+
+    // get distance matrix response
+  service.getDistanceMatrix(request).then((response) => {
+    // put response
+    document.getElementById("response").innerText = JSON.stringify(
+      response,
+      null,
+      2
+    );
+    console.log(response);
+  });
+
+}  

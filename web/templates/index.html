@@ -24,6 +24,7 @@
         </div>
         <div id="map"></div>    
     </div>
+    <div id="response"></div>
 
     <!-- Adding the clustering library to the page -->
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
@@ -32,5 +33,5 @@
     <script src="{{ url_for('static', filename='mapCode.js') }}"></script>
 
     <!-- Connect to the google maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&libraries=places&callback=initMap" async defer></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&libraries=places&callback=initMap"></script>
 {% endblock %}
