@@ -1,10 +1,11 @@
 // Function to display a map of Dublin on the homepage
+var station_info;
 function initMap() { 
     var currentlyOpenPopup;
 
     var jqxhr = $.getJSON("/station_info", function(data){
         console.log("success", data);
-        var station_info = data;
+        station_info = data;
 
         // Displays the map and zooms in on Dublin city center
         const dublin = { lat: 53.345, lng: -6.266155 }; 
@@ -17,45 +18,45 @@ function initMap() {
         let map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
 
-            // Creates a marker on the map for each station
-            const markers = station_info.map((position, i) => {
-                const marker = new google.maps.Marker({
-                position:  {lat: station_info[i].position_lat, lng: station_info[i].position_lng},
-                map : map,
-                title : station_info[i].number.toString(),
-                });
+        // Creates a marker on the map for each station
+        const markers = station_info.map((position, i) => {
+            const marker = new google.maps.Marker({
+            position:  {lat: station_info[i].position_lat, lng: station_info[i].position_lng},
+            map : map,
+            title : station_info[i].number.toString(),
+            });
 
 
 
-                // Creates a pop-up window for each station
-                marker.infowindow = new google.maps.InfoWindow({
-                    content: '<div id="station_popup_' +
-                    station_info[i].number +
-                    '" "class="station_popup"><h4>' + 
-                    station_info[i].address + 
-                    '</h4><p class="bike_availability"></p><p class="parking_availability"></p></div>',
-                });
+            // Creates a pop-up window for each station
+            marker.infowindow = new google.maps.InfoWindow({
+                content: '<div id="station_popup_' +
+                station_info[i].number +
+                '" "class="station_popup"><h4>' + 
+                station_info[i].address + 
+                '</h4><p class="bike_availability"></p><p class="parking_availability"></p></div>',
+            });
 
-                // Add function that displays pop-up window when a marker is clicked for each station marker
-                marker.addListener("click", () => {
-                    if (currentlyOpenPopup){
-                        console.log(currentlyOpenPopup);
-                        currentlyOpenPopup.infowindow.close({
-                            anchor: currentlyOpenPopup,
-                            map,
-                            shouldFocus: false,
-                        });
-                    }
-                    updateInfoWindow(marker.title);
-                    marker.infowindow.open({
-                        anchor: marker,
+            // Add function that displays pop-up window when a marker is clicked for each station marker
+            marker.addListener("click", () => {
+                if (currentlyOpenPopup){
+                    console.log(currentlyOpenPopup);
+                    currentlyOpenPopup.infowindow.close({
+                        anchor: currentlyOpenPopup,
                         map,
                         shouldFocus: false,
                     });
-                    currentlyOpenPopup = marker;
+                }
+                updateInfoWindow(marker.title);
+                marker.infowindow.open({
+                    anchor: marker,
+                    map,
+                    shouldFocus: false,
                 });
-                return marker;
+                currentlyOpenPopup = marker;
             });
+            return marker;
+        });
             
 
         // Cluster markers together
@@ -129,8 +130,20 @@ function getPanel(){
 
 // Function to display the centre popup when the user has submitted their start/end point in the journey planner
 function showPopup(){
+    // Gets rid of the side bar
     getPanel();
-    var test = document.getElementById("departing").value;
+
+    var startingLocation = document.getElementById("departing").value;
     document.getElementById("departurepopup").classList.toggle("active");
-    document.getElementById("departureText").innerHTML = test;
+    document.getElementById("departureText").innerHTML = startingLocation;
+
+    // Get station coordinates
+    const stationCoordinates = [];
+    for (i=0; i<station_info.length; i++) {
+        station_lat = station_info[i].position_lat;
+        station_long = station_info[i].position_lng;
+        stationCoordinates.push([station_lat, station_long]);
+    }
+
+    console.log(stationCoordinates);
 }
