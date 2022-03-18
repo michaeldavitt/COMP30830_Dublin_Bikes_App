@@ -7,7 +7,7 @@ function initMap() {
         var station_info = data;
 
         // Displays the map and zooms in on Dublin city center
-        const dublin = { lat: 53.345, lng: -6.266155}; 
+        const dublin = { lat: 53.345, lng: -6.266155 }; 
         let mapOptions = {
             center: dublin, 
             zoom: 14,
@@ -59,12 +59,40 @@ function initMap() {
             
 
         // Cluster markers together
-        const markerCluster = new markerClusterer.MarkerClusterer({ map, markers });   
+        const markerCluster = new markerClusterer.MarkerClusterer({ map, markers }); 
+        
+        initAutocomplete();
 
     })
     .fail(function(){
         console.log("error");
     })        
+}
+
+// Function for autocompleting addresses inside input fields
+// Reference: https://www.youtube.com/watch?v=c3MjU9E9buQ
+let autocomplete;
+function initAutocomplete() {
+    // Set up the options for the new Autocomplete
+    const center = { lat: 53.345, lng: -6.266155 };
+    const defaultBounds = {
+        north: center.lat + 0.1,
+        south: center.lat - 0.1,
+        east: center.lng + 0.1,
+        west: center.lng - 0.1,
+    };
+    const departing_input = document.getElementById("departing");
+    const arriving_input = document.getElementById("destination");
+    const options = {
+        bounds: defaultBounds,
+        // componentRestrictions: { country: "ire" },
+        fields: ["place_id", "geometry", "name"],
+        strictBounds: false,
+        // types: ["geocode"],
+    };
+
+    departingAutocomplete = new google.maps.places.Autocomplete(departing_input, options);
+    arrivingAutocomplete = new google.maps.places.Autocomplete(arriving_input, options);
 }
 
 // Function which sends station information to the info window popup

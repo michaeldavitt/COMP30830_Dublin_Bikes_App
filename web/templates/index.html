@@ -7,11 +7,9 @@
     <div id="container">
         <div id="sideBar">
             <form action="">
-                <label for="departing">Departing From: </label><br>
-                <input type="text" id="departing" name="departingStation" value =""><br>
-                <label for="destination">Destination: </label><br>
-                <input type="text" id="destination" name="destinationStation" value=""><br>
-                <input type="time" name="eta" value=""><br>
+                <input type="text" id="departing" name="departingStation" placeholder="Enter a starting location..." value =""><br>
+                <input type="text" id="destination" name="destinationStation" placeholder="Enter your destination..." value=""><br>
+                <input type="time" name="eta" value="">
                 <input type="button" value="Plan Your Journey" onclick="showPopup()">
             </form>           
         </div>
@@ -34,5 +32,5 @@
     <script src="{{ url_for('static', filename='mapCode.js') }}"></script>
 
     <!-- Connect to the google maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&callback=initMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&libraries=places&callback=initMap" async defer></script>
 {% endblock %}

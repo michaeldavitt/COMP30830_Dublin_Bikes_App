@@ -76,3 +76,12 @@ html, body {
 #testing{
     position: relative;
 }
+
+#sideBar {
+    width: 400px;
+}
+
+input {
+    margin: 20px;
+    width: 300px;
+}
