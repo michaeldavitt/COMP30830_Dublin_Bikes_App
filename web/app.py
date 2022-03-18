@@ -85,10 +85,20 @@ def get_hourly_availability(station_id, bikes_or_stands, day):
     engine = get_db()
     df = pd.read_sql_query(
         f"select * from availability where number = {station_id}", engine)
+
+    # Convert last_update column to datetime
     df['last_update_date'] = pd.to_datetime(df.last_update, unit='ms')
+
+    # Get the day of the week for each row
     df["Day_of_week"] = df["last_update_date"].dt.day_name()
+
+    # Filter the database so that we only display data for a specific day
     df = df[df["Day_of_week"] == day]
+
+    # Get the hour for each row (13:00, 14:00 etc.)
     df["Hour"] = df["last_update_date"].dt.hour
+
+    # Get the average availability in each hour
     hourly_availability = df.groupby(["Hour"])[bikes_or_stands].mean()
     return jsonify(data=list(zip(map(lambda x: str(x), hourly_availability.index), hourly_availability)))
 

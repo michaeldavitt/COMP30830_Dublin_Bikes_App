@@ -5,6 +5,8 @@
     
     <!-- Container for the map and for the side bar-->
     <div id="container">
+
+        <!-- Creates sidebar -->
         <div id="sideBar">
             <form action="">
                 <input type="text" id="departing" name="departingStation" placeholder="Enter a starting location..." value =""><br>
@@ -13,6 +15,7 @@
                 <input type="button" value="Plan Your Journey" onclick="showPopup()">
             </form>           
         </div>
+
         <!-- container for the departure popups -->
         <div class="popup" id="departurepopup">
             <div class="overlay"></div>
@@ -22,7 +25,10 @@
                 <p id="departureText"></p>
             </div>
         </div>
+
+        <!-- container for the map -->
         <div id="map"></div>    
+        
     </div>
     <div id="response"></div>
 

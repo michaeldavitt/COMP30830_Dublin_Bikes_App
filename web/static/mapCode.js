@@ -3,6 +3,7 @@ var station_info;
 function initMap() { 
     var currentlyOpenPopup;
 
+    // Gets static station information to display on the map
     var jqxhr = $.getJSON("/station_info", function(data){
         console.log("success", data);
         station_info = data;
@@ -20,13 +21,13 @@ function initMap() {
 
         // Creates a marker on the map for each station
         const markers = station_info.map((position, i) => {
+
+            // Creates new marker on map with position = station coordinates
             const marker = new google.maps.Marker({
-            position:  {lat: station_info[i].position_lat, lng: station_info[i].position_lng},
-            map : map,
-            title : station_info[i].number.toString(),
+                position:  {lat: station_info[i].position_lat, lng: station_info[i].position_lng},
+                map : map,
+                title : station_info[i].number.toString(),
             });
-
-
 
             // Creates a pop-up window for each station
             marker.infowindow = new google.maps.InfoWindow({
@@ -39,22 +40,30 @@ function initMap() {
 
             // Add function that displays pop-up window when a marker is clicked for each station marker
             marker.addListener("click", () => {
+
+                // Automatically close any open pop-ups before displaying a new popup
                 if (currentlyOpenPopup){
-                    console.log(currentlyOpenPopup);
                     currentlyOpenPopup.infowindow.close({
                         anchor: currentlyOpenPopup,
                         map,
                         shouldFocus: false,
                     });
                 }
+
+                // Adds realtime data to the popup
                 updateInfoWindow(marker.title);
+
+                // Opens the popup
                 marker.infowindow.open({
                     anchor: marker,
                     map,
                     shouldFocus: false,
                 });
+
+                // Sets the currently opened popup to be the recently opened popup
                 currentlyOpenPopup = marker;
             });
+            
             return marker;
         });
             
@@ -62,6 +71,7 @@ function initMap() {
         // Cluster markers together
         const markerCluster = new markerClusterer.MarkerClusterer({ map, markers }); 
         
+        // Launches the autocomplete function for the input boxes
         initAutocomplete();
 
     })
@@ -75,15 +85,23 @@ function initMap() {
 let autocomplete;
 function initAutocomplete() {
     // Set up the options for the new Autocomplete
+
+    // Centers the map in Dublin
     const center = { lat: 53.345, lng: -6.266155 };
+
+    // Sets a range so that users can only enter Dublin locations
     const defaultBounds = {
         north: center.lat + 0.1,
         south: center.lat - 0.1,
         east: center.lng + 0.1,
         west: center.lng - 0.1,
     };
+
+    // Gets input boxes
     const departing_input = document.getElementById("departing");
     const arriving_input = document.getElementById("destination");
+
+    // Sets options for autocomplete API request
     const options = {
         bounds: defaultBounds,
         componentRestrictions: { country: ["IE"] },
@@ -91,17 +109,24 @@ function initAutocomplete() {
         strictBounds: true,
     };
 
+    // Makes API request
     departingAutocomplete = new google.maps.places.Autocomplete(departing_input, options);
     arrivingAutocomplete = new google.maps.places.Autocomplete(arriving_input, options);
 }
 
+
 // Function which sends station information to the info window popup
-function updateInfoWindow(station_id){
+function updateInfoWindow(station_id) {
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
         var availabilityData = data;
+
         // Adds number of available bikes for the given station
+
+        // Isolates the popup for the specific station and stores in a variable
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
         bikeAvailabilityElement = infoWindowDiv.getElementsByClassName("bike_availability")[0];
+
+        // Input the realtime information
         bikeAvailability = "Available Bikes: " + availabilityData[0]["available_bikes"];
         bikeAvailabilityElement.innerHTML = bikeAvailability;
         infoWindowDiv.appendChild(bikeAvailabilityElement);
@@ -120,16 +145,20 @@ function updateInfoWindow(station_id){
 // Function to display the side bar where the user will input their start/end location
 function getPanel(){
     var panel = document.getElementById("sideBar");
-    if(panel.style.display === "none"){
+
+    // Opens the side bar
+    if(panel.style.display === "none") {
         panel.style.display = "block";
     }
-    else{
+
+    // Closes the side bar
+    else {
         panel.style.display = "none";
     }
 }
 
 // Function to display the centre popup when the user has submitted their start/end point in the journey planner
-function showPopup(){
+function showPopup() {
     // Gets rid of the side bar
     getPanel();
 
@@ -140,13 +169,12 @@ function showPopup(){
     var destinationLocation = document.getElementById("destination").value;
 
     // Get station coordinates
-    const stationCoordinates = [];
+    const stationCoordinates = Array();
     for (i=0; i<station_info.length; i++) {
         station_lat = station_info[i].position_lat;
         station_long = station_info[i].position_lng;
-        stationCoordinates.push({lat: station_lat, lng: station_long});
+        stationCoordinates[i] = {lat: station_lat, lng: station_long};
     }
-    console.log(stationCoordinates);
 
     // Initialize service
     const geocoder = new google.maps.Geocoder();
@@ -156,34 +184,35 @@ function showPopup(){
     const origin1 = startingLocation;
     const destination1 = destinationLocation;
     
-    for (i - 0; i< stationCoordinates; i++){
-        const request = {
-            origins: [origin1, destination1],
-            destinations: [stationCoordinates[i]],
-            travelMode: google.maps.TravelMode.DRIVING,
-            unitSystem: google.maps.UnitSystem.METRIC,
-            avoidHighways: false,
-            avoidTolls: false,
-        };
+    // for (i = 0; i < stationCoordinates.length; i+=10){
+    //     const request = {
+    //         origins: [origin1, destination1],
+    //         destinations: [stationCoordinates[i], stationCoordinates[i+1]],
+    //         travelMode: google.maps.TravelMode.DRIVING,
+    //         unitSystem: google.maps.UnitSystem.METRIC,
+    //         avoidHighways: false,
+    //         avoidTolls: false,
+    //     };
         
-        console.log(stationCoordinates[i]);
+    //     console.log(stationCoordinates.slice(i, i+10));
 
-        // get distance matrix response
-        service.getDistanceMatrix(request).then((response) => {
-        // put response
-            document.getElementById("response").innerText = JSON.stringify(
-                response,
-                null,
-                2
-            );
+    //     // get distance matrix response
+    //     service.getDistanceMatrix(request).then((response) => {
+    //     // put response
+    //         document.getElementById("response").innerText = JSON.stringify(
+    //             response,
+    //             null,
+    //             2
+    //         );
 
-            console.log(response);
-        });
-      console.log(response);
-    }
+    //         console.log(response);
+    //     });
+    // }
+
+//     console.log(stationCoordinates)
 //     const request = {
 //         origins: [origin1, destination1],
-//         destinations: [stationCoordinates[0]],
+//         destinations: stationCoordinates,
 //         travelMode: google.maps.TravelMode.DRIVING,
 //         unitSystem: google.maps.UnitSystem.METRIC,
 //         avoidHighways: false,
