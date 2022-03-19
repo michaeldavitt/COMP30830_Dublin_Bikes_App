@@ -42,12 +42,13 @@ html, body {
     transform: translate(-50%, -50%) scale(0);
     background-color: #fff;
     width: 450px;
-    height: 220px;
+    height: 400px;
     z-index: 2;
     text-align: center;
     padding: 20px;
     box-sizing: border-box;
     margin-left: 50%;
+    overflow-y: scroll;
 }
 
 .popup .close-btn{

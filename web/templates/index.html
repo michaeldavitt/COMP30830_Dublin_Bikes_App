@@ -23,6 +23,7 @@
                 <div class="close-btn" onclick="showPopup()">&times;</div>
                 <h1>Choose a station for departure</h1>
                 <p id="departureText"></p>
+                <button id="popipButton" onclick="updatePopup()"></button>
             </div>
         </div>
 
@@ -30,7 +31,6 @@
         <div id="map"></div>    
         
     </div>
-    <div id="response"></div>
 
     <!-- Adding the clustering library to the page -->
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>

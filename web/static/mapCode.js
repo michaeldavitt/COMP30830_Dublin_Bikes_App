@@ -1,5 +1,9 @@
 // Function to display a map of Dublin on the homepage
 var station_info;
+var globalResponse;
+var originDistances = []
+var destinationDistances = []
+var addressQuantity;
 function initMap() { 
     var currentlyOpenPopup;
 
@@ -217,39 +221,79 @@ function showPopup() {
         avoidTolls: false,
     };
 
+
     // get distance matrix response
   service.getDistanceMatrix(request).then((response) => {
-    // put response
-    document.getElementById("response").innerText = JSON.stringify(
-      response,
-      null,
-      2
-    );
+    
     console.log(response);
+    globalResponse = response;
 
     // variables to collect the distance of the stations
-    var distance;
-    var addressQuantity = response.rows[0].elements.length;
-    var originDistances = []
-    var destinationDistances = []
+    addressQuantity = response.rows[0].elements.length;
+    originDistances = []
+    destinationDistances = []
 
 
     // loop that is getting all the distance, for the departure and destination, in Km and sorting them in a list.
     for (i = 0; i < addressQuantity; i++){
-        destinationDistance = response.rows[0].elements[i].distance.text;
+        originDistance = response.rows[0].elements[i].distance.text;
+        originDistances.push(originDistance);
+        
+        destinationDistance = response.rows[1].elements[i].distance.text;
         destinationDistances.push(destinationDistance);
-        destinationDistances.sort();
     }
+    originDistances.sort();
+    destinationDistances.sort();
 
 
     // loop to get the nearest 5 stations from the user location, and recommend it in the popup.
+    document.getElementById("departureText").innerHTML = "";
     for (i = 0; i < response.destinationAddresses.length; i++){
         for(j = 0; j < addressQuantity; j++){
-            if(destinationDistances[i] == response.rows[0].elements[j].distance.text){
+            if(originDistances[i] == response.rows[0].elements[j].distance.text){
                 document.getElementById("departureText").innerHTML += response.destinationAddresses[j] + "<br/>";
             }
         }
     }
-  });
+    });
 
-}  
+
+    // // variables to collect the distance of the stations
+    // var distance;
+    // var addressQuantity = response.rows[0].elements.length;
+    // var originDistances = []
+    // var destinationDistances = []
+
+
+    // // loop that is getting all the distance, for the departure and destination, in Km and sorting them in a list.
+    // for (i = 0; i < addressQuantity; i++){
+    //     originDistance = response.rows[0].elements[i].distance.text;
+    //     originDistances.push(originDistance);
+    // }
+    // originDistances.sort();
+
+
+    // // loop to get the nearest 5 stations from the user location, and recommend it in the popup.
+    // for (i = 0; i < response.destinationAddresses.length; i++){
+    //     for(j = 0; j < addressQuantity; j++){
+    //         if(originDistances[i] == response.rows[0].elements[j].distance.text){
+    //             document.getElementById("departureText").innerHTML += response.destinationAddresses[j] + "<br/>";
+    //         }
+    //     }
+    // }
+
+}
+
+// Function to change the innerHTML of the popup
+function updatePopup(){
+    document.getElementById("departureText").innerHTML ="";
+
+    for (i = 0; i < globalResponse.destinationAddresses.length; i++){
+        for(j = 0; j < addressQuantity; j++){         
+            if(destinationDistances[i] == globalResponse.rows[1].elements[j].distance.text){
+                document.getElementById("departureText").innerHTML += globalResponse.destinationAddresses[j] + "<br/>";
+            }
+        }
+    }
+}
+
