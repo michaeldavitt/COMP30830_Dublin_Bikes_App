@@ -252,14 +252,6 @@ function showPopup() {
             }
         }
     }
-    // var radios = document.getElementsByName('recommendation_stations');
-    // for(i = 0; i < radios.length; i++){
-    //     console.log(radios[i])
-    //     if(radios[i].checked){
-    //         userChoice = radios[i].value;
-    //     }
-    // }
-    // console.log(userChoice);
     });
 
 }
@@ -267,15 +259,18 @@ function showPopup() {
 // Function to update the popup recommendation data. 
 function updatePopup(){
 
+    // updating the popup header
+    document.getElementById("popupHeader").innerHTML = "Choose a station for destination";
+
+    // getting the value of the user choice.
     var radios = document.getElementsByName('recommendation_stations');
     for(i = 0; i < radios.length; i++){
         if(radios[i].checked){
             userChoice = radios[i].value;
         }
     }
-    console.log(userChoice);
     
-    // Setting the innerHTML of the popup to empty
+    // Setting the innerHTML of the popup to empty.
     document.getElementById("departureText").innerHTML ="";
     container = document.getElementById("departureText");
 

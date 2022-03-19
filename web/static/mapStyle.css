@@ -87,3 +87,16 @@ input {
     margin: 20px;
     width: 300px;
 }
+
+/* Plan your jouruney button style */
+
+#popupButton{
+    cursor: pointer;
+    right: 20px;
+    top: 20px;
+    width: 50%;
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 30px;
+    text-align: center;
+}
