@@ -1,9 +1,14 @@
-// Function to display a map of Dublin on the homepage
+// Variable that displays the static station information
 var station_info;
+
+// Variables that will be used to display data in the recommendation popups
 var globalResponse;
 var originDistances = []
 var destinationDistances = []
 var addressQuantity;
+var userChoice;
+
+// Function to display a map of Dublin on the homepage
 function initMap() { 
     var currentlyOpenPopup;
 
@@ -247,12 +252,28 @@ function showPopup() {
             }
         }
     }
+    // var radios = document.getElementsByName('recommendation_stations');
+    // for(i = 0; i < radios.length; i++){
+    //     console.log(radios[i])
+    //     if(radios[i].checked){
+    //         userChoice = radios[i].value;
+    //     }
+    // }
+    // console.log(userChoice);
     });
 
 }
 
 // Function to update the popup recommendation data. 
 function updatePopup(){
+
+    var radios = document.getElementsByName('recommendation_stations');
+    for(i = 0; i < radios.length; i++){
+        if(radios[i].checked){
+            userChoice = radios[i].value;
+        }
+    }
+    console.log(userChoice);
     
     // Setting the innerHTML of the popup to empty
     document.getElementById("departureText").innerHTML ="";
@@ -262,12 +283,13 @@ function updatePopup(){
     for (i = 0; i < globalResponse.destinationAddresses.length; i++){
         for(j = 0; j < addressQuantity; j++){         
             if(destinationDistances[i] == globalResponse.rows[1].elements[j].distance.text){
+
+                // Creating radio buttons for each station
                 var radioboxDestination = document.createElement('input');
                 radioboxDestination.type="radio";
                 radioboxDestination.name="recommendation_stations";
                 radioboxDestination.id = j;
                 radioboxDestination.value = globalResponse.destinationAddresses[j];
-
                 container.appendChild(radioboxDestination) + container.append(globalResponse.destinationAddresses[j]);
             }
         }
