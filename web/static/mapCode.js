@@ -6,7 +6,7 @@ var globalResponse;
 var originDistances = []
 var destinationDistances = []
 var addressQuantity;
-var userChoice;
+var userChoices = [];
 
 // Function to display a map of Dublin on the homepage
 function initMap() { 
@@ -266,7 +266,7 @@ function updatePopup(){
     var radios = document.getElementsByName('recommendation_stations');
     for(i = 0; i < radios.length; i++){
         if(radios[i].checked){
-            userChoice = radios[i].value;
+            userChoices.push(radios[i].value);
         }
     }
     
