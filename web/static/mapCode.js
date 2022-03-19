@@ -227,20 +227,22 @@ function showPopup() {
     );
     console.log(response);
 
+    // variables to collect the distance of the stations
     var distance;
     var addressQuantity = response.rows[0].elements.length;
     var originDistances = []
     var destinationDistances = []
 
+
+    // loop that is getting all the distance, for the departure and destination, in Km and sorting them in a list.
     for (i = 0; i < addressQuantity; i++){
         destinationDistance = response.rows[0].elements[i].distance.text;
         destinationDistances.push(destinationDistance);
         destinationDistances.sort();
-
-        // console.log(destinationDistances);
     }
 
-    var j = 0;
+
+    // loop to get the nearest 5 stations from the user location, and recommend it in the popup.
     for (i = 0; i < response.destinationAddresses.length; i++){
         for(j = 0; j < addressQuantity; j++){
             if(destinationDistances[i] == response.rows[0].elements[j].distance.text){
