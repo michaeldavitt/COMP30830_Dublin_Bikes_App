@@ -164,7 +164,7 @@ function showPopup() {
 
     var startingLocation = document.getElementById("departing").value;
     document.getElementById("departurepopup").classList.toggle("active");
-    document.getElementById("departureText").innerHTML = startingLocation;
+    // document.getElementById("departureText").innerHTML = startingLocation;
 
     var destinationLocation = document.getElementById("destination").value;
 
@@ -184,17 +184,16 @@ function showPopup() {
     const origin1 = startingLocation;
     const destination1 = destinationLocation;
     
-    // for (i = 0; i < stationCoordinates.length; i+=10){
+    // for (i = 0; i < stationCoordinates.length; i++){
     //     const request = {
     //         origins: [origin1, destination1],
-    //         destinations: [stationCoordinates[i], stationCoordinates[i+1]],
+    //         destinations: [stationCoordinates[i]],
     //         travelMode: google.maps.TravelMode.DRIVING,
     //         unitSystem: google.maps.UnitSystem.METRIC,
     //         avoidHighways: false,
     //         avoidTolls: false,
     //     };
         
-    //     console.log(stationCoordinates.slice(i, i+10));
 
     //     // get distance matrix response
     //     service.getDistanceMatrix(request).then((response) => {
@@ -209,25 +208,46 @@ function showPopup() {
     //     });
     // }
 
-//     console.log(stationCoordinates)
-//     const request = {
-//         origins: [origin1, destination1],
-//         destinations: stationCoordinates,
-//         travelMode: google.maps.TravelMode.DRIVING,
-//         unitSystem: google.maps.UnitSystem.METRIC,
-//         avoidHighways: false,
-//         avoidTolls: false,
-//     };
+    const request = {
+        origins: [origin1, destination1],
+        destinations: [stationCoordinates[0], stationCoordinates[1], stationCoordinates[2], stationCoordinates[3], stationCoordinates[4]],
+        travelMode: google.maps.TravelMode.DRIVING,
+        unitSystem: google.maps.UnitSystem.METRIC,
+        avoidHighways: false,
+        avoidTolls: false,
+    };
 
-//     // get distance matrix response
-//   service.getDistanceMatrix(request).then((response) => {
-//     // put response
-//     document.getElementById("response").innerText = JSON.stringify(
-//       response,
-//       null,
-//       2
-//     );
-//     console.log(response);
-//   });
+    // get distance matrix response
+  service.getDistanceMatrix(request).then((response) => {
+    // put response
+    document.getElementById("response").innerText = JSON.stringify(
+      response,
+      null,
+      2
+    );
+    console.log(response);
+
+    var distance;
+    var addressQuantity = response.rows[0].elements.length;
+    var originDistances = []
+    var destinationDistances = []
+
+    for (i = 0; i < addressQuantity; i++){
+        destinationDistance = response.rows[0].elements[i].distance.text;
+        destinationDistances.push(destinationDistance);
+        destinationDistances.sort();
+
+        // console.log(destinationDistances);
+    }
+
+    var j = 0;
+    for (i = 0; i < response.destinationAddresses.length; i++){
+        for(j = 0; j < addressQuantity; j++){
+            if(destinationDistances[i] == response.rows[0].elements[j].distance.text){
+                document.getElementById("departureText").innerHTML += response.destinationAddresses[j] + "<br/>";
+            }
+        }
+    }
+  });
 
 }  
