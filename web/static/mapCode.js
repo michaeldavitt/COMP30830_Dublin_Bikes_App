@@ -188,29 +188,6 @@ function showPopup() {
     const origin1 = startingLocation;
     const destination1 = destinationLocation;
     
-    // for (i = 0; i < stationCoordinates.length; i++){
-    //     const request = {
-    //         origins: [origin1, destination1],
-    //         destinations: [stationCoordinates[i]],
-    //         travelMode: google.maps.TravelMode.DRIVING,
-    //         unitSystem: google.maps.UnitSystem.METRIC,
-    //         avoidHighways: false,
-    //         avoidTolls: false,
-    //     };
-        
-
-    //     // get distance matrix response
-    //     service.getDistanceMatrix(request).then((response) => {
-    //     // put response
-    //         document.getElementById("response").innerText = JSON.stringify(
-    //             response,
-    //             null,
-    //             2
-    //         );
-
-    //         console.log(response);
-    //     });
-    // }
 
     const request = {
         origins: [origin1, destination1],
@@ -236,12 +213,16 @@ function showPopup() {
 
     // loop that is getting all the distance, for the departure and destination, in Km and sorting them in a list.
     for (i = 0; i < addressQuantity; i++){
+        // getting the distances for the departure locations
         originDistance = response.rows[0].elements[i].distance.text;
         originDistances.push(originDistance);
         
+        // getting the distances for destination locations
         destinationDistance = response.rows[1].elements[i].distance.text;
         destinationDistances.push(destinationDistance);
     }
+
+    // Sorting the lists by ascending order
     originDistances.sort();
     destinationDistances.sort();
 
@@ -250,6 +231,8 @@ function showPopup() {
     document.getElementById("departureText").innerHTML = "";
     for (i = 0; i < response.destinationAddresses.length; i++){
         for(j = 0; j < addressQuantity; j++){
+
+            // Checking if the sorted distances matches the addresses and displaying them in order of distance for the user 
             if(originDistances[i] == response.rows[0].elements[j].distance.text){
                 document.getElementById("departureText").innerHTML += response.destinationAddresses[j] + "<br/>";
             }
@@ -257,37 +240,16 @@ function showPopup() {
     }
     });
 
-
-    // // variables to collect the distance of the stations
-    // var distance;
-    // var addressQuantity = response.rows[0].elements.length;
-    // var originDistances = []
-    // var destinationDistances = []
-
-
-    // // loop that is getting all the distance, for the departure and destination, in Km and sorting them in a list.
-    // for (i = 0; i < addressQuantity; i++){
-    //     originDistance = response.rows[0].elements[i].distance.text;
-    //     originDistances.push(originDistance);
-    // }
-    // originDistances.sort();
-
-
-    // // loop to get the nearest 5 stations from the user location, and recommend it in the popup.
-    // for (i = 0; i < response.destinationAddresses.length; i++){
-    //     for(j = 0; j < addressQuantity; j++){
-    //         if(originDistances[i] == response.rows[0].elements[j].distance.text){
-    //             document.getElementById("departureText").innerHTML += response.destinationAddresses[j] + "<br/>";
-    //         }
-    //     }
-    // }
-
 }
 
-// Function to change the innerHTML of the popup
+// Function to update the popup recommendation data. 
 function updatePopup(){
+    
+    // Setting the innerHTML of the popup to empty
     document.getElementById("departureText").innerHTML ="";
 
+
+    // code that display the recommended stations for the user.
     for (i = 0; i < globalResponse.destinationAddresses.length; i++){
         for(j = 0; j < addressQuantity; j++){         
             if(destinationDistances[i] == globalResponse.rows[1].elements[j].distance.text){
