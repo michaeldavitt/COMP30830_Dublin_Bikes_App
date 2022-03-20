@@ -215,7 +215,26 @@ async function showPopup() {
         await sleep(120);
     }
 
+    startToStationsArray.sort((a, b) => {
+        return a[1] - b[1];
+    });
+    endToStationsArray.sort((a, b) => {
+        return a[1] - b[1];
+    })
     console.log(startToStationsArray);
+
+    // Get the element where we will store the popup info
+    var container = document.getElementById("departureText");
+
+    // Create checkboxes for the popups
+    for (i=0; i<5; i++) {
+        var radioboxDeparture = document.createElement('input');
+        radioboxDeparture.type="radio";
+        radioboxDeparture.name="startLocationSelection";
+        radioboxDeparture.id= startToStationsArray[i][0];
+        radioboxDeparture.value=startToStationsArray[i][0];
+        container.appendChild(radioboxDeparture) + container.append(startToStationsArray[i][0]);
+    }
 }
 
 function getDistances(request, service, i) {
@@ -225,91 +244,35 @@ function getDistances(request, service, i) {
     });
 }
 
+
+// Function to update the popup recommendation data. 
+function updatePopup(){
+
+    // updating the popup header
+    document.getElementById("popupHeader").innerHTML = "Choose a station for destination";
+
+    // getting the value of the user choice.
+    var radios = document.getElementsByName('startLocationSelection');
+    for(i = 0; i < radios.length; i++){
+        if(radios[i].checked){
+            userChoices.push(radios[i].value);
+        }
+    }
     
-    // get distance matrix response
-//   service.getDistanceMatrix(request).then((response) => {
-    
-//     console.log(response);
-//     globalResponse = response;
+    console.log(userChoices);
 
-//     // variables to collect the distance of the stations
-//     addressQuantity = response.rows[0].elements.length;
-//     originDistances = []
-//     destinationDistances = []
+    // Setting the innerHTML of the popup to empty.
+    document.getElementById("departureText").innerHTML ="";
+    container = document.getElementById("departureText");
 
-
-//     // loop that is getting all the distance, for the departure and destination, in Km and sorting them in a list.
-//     for (i = 0; i < addressQuantity; i++){
-//         // getting the distances for the departure locations
-//         originDistance = response.rows[0].elements[i].distance.text;
-//         originDistances.push(originDistance);
-        
-//         // getting the distances for destination locations
-//         destinationDistance = response.rows[1].elements[i].distance.text;
-//         destinationDistances.push(destinationDistance);
-//     }
-
-//     // Sorting the lists by ascending order
-//     originDistances.sort();
-//     destinationDistances.sort();
-
-
-//     // loop to get the nearest 5 stations from the user location, and recommend it in the popup.
-//     document.getElementById("departureText").innerHTML = "";
-//     var container = document.getElementById("departureText");
-//     for (i = 0; i < response.destinationAddresses.length; i++){
-//         for(j = 0; j < addressQuantity; j++){
-
-//             // Checking if the sorted distances matches the addresses and displaying them in order of distance for the user 
-//             if(originDistances[i] == response.rows[0].elements[j].distance.text){
-                
-
-//                 // Creating the radio buttons for each station
-//                 var radioboxDeparture = document.createElement('input');
-//                 radioboxDeparture.type="radio";
-//                 radioboxDeparture.name="recommendation_stations";
-//                 radioboxDeparture.id= j;
-//                 radioboxDeparture.value= response.destinationAddresses[j];
-//                 container.appendChild(radioboxDeparture) + container.append(response.destinationAddresses[j]);
-//             }
-//         }
-//     }
-//     });
-
-// }
-
-// // Function to update the popup recommendation data. 
-// function updatePopup(){
-
-//     // updating the popup header
-//     document.getElementById("popupHeader").innerHTML = "Choose a station for destination";
-
-//     // getting the value of the user choice.
-//     var radios = document.getElementsByName('recommendation_stations');
-//     for(i = 0; i < radios.length; i++){
-//         if(radios[i].checked){
-//             userChoices.push(radios[i].value);
-//         }
-//     }
-    
-//     // Setting the innerHTML of the popup to empty.
-//     document.getElementById("departureText").innerHTML ="";
-//     container = document.getElementById("departureText");
-
-//     // code that display the recommended stations for the user.
-//     for (i = 0; i < globalResponse.destinationAddresses.length; i++){
-//         for(j = 0; j < addressQuantity; j++){         
-//             if(destinationDistances[i] == globalResponse.rows[1].elements[j].distance.text){
-
-//                 // Creating radio buttons for each station
-//                 var radioboxDestination = document.createElement('input');
-//                 radioboxDestination.type="radio";
-//                 radioboxDestination.name="recommendation_stations";
-//                 radioboxDestination.id = j;
-//                 radioboxDestination.value = globalResponse.destinationAddresses[j];
-//                 container.appendChild(radioboxDestination) + container.append(globalResponse.destinationAddresses[j]);
-//             }
-//         }
-//     }
-// }
+    // Create checkboxes for the popups
+    for (i=0; i<5; i++) {
+        var radioboxDeparture = document.createElement('input');
+        radioboxDeparture.type="radio";
+        radioboxDeparture.name="endLocationSelection";
+        radioboxDeparture.id= endToStationsArray[i][0];
+        radioboxDeparture.value=endToStationsArray[i][0];
+        container.appendChild(radioboxDeparture) + container.append(endToStationsArray[i][0]);
+    }
+}
 
