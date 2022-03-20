@@ -178,6 +178,18 @@ async function showPopup() {
     var container = document.getElementById("departureText");
     container.innerHTML = "";
 
+    // Add a progress bar
+    progressBar = document.createElement("progress");
+    progressBar.id = "progressBar";
+    progressBar.max = station_info.length;
+    progressBar.value = 0;
+    progressBarLabel = document.createElement("label");
+    progressBarLabel.for = "progressBar";
+    progressBarLabel.innerHTML = "Obtaining optimal stations:";
+    container.appendChild(progressBarLabel);
+    container.appendChild(document.createElement("br"));
+    container.appendChild(progressBar);
+
     // Gets rid of the side bar
     getPanel();
 
@@ -219,6 +231,8 @@ async function showPopup() {
 
         // Sleep so that our requests don't trigger a query_limit_exceeded error
         await sleep(120);
+
+        progressBar.value = i+1;
     }
 
     startToStationsArray.sort((a, b) => {
@@ -227,8 +241,8 @@ async function showPopup() {
     endToStationsArray.sort((a, b) => {
         return a[1] - b[1];
     })
-    console.log(startToStationsArray);
 
+    container.innerHTML = "";
     // Create checkboxes for the popups
     for (i=0; i<5; i++) {
 
