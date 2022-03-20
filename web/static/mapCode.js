@@ -192,15 +192,11 @@ async function showPopup() {
     // const geocoder = new google.maps.Geocoder();
     const service = new google.maps.DistanceMatrixService();
 
-    // Create variables to store coordinates and station names
-    // var coordinates = Array();
-    // var stationNames = Array();
 
     // Make a distance request for each station
     for (i=0; i<station_info.length; i++) {
         station_lat = station_info[i].position_lat;
         station_long = station_info[i].position_lng;
-        coordinates
 
         // Set up request
         var request = {
@@ -216,9 +212,7 @@ async function showPopup() {
         getDistances(request, service, i)
 
         // Sleep so that our requests don't trigger a query_limit_exceeded error
-        if (i % 5 == 0) {
-            await sleep(115);
-        }
+        await sleep(120);
     }
 
     console.log(startToStationsArray);
