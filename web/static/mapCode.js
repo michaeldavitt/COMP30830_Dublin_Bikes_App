@@ -1,6 +1,9 @@
 // Variable that displays the static station information
 var station_info;
 
+// Variable to store the map
+let map;
+
 // Variable where the user choices are stored
 var userChoices = [];
 
@@ -21,7 +24,7 @@ function initMap() {
         }
 
         // Puts new map into HTML div
-        let map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
 
         // Creates a marker on the map for each station
@@ -196,7 +199,6 @@ async function showPopup() {
     // Reset global start and end arrays
     startToStationsArray = [];
     endToStationsArray = [];
-    console.log(startToStationsArray)
 
     // Display pop up
     document.getElementById("departurepopup").classList.toggle("active");
@@ -204,7 +206,6 @@ async function showPopup() {
     // Get user input values
     var startingLocation = document.getElementById("departing").value;
     var destinationLocation = document.getElementById("destination").value;
-    console.log(startingLocation)
 
     // Initialize distance matrix service
     // const geocoder = new google.maps.Geocoder();
@@ -250,10 +251,10 @@ async function showPopup() {
         var radioboxDeparture = document.createElement('input');
         radioboxDeparture.type = "radio";
         radioboxDeparture.className = "btn-check";
-        radioboxDeparture.name = "options";
+        radioboxDeparture.name = "startLocationSelection";
         radioboxDeparture.autocomplete = "off";
         radioboxDeparture.id = startToStationsArray[i][0];
-        radioboxDeparture.value = startToStationsArray[i][0];
+        radioboxDeparture.value = startToStationsArray[i][2];
 
         // Create label using Bootstrap
         var departureLabel = document.createElement("label");
@@ -261,10 +262,14 @@ async function showPopup() {
         departureLabel.for = startToStationsArray[i][0];
         departureLabel.innerHTML = startToStationsArray[i][0];
 
+        // Create a div using Bootstrap
+        var departureHolder = document.createElement("div");
+        departureHolder.className = "form-check";
+
         // Add the new elements to the popup
-        container.appendChild(radioboxDeparture);
-        container.appendChild(departureLabel);
-        container.appendChild(document.createElement("br"));
+        departureLabel.appendChild(radioboxDeparture);
+        departureHolder.appendChild(departureLabel);
+        container.appendChild(departureHolder);
     }
 
     // Create the confirm button
@@ -280,8 +285,8 @@ async function showPopup() {
 
 function getDistances(request, service, i) {
     service.getDistanceMatrix(request).then((response) => {
-        startToStationsArray.push([station_info[i].address, response.rows[0].elements[0].duration.value]);
-        endToStationsArray.push([station_info[i].address, response.rows[1].elements[0].duration.value]);
+        startToStationsArray.push([station_info[i].address, response.rows[0].elements[0].duration.value, response.destinationAddresses[0]]);
+        endToStationsArray.push([station_info[i].address, response.rows[1].elements[0].duration.value, response.destinationAddresses[0]]);
     });
 }
 
@@ -313,10 +318,10 @@ function updatePopup(){
         var radioboxDeparture = document.createElement('input');
         radioboxDeparture.type = "radio";
         radioboxDeparture.className = "btn-check";
-        radioboxDeparture.name = "options";
+        radioboxDeparture.name = "endLocationSelection";
         radioboxDeparture.autocomplete = "off";
         radioboxDeparture.id = endToStationsArray[i][0];
-        radioboxDeparture.value = endToStationsArray[i][0];
+        radioboxDeparture.value = endToStationsArray[i][2];
 
         // Create label using Bootstrap
         var departureLabel = document.createElement("label");
@@ -324,18 +329,54 @@ function updatePopup(){
         departureLabel.for = endToStationsArray[i][0];
         departureLabel.innerHTML = endToStationsArray[i][0];
 
+        // Create a div using Bootstrap
+        var departureHolder = document.createElement("div");
+        departureHolder.className = "form-check";
+
         // Add the new elements to the popup
-        container.appendChild(radioboxDeparture);
-        container.appendChild(departureLabel);
-        container.appendChild(document.createElement("br"));
+        departureLabel.appendChild(radioboxDeparture);
+        departureHolder.appendChild(departureLabel);
+        container.appendChild(departureHolder);
 
         // Change the onclick event for the confirm button to hidePopup function
         confirmButton = document.getElementById("popupButton");
-        confirmButton.setAttribute("onclick", "hidePopup();");
+        confirmButton.setAttribute("onclick", "getRoute();");
     }
 }
 
 function hidePopup(){
     popup = document.getElementById("departurepopup");
     popup.style.display = "none";
+}
+
+function getRoute(){
+    // Initialise services
+    var directionsService = new google.maps.DirectionsService();
+    var directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    // Get the user's desired endpoint
+    var radios = document.getElementsByName('endLocationSelection');
+    for(i = 0; i < radios.length; i++){
+        if(radios[i].checked){
+            userChoices.push(radios[i].value);
+        }
+    }
+
+    hidePopup();
+
+    console.log(userChoices);
+
+    var start = userChoices[0];
+    var end = userChoices[1];
+    var request = {
+        origin: start,
+        destination: end,
+        travelMode: 'BICYCLING'
+    };
+    directionsService.route(request, function(result, status) {
+        if (status == 'OK') {
+        directionsRenderer.setDirections(result);
+        }
+    });
 }
