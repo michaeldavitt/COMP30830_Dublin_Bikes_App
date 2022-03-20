@@ -166,128 +166,156 @@ function getPanel(){
     }
 }
 
+// Sleep function
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+
+var startToStationsArray = Array();
+var endToStationsArray = Array();
+
 // Function to display the centre popup when the user has submitted their start/end point in the journey planner
-function showPopup() {
+async function showPopup() {
     // Gets rid of the side bar
     getPanel();
 
-    var startingLocation = document.getElementById("departing").value;
+    // Display pop up
     document.getElementById("departurepopup").classList.toggle("active");
-    // document.getElementById("departureText").innerHTML = startingLocation;
 
+    // Get user input values
+    var startingLocation = document.getElementById("departing").value;
     var destinationLocation = document.getElementById("destination").value;
 
-    // Get station coordinates
-    const stationCoordinates = Array();
+    // Initialize distance matrix service
+    // const geocoder = new google.maps.Geocoder();
+    const service = new google.maps.DistanceMatrixService();
+
+    // Create variables to store coordinates and station names
+    // var coordinates = Array();
+    // var stationNames = Array();
+
+    // Make a distance request for each station
     for (i=0; i<station_info.length; i++) {
         station_lat = station_info[i].position_lat;
         station_long = station_info[i].position_lng;
-        stationCoordinates[i] = {lat: station_lat, lng: station_long};
+        coordinates
+
+        // Set up request
+        var request = {
+            origins: [startingLocation, destinationLocation],
+            destinations: [{lat: station_lat, lng: station_long}],
+            travelMode: google.maps.TravelMode.WALKING,
+            unitSystem: google.maps.UnitSystem.METRIC,
+            avoidHighways: false,
+            avoidTolls: false,
+        };
+
+        // Get distance
+        getDistances(request, service, i)
+
+        // Sleep so that our requests don't trigger a query_limit_exceeded error
+        if (i % 5 == 0) {
+            await sleep(115);
+        }
     }
 
-    // Initialize service
-    const geocoder = new google.maps.Geocoder();
-    const service = new google.maps.DistanceMatrixService();
+    console.log(startToStationsArray);
+}
 
-    // build request
-    const origin1 = startingLocation;
-    const destination1 = destinationLocation;
+function getDistances(request, service, i) {
+    service.getDistanceMatrix(request).then((response) => {
+        startToStationsArray.push([station_info[i].address, response.rows[0].elements[0].duration.value]);
+        endToStationsArray.push([station_info[i].address, response.rows[1].elements[0].duration.value]);
+    });
+}
+
     
-
-    const request = {
-        origins: [origin1, destination1],
-        destinations: [stationCoordinates[0], stationCoordinates[1], stationCoordinates[2], stationCoordinates[3], stationCoordinates[4]],
-        travelMode: google.maps.TravelMode.DRIVING,
-        unitSystem: google.maps.UnitSystem.METRIC,
-        avoidHighways: false,
-        avoidTolls: false,
-    };
-
-
     // get distance matrix response
-  service.getDistanceMatrix(request).then((response) => {
+//   service.getDistanceMatrix(request).then((response) => {
     
-    console.log(response);
-    globalResponse = response;
+//     console.log(response);
+//     globalResponse = response;
 
-    // variables to collect the distance of the stations
-    addressQuantity = response.rows[0].elements.length;
-    originDistances = []
-    destinationDistances = []
+//     // variables to collect the distance of the stations
+//     addressQuantity = response.rows[0].elements.length;
+//     originDistances = []
+//     destinationDistances = []
 
 
-    // loop that is getting all the distance, for the departure and destination, in Km and sorting them in a list.
-    for (i = 0; i < addressQuantity; i++){
-        // getting the distances for the departure locations
-        originDistance = response.rows[0].elements[i].distance.text;
-        originDistances.push(originDistance);
+//     // loop that is getting all the distance, for the departure and destination, in Km and sorting them in a list.
+//     for (i = 0; i < addressQuantity; i++){
+//         // getting the distances for the departure locations
+//         originDistance = response.rows[0].elements[i].distance.text;
+//         originDistances.push(originDistance);
         
-        // getting the distances for destination locations
-        destinationDistance = response.rows[1].elements[i].distance.text;
-        destinationDistances.push(destinationDistance);
-    }
+//         // getting the distances for destination locations
+//         destinationDistance = response.rows[1].elements[i].distance.text;
+//         destinationDistances.push(destinationDistance);
+//     }
 
-    // Sorting the lists by ascending order
-    originDistances.sort();
-    destinationDistances.sort();
+//     // Sorting the lists by ascending order
+//     originDistances.sort();
+//     destinationDistances.sort();
 
 
-    // loop to get the nearest 5 stations from the user location, and recommend it in the popup.
-    document.getElementById("departureText").innerHTML = "";
-    var container = document.getElementById("departureText");
-    for (i = 0; i < response.destinationAddresses.length; i++){
-        for(j = 0; j < addressQuantity; j++){
+//     // loop to get the nearest 5 stations from the user location, and recommend it in the popup.
+//     document.getElementById("departureText").innerHTML = "";
+//     var container = document.getElementById("departureText");
+//     for (i = 0; i < response.destinationAddresses.length; i++){
+//         for(j = 0; j < addressQuantity; j++){
 
-            // Checking if the sorted distances matches the addresses and displaying them in order of distance for the user 
-            if(originDistances[i] == response.rows[0].elements[j].distance.text){
+//             // Checking if the sorted distances matches the addresses and displaying them in order of distance for the user 
+//             if(originDistances[i] == response.rows[0].elements[j].distance.text){
                 
 
-                // Creating the radio buttons for each station
-                var radioboxDeparture = document.createElement('input');
-                radioboxDeparture.type="radio";
-                radioboxDeparture.name="recommendation_stations";
-                radioboxDeparture.id= j;
-                radioboxDeparture.value= response.destinationAddresses[j];
-                container.appendChild(radioboxDeparture) + container.append(response.destinationAddresses[j]);
-            }
-        }
-    }
-    });
+//                 // Creating the radio buttons for each station
+//                 var radioboxDeparture = document.createElement('input');
+//                 radioboxDeparture.type="radio";
+//                 radioboxDeparture.name="recommendation_stations";
+//                 radioboxDeparture.id= j;
+//                 radioboxDeparture.value= response.destinationAddresses[j];
+//                 container.appendChild(radioboxDeparture) + container.append(response.destinationAddresses[j]);
+//             }
+//         }
+//     }
+//     });
 
-}
+// }
 
-// Function to update the popup recommendation data. 
-function updatePopup(){
+// // Function to update the popup recommendation data. 
+// function updatePopup(){
 
-    // updating the popup header
-    document.getElementById("popupHeader").innerHTML = "Choose a station for destination";
+//     // updating the popup header
+//     document.getElementById("popupHeader").innerHTML = "Choose a station for destination";
 
-    // getting the value of the user choice.
-    var radios = document.getElementsByName('recommendation_stations');
-    for(i = 0; i < radios.length; i++){
-        if(radios[i].checked){
-            userChoices.push(radios[i].value);
-        }
-    }
+//     // getting the value of the user choice.
+//     var radios = document.getElementsByName('recommendation_stations');
+//     for(i = 0; i < radios.length; i++){
+//         if(radios[i].checked){
+//             userChoices.push(radios[i].value);
+//         }
+//     }
     
-    // Setting the innerHTML of the popup to empty.
-    document.getElementById("departureText").innerHTML ="";
-    container = document.getElementById("departureText");
+//     // Setting the innerHTML of the popup to empty.
+//     document.getElementById("departureText").innerHTML ="";
+//     container = document.getElementById("departureText");
 
-    // code that display the recommended stations for the user.
-    for (i = 0; i < globalResponse.destinationAddresses.length; i++){
-        for(j = 0; j < addressQuantity; j++){         
-            if(destinationDistances[i] == globalResponse.rows[1].elements[j].distance.text){
+//     // code that display the recommended stations for the user.
+//     for (i = 0; i < globalResponse.destinationAddresses.length; i++){
+//         for(j = 0; j < addressQuantity; j++){         
+//             if(destinationDistances[i] == globalResponse.rows[1].elements[j].distance.text){
 
-                // Creating radio buttons for each station
-                var radioboxDestination = document.createElement('input');
-                radioboxDestination.type="radio";
-                radioboxDestination.name="recommendation_stations";
-                radioboxDestination.id = j;
-                radioboxDestination.value = globalResponse.destinationAddresses[j];
-                container.appendChild(radioboxDestination) + container.append(globalResponse.destinationAddresses[j]);
-            }
-        }
-    }
-}
+//                 // Creating radio buttons for each station
+//                 var radioboxDestination = document.createElement('input');
+//                 radioboxDestination.type="radio";
+//                 radioboxDestination.name="recommendation_stations";
+//                 radioboxDestination.id = j;
+//                 radioboxDestination.value = globalResponse.destinationAddresses[j];
+//                 container.appendChild(radioboxDestination) + container.append(globalResponse.destinationAddresses[j]);
+//             }
+//         }
+//     }
+// }
 
