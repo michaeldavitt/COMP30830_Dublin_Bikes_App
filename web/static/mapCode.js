@@ -268,7 +268,14 @@ async function showPopup() {
     }
 
     // Create the confirm button
+    confirmButton = document.createElement("button");
+    confirmButton.id = "popupButton";
+    confirmButton.setAttribute("onclick", "updatePopup();")
+    confirmButton.innerHTML = "Confirm";
 
+    // Isolate the container and put the confirm button in the container
+    popupContainer = document.getElementById("departurepopup").getElementsByClassName("content")[0];
+    popupContainer.appendChild(confirmButton);
 }
 
 function getDistances(request, service, i) {
@@ -321,6 +328,10 @@ function updatePopup(){
         container.appendChild(radioboxDeparture);
         container.appendChild(departureLabel);
         container.appendChild(document.createElement("br"));
+
+        // Change the onclick event for the confirm button to hidePopup function
+        confirmButton = document.getElementById("popupButton");
+        confirmButton.setAttribute("onclick", "hidePopup();");
     }
 }
 
