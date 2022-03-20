@@ -228,13 +228,29 @@ async function showPopup() {
 
     // Create checkboxes for the popups
     for (i=0; i<5; i++) {
+
+        // Create input element using Bootstrap
         var radioboxDeparture = document.createElement('input');
-        radioboxDeparture.type="radio";
-        radioboxDeparture.name="startLocationSelection";
-        radioboxDeparture.id= startToStationsArray[i][0];
-        radioboxDeparture.value=startToStationsArray[i][0];
-        container.appendChild(radioboxDeparture) + container.append(startToStationsArray[i][0]);
+        radioboxDeparture.type = "radio";
+        radioboxDeparture.className = "btn-check";
+        radioboxDeparture.name = "startLocationSelection";
+        radioboxDeparture.autocomplete = "off";
+        radioboxDeparture.id = startToStationsArray[i][0];
+        radioboxDeparture.value = startToStationsArray[i][0];
+
+        // Create label using Bootstrap
+        var departureLabel = document.createElement("label");
+        departureLabel.className = "btn btn-secondary";
+        departureLabel.innerHTML = startToStationsArray[i][0];
+
+        // Add the new elements to the popup
+        container.appendChild(radioboxDeparture);
+        container.appendChild(departureLabel);
+        container.appendChild(document.createElement("br"));
     }
+
+    // Create the confirm button
+
 }
 
 function getDistances(request, service, i) {
