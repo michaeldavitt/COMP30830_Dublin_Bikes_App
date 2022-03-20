@@ -1,11 +1,7 @@
 // Variable that displays the static station information
 var station_info;
 
-// Variables that will be used to display data in the recommendation popups
-var globalResponse;
-var originDistances = []
-var destinationDistances = []
-var addressQuantity;
+// Variable where the user choices are stored
 var userChoices = [];
 
 // Function to display a map of Dublin on the homepage
@@ -173,13 +169,22 @@ function sleep(ms) {
 
 
 
-var startToStationsArray = Array();
-var endToStationsArray = Array();
+var startToStationsArray;
+var endToStationsArray;
 
 // Function to display the centre popup when the user has submitted their start/end point in the journey planner
 async function showPopup() {
+    // Get the element where we will store the popup info
+    var container = document.getElementById("departureText");
+    container.innerHTML = "";
+
     // Gets rid of the side bar
     getPanel();
+
+    // Reset global start and end arrays
+    startToStationsArray = [];
+    endToStationsArray = [];
+    console.log(startToStationsArray)
 
     // Display pop up
     document.getElementById("departurepopup").classList.toggle("active");
@@ -187,6 +192,7 @@ async function showPopup() {
     // Get user input values
     var startingLocation = document.getElementById("departing").value;
     var destinationLocation = document.getElementById("destination").value;
+    console.log(startingLocation)
 
     // Initialize distance matrix service
     // const geocoder = new google.maps.Geocoder();
@@ -223,9 +229,6 @@ async function showPopup() {
     })
     console.log(startToStationsArray);
 
-    // Get the element where we will store the popup info
-    var container = document.getElementById("departureText");
-
     // Create checkboxes for the popups
     for (i=0; i<5; i++) {
 
@@ -233,14 +236,15 @@ async function showPopup() {
         var radioboxDeparture = document.createElement('input');
         radioboxDeparture.type = "radio";
         radioboxDeparture.className = "btn-check";
-        radioboxDeparture.name = "startLocationSelection";
+        radioboxDeparture.name = "options";
         radioboxDeparture.autocomplete = "off";
         radioboxDeparture.id = startToStationsArray[i][0];
         radioboxDeparture.value = startToStationsArray[i][0];
 
         // Create label using Bootstrap
         var departureLabel = document.createElement("label");
-        departureLabel.className = "btn btn-secondary";
+        departureLabel.className = "btn btn-outline-primary";
+        departureLabel.for = startToStationsArray[i][0];
         departureLabel.innerHTML = startToStationsArray[i][0];
 
         // Add the new elements to the popup
@@ -283,12 +287,30 @@ function updatePopup(){
 
     // Create checkboxes for the popups
     for (i=0; i<5; i++) {
+
+        // Create input element using Bootstrap
         var radioboxDeparture = document.createElement('input');
-        radioboxDeparture.type="radio";
-        radioboxDeparture.name="endLocationSelection";
-        radioboxDeparture.id= endToStationsArray[i][0];
-        radioboxDeparture.value=endToStationsArray[i][0];
-        container.appendChild(radioboxDeparture) + container.append(endToStationsArray[i][0]);
+        radioboxDeparture.type = "radio";
+        radioboxDeparture.className = "btn-check";
+        radioboxDeparture.name = "options";
+        radioboxDeparture.autocomplete = "off";
+        radioboxDeparture.id = endToStationsArray[i][0];
+        radioboxDeparture.value = endToStationsArray[i][0];
+
+        // Create label using Bootstrap
+        var departureLabel = document.createElement("label");
+        departureLabel.className = "btn btn-outline-primary";
+        departureLabel.for = endToStationsArray[i][0];
+        departureLabel.innerHTML = endToStationsArray[i][0];
+
+        // Add the new elements to the popup
+        container.appendChild(radioboxDeparture);
+        container.appendChild(departureLabel);
+        container.appendChild(document.createElement("br"));
     }
 }
 
+function hidePopup(){
+    popup = document.getElementById("departurepopup");
+    popup.style.display = "none";
+}

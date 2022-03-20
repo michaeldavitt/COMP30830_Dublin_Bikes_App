@@ -100,3 +100,7 @@ input {
     line-height: 30px;
     text-align: center;
 }
+
+.popup .input {
+    min-width: 400px;
+}
