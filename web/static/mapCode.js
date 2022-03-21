@@ -297,6 +297,8 @@ function updatePopup(){
     // updating the popup header
     document.getElementById("popupHeader").innerHTML = "Choose a station for destination";
 
+    userChoices = [];
+
     // getting the value of the user choice.
     var radios = document.getElementsByName('startLocationSelection');
     for(i = 0; i < radios.length; i++){
@@ -346,10 +348,13 @@ function updatePopup(){
 
 function hidePopup(){
     popup = document.getElementById("departurepopup");
-    popup.style.display = "none";
+    popup.classList.toggle("active");
 }
 
 function getRoute(){
+    // Get rid of popup button
+    document.getElementById("popupButton").remove();
+
     // Initialise services
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
