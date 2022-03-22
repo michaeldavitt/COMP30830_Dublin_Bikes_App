@@ -84,13 +84,17 @@ function initMap() {
 
     })
     .fail(function(){
-        console.log("error");
+        console.log("error in the initMap function");
     })        
 }
 
 // Function for autocompleting addresses inside input fields
 // Reference: https://www.youtube.com/watch?v=c3MjU9E9buQ
-let autocomplete;
+// let autocomplete;
+// Store variables for the user input
+var userStartPlace;
+var userEndPlace;
+
 function initAutocomplete() {
     // Set up the options for the new Autocomplete
 
@@ -120,6 +124,37 @@ function initAutocomplete() {
     // Makes API request
     departingAutocomplete = new google.maps.places.Autocomplete(departing_input, options);
     arrivingAutocomplete = new google.maps.places.Autocomplete(arriving_input, options);
+
+    // Add onclick events to store the user's input as a place object
+    departingAutocomplete.addListener("place_changed", () => {
+        // Extract the place when the user clicks on an item in the dropdown menu
+        var place = departingAutocomplete.getPlace();
+
+        if (!place.geometry || !place.geometry.location) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+        } else {
+            userStartPlace = [departingAutocomplete.getPlace().geometry.location.lat(),
+            departingAutocomplete.getPlace().geometry.location.lng()];
+        }
+    })
+
+    arrivingAutocomplete.addListener("place_changed", () => {
+        // Extract the place when the user clicks on an item in the dropdown menu
+        var place = arrivingAutocomplete.getPlace();
+
+        if (!place.geometry || !place.geometry.location) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+        } else {
+            userEndPlace = [arrivingAutocomplete.getPlace().geometry.location.lat(),
+            arrivingAutocomplete.getPlace().geometry.location.lng()];
+        }
+    })
 }
 
 
@@ -127,8 +162,6 @@ function initAutocomplete() {
 function updateInfoWindow(station_id) {
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
         var availabilityData = data;
-
-        // Adds number of available bikes for the given station
 
         // Isolates the popup for the specific station and stores in a variable
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
@@ -146,7 +179,7 @@ function updateInfoWindow(station_id) {
         infoWindowDiv.appendChild(parkingAvailabilityElement);
     })
     .fail(function(){
-        console.log("error");
+        console.log("error in the updateInfoWindow function");
     })
 }
 
@@ -170,13 +203,13 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-
-
 var startToStationsArray;
 var endToStationsArray;
 
 // Function to display the centre popup when the user has submitted their start/end point in the journey planner
 async function showPopup() {
+    console.log(userStartPlace, userEndPlace);
+
     // Get the element where we will store the popup info
     var container = document.getElementById("departureText");
     container.innerHTML = "";
@@ -203,35 +236,14 @@ async function showPopup() {
     // Display pop up
     document.getElementById("departurepopup").classList.toggle("active");
 
-    // Get user input values
-    var startingLocation = document.getElementById("departing").value;
-    var destinationLocation = document.getElementById("destination").value;
-
-    // Initialize distance matrix service
-    // const geocoder = new google.maps.Geocoder();
-    const service = new google.maps.DistanceMatrixService();
-
-
     // Make a distance request for each station
     for (i=0; i<station_info.length; i++) {
         station_lat = station_info[i].position_lat;
         station_long = station_info[i].position_lng;
 
-        // Set up request
-        var request = {
-            origins: [startingLocation, destinationLocation],
-            destinations: [{lat: station_lat, lng: station_long}],
-            travelMode: google.maps.TravelMode.WALKING,
-            unitSystem: google.maps.UnitSystem.METRIC,
-            avoidHighways: false,
-            avoidTolls: false,
-        };
-
         // Get distance
-        getDistances(request, service, i)
-
-        // Sleep so that our requests don't trigger a query_limit_exceeded error
-        await sleep(120);
+        startToStationsArray.push(getDistances([station_lat, station_long], userStartPlace));
+        endToStationsArray.push(getDistances([station_lat, station_long], userEndPlace));
 
         progressBar.value = i+1;
     }
@@ -242,6 +254,8 @@ async function showPopup() {
     endToStationsArray.sort((a, b) => {
         return a[1] - b[1];
     })
+
+    console.log(startToStationsArray.length);
 
     container.innerHTML = "";
     // Create checkboxes for the popups
@@ -283,10 +297,14 @@ async function showPopup() {
     popupContainer.appendChild(confirmButton);
 }
 
-function getDistances(request, service, i) {
-    service.getDistanceMatrix(request).then((response) => {
-        startToStationsArray.push([station_info[i].address, response.rows[0].elements[0].duration.value, response.destinationAddresses[0]]);
-        endToStationsArray.push([station_info[i].address, response.rows[1].elements[0].duration.value, response.destinationAddresses[0]]);
+function getDistances(station_coordinates, location_coordinates) {
+    var jqxhr = $.getJSON("/distances/" + station_coordinates[0] + 
+    "/" + station_coordinates[1] + "/" + location_coordinates[0] + "/" + 
+    location_coordinates[1], function(data){
+        console.log(data);
+    })
+    .fail(function(){
+        console.log("error in the getDistance function");
     });
 }
 
@@ -306,8 +324,6 @@ function updatePopup(){
             userChoices.push(radios[i].value);
         }
     }
-    
-    console.log(userChoices);
 
     // Setting the innerHTML of the popup to empty.
     document.getElementById("departureText").innerHTML ="";

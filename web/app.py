@@ -2,6 +2,7 @@ from flask import Flask, render_template, g, jsonify
 from itsdangerous import json
 from sqlalchemy import create_engine
 import pandas as pd
+from haversine import haversine
 
 app = Flask(__name__)
 
@@ -101,6 +102,12 @@ def get_hourly_availability(station_id, bikes_or_stands, day):
     # Get the average availability in each hour
     hourly_availability = df.groupby(["Hour"])[bikes_or_stands].mean()
     return jsonify(data=list(zip(map(lambda x: str(x), hourly_availability.index), hourly_availability)))
+
+
+@app.route("/distances/<station_lat>/<station_lng>/<location_lat>/<location_lng>")
+def get_distance(station_lat, station_lng, location_lat, location_lng):
+    """Returns the havershine distance between two coordinates"""
+    return str(haversine((float(station_lat), float(station_lng)), (float(location_lat), float(location_lng))))
 
 
 def get_maps_api_key():
