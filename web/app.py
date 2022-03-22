@@ -104,10 +104,25 @@ def get_hourly_availability(station_id, bikes_or_stands, day):
     return jsonify(data=list(zip(map(lambda x: str(x), hourly_availability.index), hourly_availability)))
 
 
-@app.route("/distances/<station_lat>/<station_lng>/<location_lat>/<location_lng>")
-def get_distance(station_lat, station_lng, location_lat, location_lng):
+@app.route("/distances/<location_lat>/<location_lng>")
+def get_distance(location_lat, location_lng):
     """Returns the havershine distance between two coordinates"""
-    return str(haversine((float(station_lat), float(station_lng)), (float(location_lat), float(location_lng))))
+
+    # Connect to database
+    engine = get_db()
+
+    # Get the coordinates and name of each station
+    rows = engine.execute(
+        "SELECT position_lat, position_lng, address FROM dbikes.station").fetchall()
+    stations = [dict(row.items()) for row in rows]
+
+    # Loop through each station and store the distance from the user location
+    distance_station_to_location = {}
+    for station in stations:
+        distance_station_to_location[station["address"]] = [haversine((float(station["position_lat"]), float(
+            station["position_lng"])), (float(location_lat), float(location_lng))), [station["position_lat"], station["position_lng"]]]
+
+    return jsonify(distance_station_to_location)
 
 
 def get_maps_api_key():
