@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    #myInput {
+        height: 50px;
+    }
+    #station_list a {
+        display: block;
+        padding: 20px;
+        list-style: none;
+        text-align: center;
+        background: grey;
+        text-decoration: none;
+        color: black;
+    }
+
+    #station_list a:hover {
+        background: lightgray;
+    }
+</style>
+
+    <!-- Main content -->
+    <div id="container">
+
+        <!-- Search bar -->
+        <div class="row">
+            <input type="text" id="myInput" onkeyup="filterStationList()" placeholder="Search for stations..">
+        </div>
+
+        <!-- List of bike stations -->
+        <div class="row">
+            <ul id="station_list"></ul>
+        </div>
+    </div>
+
+    <!-- Code to get station information -->
+    <script src="{{ url_for('static', filename='stationInfoCode.js') }}"></script>
+    <script>createStationList()</script>
+{% endblock %}

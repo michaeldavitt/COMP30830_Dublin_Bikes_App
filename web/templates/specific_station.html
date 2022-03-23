@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    .row {
+        margin-bottom: 40px;
+    }
+
+    .availability_data {
+        border: 1px solid black;
+        padding: 10px;
+        font-size: large;
+        font-weight: bold;
+        background-color: rgb(226, 218, 218);
+        text-align: center;
+    }
+</style>
+
+    <!-- Main content -->
+    <div class="container">
+
+        <!-- Row for the station title -->
+        <div class="row">
+            <h1 id="station_title"></h1>
+        </div>
+
+        <div class="row">
+            <h2>Current Availability Information</h2>
+        </div>
+
+        <!-- Row for the station availability information -->
+        <div class="row" id="station_info"></div>
+
+        <div class="row">
+            <h2>Average Availability Charts</h2>
+        </div>
+
+        <!-- Option to select day for bike availability chart -->
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Monday_Bikes" name="Radio_Bikes" value="Monday" onclick="displayBikeAvailabilityChart(value)"><label class="form-check-label" for="Monday_Bikes">Monday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Tuesday_Bikes" name="Radio_Bikes" value="Tuesday" onclick="displayBikeAvailabilityChart(value)"><label class="form-check-label" for="Tuesday_Bikes">Tuesday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Wednesday_Bikes" name="Radio_Bikes" value="Wednesday" onclick="displayBikeAvailabilityChart(value)"><label class="form-check-label" for="Wednesday_Bikes">Wednesday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Thursday_Bikes" name="Radio_Bikes" value="Thursday" onclick="displayBikeAvailabilityChart(value)"><label class="form-check-label" for="Thursday_Bikes">Thursday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Friday_Bikes" name="Radio_Bikes" value="Friday" onclick="displayBikeAvailabilityChart(value)"><label class="form-check-label" for="Friday_Bikes">Friday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Saturday_Bikes" name="Radio_Bikes" value="Saturday" onclick="displayBikeAvailabilityChart(value)"><label class="form-check-label" for="Saturday_Bikes">Saturday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Sunday_Bikes" name="Radio_Bikes" value="Sunday" onclick="displayBikeAvailabilityChart(value)"><label class="form-check-label" for="Sunday_Bikes">Sunday</label>
+        </div>
+        
+        <div id="chartDivBikes"></div>
+        
+        <!-- Option to select day for parking space availability chart -->
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Monday_Stands" name="Radio_Stands" value="Monday" onclick="displayStationAvailabilityChart(value)"><label class="form-check-label" for="Monday_Stands">Monday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Tuesday_Stands" name="Radio_Stands" value="Tuesday" onclick="displayStationAvailabilityChart(value)"><label class="form-check-label" for="Tuesday_Stands">Tuesday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Wednesday_Stands" name="Radio_Stands" value="Wednesday" onclick="displayStationAvailabilityChart(value)"><label class="form-check-label" for="Wednesday_Stands">Wednesday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Thursday_Stands" name="Radio_Stands" value="Thursday" onclick="displayStationAvailabilityChart(value)"><label class="form-check-label" for="Thursday_Stands">Thursday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Friday_Stands" name="Radio_Stands" value="Friday" onclick="displayStationAvailabilityChart(value)"><label class="form-check-label" for="Friday_Stands">Friday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Saturday_Stands" name="Radio_Stands" value="Saturday" onclick="displayStationAvailabilityChart(value)"><label class="form-check-label" for="Saturday_Stands">Saturday</label>
+        </div>
+        <div class="form-check form-check-inline">
+            <input type="radio" class="form-check-input" id="Sunday_Stands" name="Radio_Stands" value="Sunday" onclick="displayStationAvailabilityChart(value)"><label class="form-check-label" for="Sunday_Stands">Sunday</label>
+        </div>
+        
+        <div id="chartDivStations"></div>
+    </div>
+
+    
+
+    <!-- Get station number and store it in a variable -->
+    <script>
+        var station_id = '{{ station_id }}';
+    </script>
+
+    <!-- Read in external JS and display realtime station information -->
+    <script src="{{ url_for('static', filename='stationInfoCode.js') }}"></script>
+    <script>displayStationInfo()</script>
+
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the corechart package.
+      google.charts.load('current', {'packages':['corechart']});
+    
+    </script>
+
+    <!-- Code to create the charts -->
+    <script>
+        var now = new Date();
+        var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        var today = days[now.getDay()];
+        document.getElementById(today + "_Bikes").checked = true;
+        document.getElementById(today + "_Stands").checked = true;
+        displayBikeAvailabilityChart(today);
+        displayStationAvailabilityChart(today);
+    </script>
+{% endblock %}
