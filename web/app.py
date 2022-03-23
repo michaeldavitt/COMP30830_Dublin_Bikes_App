@@ -2,6 +2,7 @@ from flask import Flask, render_template, g, jsonify
 from itsdangerous import json
 from sqlalchemy import create_engine
 import pandas as pd
+from haversine import haversine
 
 app = Flask(__name__)
 
@@ -85,12 +86,43 @@ def get_hourly_availability(station_id, bikes_or_stands, day):
     engine = get_db()
     df = pd.read_sql_query(
         f"select * from availability where number = {station_id}", engine)
+
+    # Convert last_update column to datetime
     df['last_update_date'] = pd.to_datetime(df.last_update, unit='ms')
+
+    # Get the day of the week for each row
     df["Day_of_week"] = df["last_update_date"].dt.day_name()
+
+    # Filter the database so that we only display data for a specific day
     df = df[df["Day_of_week"] == day]
+
+    # Get the hour for each row (13:00, 14:00 etc.)
     df["Hour"] = df["last_update_date"].dt.hour
+
+    # Get the average availability in each hour
     hourly_availability = df.groupby(["Hour"])[bikes_or_stands].mean()
     return jsonify(data=list(zip(map(lambda x: str(x), hourly_availability.index), hourly_availability)))
+
+
+@app.route("/distances/<location_lat>/<location_lng>")
+def get_distance(location_lat, location_lng):
+    """Returns the havershine distance between two coordinates"""
+
+    # Connect to database
+    engine = get_db()
+
+    # Get the coordinates and name of each station
+    rows = engine.execute(
+        "SELECT position_lat, position_lng, address FROM dbikes.station").fetchall()
+    stations = [dict(row.items()) for row in rows]
+
+    # Loop through each station and store the distance from the user location
+    distance_station_to_location = {}
+    for station in stations:
+        distance_station_to_location[station["address"]] = [haversine((float(station["position_lat"]), float(
+            station["position_lng"])), (float(location_lat), float(location_lng))), [station["position_lat"], station["position_lng"]]]
+
+    return jsonify(distance_station_to_location)
 
 
 def get_maps_api_key():

@@ -1,6 +1,7 @@
 // Isolate the station list
 stationList = document.getElementById("station_list");
 
+// Generates a list of bike stations
 function createStationList(){
     var jqxhr = $.getJSON("/station_info", function(data){
         console.log("success", data);
@@ -10,8 +11,11 @@ function createStationList(){
         for (station_num in stations){
             // Create a new list item
             const listItem = document.createElement("li");
-            const linkItem = document.createElement("a")
+
+            // Creates a link to the specific station page
+            const linkItem = document.createElement("a");
             linkItem.href = "station/" + stations[station_num].number;
+
             const stationInfo = document.createTextNode(stations[station_num].address);
             listItem.appendChild(stationInfo);
             linkItem.appendChild(listItem);
@@ -44,7 +48,7 @@ function filterStationList() {
     }
 }
 
-function displayStationInfo(){
+function displayStationInfo() {
 
     var jqxhr = $.getJSON("/station_info/" + station_id, function(data){
         console.log("success", data);
@@ -122,8 +126,8 @@ function displayBikeAvailabilityChart(day){
     });    
 }
 
-// Function to create the bike availability chart
-function displayStationeAvailabilityChart(day){
+// Function to create the parking space availability chart
+function displayStationAvailabilityChart(day){
     var day = day;
     var jqxhr = $.getJSON("/hourly_availability/available_stands/" + station_id + "/" + day, function(data){
         var availabilityData = data;

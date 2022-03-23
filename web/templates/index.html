@@ -3,9 +3,32 @@
     <!-- Load in the CSS -->
     <link href="{{ url_for('static', filename='mapStyle.css') }}" rel="stylesheet">
     
-    <!-- Container for the map -->
+    <!-- Container for the map and for the side bar-->
     <div id="container">
-        <div id="map"></div>
+
+        <!-- Creates sidebar -->
+        <div id="sideBar">
+            <form action="">
+                <input type="text" id="departing" name="departingStation" placeholder="Enter a starting location..." value =""><br>
+                <input type="text" id="destination" name="destinationStation" placeholder="Enter your destination..." value=""><br>
+                <input type="time" name="eta" value="">
+                <input type="button" value="Plan Your Journey" onclick="showPopup()">
+            </form>           
+        </div>
+
+        <!-- container for the departure popups -->
+        <div class="popup" id="departurepopup">
+            <div class="overlay"></div>
+            <div class="content">
+                <div class="close-btn" onclick="hidePopup()">&times;</div>
+                <h1 id="popupHeader">Choose a station for departure</h1>
+                <div id="departureText"></div>
+            </div>
+        </div>
+
+        <!-- container for the map -->
+        <div id="map"></div>    
+        
     </div>
 
     <!-- Adding the clustering library to the page -->
@@ -15,5 +38,5 @@
     <script src="{{ url_for('static', filename='mapCode.js') }}"></script>
 
     <!-- Connect to the google maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&callback=initMap"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&libraries=places&callback=initMap"></script>
 {% endblock %}
