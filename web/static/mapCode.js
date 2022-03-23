@@ -266,6 +266,7 @@ async function showPopup() {
         // })
     
         container.innerHTML = "";
+        var predictions = [5, 2, 3, 6, 7];
         // Create checkboxes for the popups
         for (i=0; i<5; i++) {
     
@@ -282,7 +283,9 @@ async function showPopup() {
             var departureLabel = document.createElement("label");
             departureLabel.className = "btn btn-outline-primary";
             departureLabel.for = startToStationsArray[i][0];
-            departureLabel.innerHTML = startToStationsArray[i][0];
+            
+            // Create availability
+            departureLabel.innerHTML = startToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
     
             // Create a div using Bootstrap
             var departureHolder = document.createElement("div");
@@ -348,6 +351,8 @@ function updatePopup(){
             return a[1][0] - b[1][0];
         });
 
+        var predictions = [5, 2, 3, 6, 7];
+
         // Create checkboxes for the popups
         for (i=0; i<5; i++) {
 
@@ -364,7 +369,7 @@ function updatePopup(){
             var departureLabel = document.createElement("label");
             departureLabel.className = "btn btn-outline-primary";
             departureLabel.for = endToStationsArray[i][0];
-            departureLabel.innerHTML = endToStationsArray[i][0];
+            departureLabel.innerHTML = endToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
 
             // Create a div using Bootstrap
             var departureHolder = document.createElement("div");

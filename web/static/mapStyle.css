@@ -104,3 +104,7 @@ input {
 .popup .input {
     min-width: 400px;
 }
+
+.btn-outline-primary {
+    width: 20rem;
+}
