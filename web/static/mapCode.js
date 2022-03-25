@@ -36,7 +36,7 @@ function initMap() {
         // Puts new map into HTML div
         map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-        var image = "/static/bike-icon.jpg";
+        var image = "/static/bike-icon.png";
         // Creates a marker on the map for each station
         const markers = station_info.map((position, i) => {
 
