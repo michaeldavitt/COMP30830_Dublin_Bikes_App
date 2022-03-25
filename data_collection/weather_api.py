@@ -1,6 +1,3 @@
-# to get the instantaneous weather data from the api
-# latitude and longitude have been given as a location in dublin
-# can be changed later on when required to do so
 import json
 import requests
 import pandas as pd

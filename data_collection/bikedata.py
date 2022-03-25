@@ -20,7 +20,6 @@ STATIONS = 'https://api.jcdecaux.com/vls/v1/stations'
 # Create variables to store credentials
 URL = "database-1.ctesjcult8dm.eu-west-1.rds.amazonaws.com"
 PORT = "3306"
-# Using sys here in case dbikes database has not been created yet
 DB = "dbikes"
 USER = "admin"
 
