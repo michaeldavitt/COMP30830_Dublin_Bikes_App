@@ -10,6 +10,15 @@ var userChoices = [];
 // Function to display a map of Dublin on the homepage
 function initMap() { 
     var currentlyOpenPopup;
+    var myStyles =[
+        {
+            featureType: "poi",
+            elementType: "labels",
+            stylers: [
+                  { visibility: "off" }
+            ]
+        }
+    ];
 
     // Gets static station information to display on the map
     var jqxhr = $.getJSON("/station_info", function(data){
@@ -21,12 +30,13 @@ function initMap() {
         let mapOptions = {
             center: dublin, 
             zoom: 14,
+            styles: myStyles,
         }
 
         // Puts new map into HTML div
         map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
-        var image = "https://icons.iconarchive.com/icons/icons8/windows-8/32/Transport-Bicycle-icon.png";
+        var image = "/static/bike-icon.jpg";
         // Creates a marker on the map for each station
         const markers = station_info.map((position, i) => {
 
