@@ -193,23 +193,10 @@ function updateInfoWindow(station_id) {
         console.log("error in the updateInfoWindow function");
     })
 }
-
+var panel = document.getElementById("sideBar");
+panel.style.display = "none";
 // Function to display the side bar where the user will input their start/end location
 function getPanel(){
-
-    // var currentPage = document.getElementById("planYourJourney").href;
-    // console.log(currentPage);
-    // // console.log(window.location.href);
-    // if(currentPage == window.location.href){
-    //     currentPage="#";
-    // }else{
-    //     currentPage=window.location.href;
-    // }
-    // console.log(currentPage);
-
-    var panel = document.getElementById("sideBar");
-    panel.style.display = "none";
-
     // Opens the side bar
     if(panel.style.display === "none") {
         panel.style.display = "block";
@@ -237,18 +224,6 @@ async function showPopup() {
     var container = document.getElementById("departureText");
     container.innerHTML = "";
 
-    // Add a progress bar
-    // progressBar = document.createElement("progress");
-    // progressBar.id = "progressBar";
-    // progressBar.max = station_info.length;
-    // progressBar.value = 0;
-    // progressBarLabel = document.createElement("label");
-    // progressBarLabel.for = "progressBar";
-    // progressBarLabel.innerHTML = "Obtaining optimal stations:";
-    // container.appendChild(progressBarLabel);
-    // container.appendChild(document.createElement("br"));
-    // container.appendChild(progressBar);
-
     // Gets rid of the side bar
     getPanel();
 
@@ -258,24 +233,6 @@ async function showPopup() {
 
     // Display pop up
     document.getElementById("departurepopup").classList.toggle("active");
-
-    // Make a distance request for each station
-    // for (i=0; i<station_info.length; i++) {
-    //     station_lat = station_info[i].position_lat;
-    //     station_long = station_info[i].position_lng;
-
-    //     // Get distance
-    //     stationStartDistance = getDistances([station_lat, station_long], userStartPlace);
-    //     stationEndDistance = getDistances([station_lat, station_long], userEndPlace);
-    //     console.log(stationStartDistance);
-    //     console.log(stationEndDistance);
-    //     startToStationsArray.push([station_info[i].address, stationStartDistance]);
-    //     endToStationsArray.push([station_info[i].address, stationEndDistance]);
-
-    //     await sleep(100);
-
-    //     progressBar.value = i+1;
-    // }
 
     var jqxhr = $.getJSON("/distances/" + userStartPlace[0] + "/" + userStartPlace[1], function(data){
 
