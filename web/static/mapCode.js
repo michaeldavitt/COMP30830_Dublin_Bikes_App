@@ -196,15 +196,23 @@ function updateInfoWindow(station_id) {
 
 // Function to display the side bar where the user will input their start/end location
 function getPanel(){
+    var currentPage = document.getElementById("planYourJourney").getAttribute('href');
+    console.log(currentPage);
+    // if(currentPage == window.location.href){
+        
+    // }
     var panel = document.getElementById("sideBar");
+    panel.style.display = "none";
 
     // Opens the side bar
     if(panel.style.display === "none") {
+        console.log("IF");
         panel.style.display = "block";
     }
 
     // Closes the side bar
     else {
+        console.log("ELSE");
         panel.style.display = "none";
     }
 }
