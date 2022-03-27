@@ -4,6 +4,8 @@ var station_info;
 // Variable to store the map
 let map;
 
+var markerList = [];
+
 // Variable where the user choices are stored
 var userChoices = [];
 
@@ -81,12 +83,11 @@ function initMap() {
 
                 // Sets the currently opened popup to be the recently opened popup
                 currentlyOpenPopup = marker;
-            });
-            
+            }); 
+            markerList.push(marker);
             return marker;
         });
-            
-
+        console.log(markerList);
         // Cluster markers together
         const markerCluster = new markerClusterer.MarkerClusterer({ map, markers }); 
         
@@ -378,7 +379,11 @@ function getRoute(){
 
     // Initialise services
     var directionsService = new google.maps.DirectionsService();
-    var directionsRenderer = new google.maps.DirectionsRenderer();
+    var directionsRenderer = new google.maps.DirectionsRenderer({
+        polylineOptions: {
+          strokeColor: "red"
+        }
+      });
     directionsRenderer.setMap(map);
 
     // Get the user's desired endpoint
@@ -405,4 +410,19 @@ function getRoute(){
         directionsRenderer.setDirections(result);
         }
     });
+}
+
+function toggleDisplayMarkers(){
+    displayMarkers = document.getElementById("displayMarkers");
+    if(displayMarkers.innerHTML == "Hide Stations"){
+        displayMarkers.innerHTML = "Show Stations";
+        for (marker in markerList){
+            markerList[marker].setVisible(false);
+        }
+    }else{
+        displayMarkers.innerHTML = "Hide Stations";
+        for (marker in markerList){
+            markerList[marker].setVisible(true);
+        }
+    }    
 }
