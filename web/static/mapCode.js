@@ -4,7 +4,12 @@ var station_info;
 // Variable to store the map
 let map;
 
+// List of marker objects
 var markerList = [];
+
+// 
+var markerCluster;
+var markers;
 
 // Variable where the user choices are stored
 var userChoices = [];
@@ -40,7 +45,7 @@ function initMap() {
 
         var image = "/static/bike-icon.png";
         // Creates a marker on the map for each station
-        const markers = station_info.map((position, i) => {
+        markers = station_info.map((position, i) => {
 
             // Creates new marker on map with position = station coordinates
             const marker = new google.maps.Marker({
@@ -87,9 +92,9 @@ function initMap() {
             markerList.push(marker);
             return marker;
         });
-        console.log(markerList);
+        console.log(markers);
         // Cluster markers together
-        const markerCluster = new markerClusterer.MarkerClusterer({ map, markers }); 
+        markerCluster = new markerClusterer.MarkerClusterer({ map, markers }); 
         
         // Launches the autocomplete function for the input boxes
         initAutocomplete();
@@ -419,10 +424,13 @@ function toggleDisplayMarkers(){
         for (marker in markerList){
             markerList[marker].setVisible(false);
         }
+        markerCluster.clearMarkers();
     }else{
         displayMarkers.innerHTML = "Hide Stations";
         for (marker in markerList){
             markerList[marker].setVisible(true);
         }
+        // Cluster markers together
+        markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
     }    
 }
