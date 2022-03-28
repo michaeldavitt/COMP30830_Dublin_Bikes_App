@@ -4,6 +4,13 @@ var station_info;
 // Variable to store the map
 let map;
 
+// List of marker objects
+var markerList = [];
+
+// 
+var markerCluster;
+var markers;
+
 // Variable where the user choices are stored
 var userChoices = [];
 
@@ -38,7 +45,7 @@ function initMap() {
 
         var image = "/static/bike-icon.png";
         // Creates a marker on the map for each station
-        const markers = station_info.map((position, i) => {
+        markers = station_info.map((position, i) => {
 
             // Creates new marker on map with position = station coordinates
             const marker = new google.maps.Marker({
@@ -81,14 +88,13 @@ function initMap() {
 
                 // Sets the currently opened popup to be the recently opened popup
                 currentlyOpenPopup = marker;
-            });
-            
+            }); 
+            markerList.push(marker);
             return marker;
         });
-            
-
+        console.log(markers);
         // Cluster markers together
-        const markerCluster = new markerClusterer.MarkerClusterer({ map, markers }); 
+        markerCluster = new markerClusterer.MarkerClusterer({ map, markers }); 
         
         // Launches the autocomplete function for the input boxes
         initAutocomplete();
@@ -193,11 +199,10 @@ function updateInfoWindow(station_id) {
         console.log("error in the updateInfoWindow function");
     })
 }
-
+var panel = document.getElementById("sideBar");
+panel.style.display = "none";
 // Function to display the side bar where the user will input their start/end location
 function getPanel(){
-    var panel = document.getElementById("sideBar");
-
     // Opens the side bar
     if(panel.style.display === "none") {
         panel.style.display = "block";
@@ -225,18 +230,6 @@ async function showPopup() {
     var container = document.getElementById("departureText");
     container.innerHTML = "";
 
-    // Add a progress bar
-    // progressBar = document.createElement("progress");
-    // progressBar.id = "progressBar";
-    // progressBar.max = station_info.length;
-    // progressBar.value = 0;
-    // progressBarLabel = document.createElement("label");
-    // progressBarLabel.for = "progressBar";
-    // progressBarLabel.innerHTML = "Obtaining optimal stations:";
-    // container.appendChild(progressBarLabel);
-    // container.appendChild(document.createElement("br"));
-    // container.appendChild(progressBar);
-
     // Gets rid of the side bar
     getPanel();
 
@@ -246,24 +239,6 @@ async function showPopup() {
 
     // Display pop up
     document.getElementById("departurepopup").classList.toggle("active");
-
-    // Make a distance request for each station
-    // for (i=0; i<station_info.length; i++) {
-    //     station_lat = station_info[i].position_lat;
-    //     station_long = station_info[i].position_lng;
-
-    //     // Get distance
-    //     stationStartDistance = getDistances([station_lat, station_long], userStartPlace);
-    //     stationEndDistance = getDistances([station_lat, station_long], userEndPlace);
-    //     console.log(stationStartDistance);
-    //     console.log(stationEndDistance);
-    //     startToStationsArray.push([station_info[i].address, stationStartDistance]);
-    //     endToStationsArray.push([station_info[i].address, stationEndDistance]);
-
-    //     await sleep(100);
-
-    //     progressBar.value = i+1;
-    // }
 
     var jqxhr = $.getJSON("/distances/" + userStartPlace[0] + "/" + userStartPlace[1], function(data){
 
@@ -409,7 +384,11 @@ function getRoute(){
 
     // Initialise services
     var directionsService = new google.maps.DirectionsService();
-    var directionsRenderer = new google.maps.DirectionsRenderer();
+    var directionsRenderer = new google.maps.DirectionsRenderer({
+        polylineOptions: {
+          strokeColor: "red"
+        }
+      });
     directionsRenderer.setMap(map);
 
     // Get the user's desired endpoint
@@ -436,4 +415,22 @@ function getRoute(){
         directionsRenderer.setDirections(result);
         }
     });
+}
+
+function toggleDisplayMarkers(){
+    displayMarkers = document.getElementById("displayMarkers");
+    if(displayMarkers.innerHTML == "Hide Stations"){
+        displayMarkers.innerHTML = "Show Stations";
+        for (marker in markerList){
+            markerList[marker].setVisible(false);
+        }
+        markerCluster.clearMarkers();
+    }else{
+        displayMarkers.innerHTML = "Hide Stations";
+        for (marker in markerList){
+            markerList[marker].setVisible(true);
+        }
+        // Cluster markers together
+        markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
+    }    
 }

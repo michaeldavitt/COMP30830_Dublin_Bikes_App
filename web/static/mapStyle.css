@@ -108,3 +108,9 @@ input {
 .btn-outline-primary {
     width: 20rem;
 }
+
+#mapButtons{
+    position:absolute;
+    margin: 0 0 60% 200px; 
+    z-index: 5;
+}
