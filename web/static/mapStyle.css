@@ -111,8 +111,12 @@ input {
 
 #mapButtons{
     position:absolute;
-    margin:0 0 90vh 0; 
+    margin:0 0 90vh 120vh; 
     z-index: 5;
+}
+
+#mapButtons button {
+    border-radius: 10px;
 }
 
 select, #dateTimeLabel {
