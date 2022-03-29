@@ -171,7 +171,8 @@ def getWeatherInfo(userDay):
     weather_data = json.loads(r.text)
     weather_data_daily = weather_data.get("daily")
     today = calendar.day_name[date.today().weekday()]
-    weekDayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    weekDayList = ["Sunday", "Monday", "Tuesday",
+                   "Wednesday", "Thursday", "Friday", "Saturday"]
     todayIndex = weekDayList.index(today)
     userDayIndex = weekDayList.index(userDay)
     if todayIndex > userDayIndex:
@@ -180,22 +181,24 @@ def getWeatherInfo(userDay):
         weatherDataIndex = userDayIndex - todayIndex
 
     userDayData = weather_data_daily[weatherDataIndex]
-    vals = {"temperature" : [int(userDayData.get("temp").get("day"))] , "pressure": [int(userDayData.get("pressure"))], "humidity": [int(userDayData.get("humidity"))],"clouds": [int(userDayData.get("clouds"))],"visibility": [int(weather_data.get("current").get("visibility"))],"main": [userDayData.get("weather")[0].get("main")]}
+    vals = {"temperature": [int(userDayData.get("temp").get("day"))], "pressure": [int(userDayData.get("pressure"))], "humidity": [int(userDayData.get("humidity"))], "clouds": [
+        int(userDayData.get("clouds"))], "visibility": [int(weather_data.get("current").get("visibility"))], "main": [userDayData.get("weather")[0].get("main")]}
     return vals
-
 
 
 @app.route("/prediction/<bikeOrSpace>/<userDay>/<userHour>/<station1>/<station2>/<station3>/<station4>/<station5>")
 def predictions(bikeOrSpace, userDay, userHour, station1, station2, station3, station4, station5):
     """Function that outputs predictions for bike availability and space availability for a chosen time of the day"""
-    stationIds = [station1, station2, station3, station4 ,station5]
+    stationIds = [station1, station2, station3, station4, station5]
     predictions = []
     inputs = getWeatherInfo(userDay)
     inputs["temperature"] = [inputs["temperature"][0] - 273.15]
     inputs["hour"] = [userHour]
     inputs["day_of_week"] = [userDay]
-    weekDayList = ["Friday", "Monday", "Saturday", "Sunday", "Thursday", "Tuesday", "Wednesday"]
-    weatherDescriptionList = ["Clear", "Clouds", "Drizzle", "Fog", "Haze", "Mist", "Rain", "Snow"]
+    weekDayList = ["Friday", "Monday", "Saturday",
+                   "Sunday", "Thursday", "Tuesday", "Wednesday"]
+    weatherDescriptionList = ["Clear", "Clouds",
+                              "Drizzle", "Fog", "Haze", "Mist", "Rain", "Snow"]
 
     for description in weatherDescriptionList:
         if description == inputs["main"]:
@@ -207,15 +210,13 @@ def predictions(bikeOrSpace, userDay, userHour, station1, station2, station3, st
         if hour == userHour:
             inputs["hour_" + str(hour)] = 1
         else:
-            inputs["hour_" + str(hour)] = 0 
+            inputs["hour_" + str(hour)] = 0
 
-    
     for day in weekDayList:
         if day == userDay:
             inputs["day_of_week_" + day] = 1
         else:
             inputs["day_of_week_" + day] = 0
-
 
     df = pd.DataFrame(inputs)
     dummy_fields = ["main", "hour", "day_of_week"]
@@ -224,18 +225,14 @@ def predictions(bikeOrSpace, userDay, userHour, station1, station2, station3, st
     print(df.columns)
 
     for i in range(len(stationIds)):
-        fileName = "machine_learning/station_" + stationIds[i] + "_" + bikeOrSpace + "_model.pkl"
+        fileName = "machine_learning/station_" + \
+            stationIds[i] + "_" + bikeOrSpace + "_model.pkl"
         with open(fileName, "rb") as handle:
             model = pickle.load(handle)
             predictions.append(round(model.predict(df)[0]))
             print(predictions)
-    
+
     return jsonify(predictions)
-
-
-
-
-
 
 
 if __name__ == "__main__":

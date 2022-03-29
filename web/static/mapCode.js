@@ -271,6 +271,7 @@ async function showPopup() {
         userHour = document.getElementById("hourSelect").value;
         var jqxhr = $.getJSON("prediction/bike/" + userDay + "/" + userHour + "/" + startToStationsArray[1][1][2] + "/" +  startToStationsArray[2][1][2] + "/" + startToStationsArray[3][1][2] + "/" + startToStationsArray[4][1][2] + "/" + startToStationsArray[5][1][2], function(data){
             var predictions = data;
+            console.log(predictions);
             
             // Create checkboxes for the popups
             for (i=0; i<5; i++) {
@@ -291,7 +292,6 @@ async function showPopup() {
                 
                 // Create availability
                 stationID = startToStationsArray[i][1][2];
-                predictedBikes = getPrediction(stationID, "bike");
                 departureLabel.innerHTML = startToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
         
                 // Create a div using Bootstrap
@@ -339,13 +339,16 @@ function updatePopup(){
     container = document.getElementById("departureText");
 
     var jqxhr = $.getJSON("/distances/" + userEndPlace[0] + "/" + userEndPlace[1], function(data){
+
         endToStationsArray = Object.entries(data);
 
         endToStationsArray.sort((a, b) => {
             return a[1][0] - b[1][0];
         });
 
-        var jqxhr = $.getJSON("prediction/stations/" + userDay + "/" + userHour + "/" + endToStationsArray[1][1][2] + "/" +  endToStationsArray[2][1][2] + "/" + endToStationsArray[3][1][2] + "/" + endToStationsArray[4][1][2] + "/" + endToStationsArray[5][1][2], function(data){
+        userDay = document.getElementById("daySelect").value;
+        userHour = document.getElementById("hourSelect").value;
+        var jqxhr = $.getJSON("prediction/station/" + userDay + "/" + userHour + "/" + endToStationsArray[1][1][2] + "/" +  endToStationsArray[2][1][2] + "/" + endToStationsArray[3][1][2] + "/" + endToStationsArray[4][1][2] + "/" + endToStationsArray[5][1][2], function(data){
             var predictions = data;
             
             // Create checkboxes for the popups
