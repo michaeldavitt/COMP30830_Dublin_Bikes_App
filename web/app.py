@@ -3,6 +3,10 @@ from itsdangerous import json
 from sqlalchemy import create_engine
 import pandas as pd
 from haversine import haversine
+import pickle
+import requests
+from datetime import date
+import calendar
 
 app = Flask(__name__)
 
@@ -113,14 +117,16 @@ def get_distance(location_lat, location_lng):
 
     # Get the coordinates and name of each station
     rows = engine.execute(
-        "SELECT position_lat, position_lng, address FROM dbikes.station").fetchall()
+        "SELECT position_lat, position_lng, address, number FROM dbikes.station").fetchall()
     stations = [dict(row.items()) for row in rows]
 
     # Loop through each station and store the distance from the user location
     distance_station_to_location = {}
     for station in stations:
         distance_station_to_location[station["address"]] = [haversine((float(station["position_lat"]), float(
-            station["position_lng"])), (float(location_lat), float(location_lng))), [station["position_lat"], station["position_lng"]]]
+            station["position_lng"])), (float(location_lat),
+                                        float(location_lng))), [station["position_lat"], station["position_lng"]],
+            station["number"]]
 
     return jsonify(distance_station_to_location)
 
@@ -151,6 +157,85 @@ def stations():
 def station(station_id):
     """Function that outputs information for a specific station"""
     return render_template("specific_station.html", station_id=station_id)
+
+
+@app.route("/testWeather")
+def getWeatherInfo(userDay):
+    weather_api = 'https://api.openweathermap.org/data/2.5/onecall?lat=53.3065282883422&lon=-6.225434257607019&exclude={part}&appid='
+
+    with open('weather_key.txt') as f:
+        weather_key = ''.join(f.readlines())
+        weather_key = str(weather_key).split()[0]
+
+    r = (requests.get(weather_api + weather_key))
+    weather_data = json.loads(r.text)
+    weather_data_daily = weather_data.get("daily")
+    today = calendar.day_name[date.today().weekday()]
+    weekDayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    todayIndex = weekDayList.index(today)
+    userDayIndex = weekDayList.index(userDay)
+    if todayIndex > userDayIndex:
+        weatherDataIndex = (userDayIndex + 7) - todayIndex
+    else:
+        weatherDataIndex = userDayIndex - todayIndex
+
+    userDayData = weather_data_daily[weatherDataIndex]
+    vals = {"temperature" : [int(userDayData.get("temp").get("day"))] , "pressure": [int(userDayData.get("pressure"))], "humidity": [int(userDayData.get("humidity"))],"clouds": [int(userDayData.get("clouds"))],"visibility": [int(weather_data.get("current").get("visibility"))],"main": [userDayData.get("weather")[0].get("main")]}
+    return vals
+
+
+
+@app.route("/prediction/<bikeOrSpace>/<userDay>/<userHour>/<station1>/<station2>/<station3>/<station4>/<station5>")
+def predictions(bikeOrSpace, userDay, userHour, station1, station2, station3, station4, station5):
+    """Function that outputs predictions for bike availability and space availability for a chosen time of the day"""
+    stationIds = [station1, station2, station3, station4 ,station5]
+    predictions = []
+    inputs = getWeatherInfo(userDay)
+    inputs["temperature"] = [inputs["temperature"][0] - 273.15]
+    inputs["hour"] = [userHour]
+    inputs["day_of_week"] = [userDay]
+    weekDayList = ["Friday", "Monday", "Saturday", "Sunday", "Thursday", "Tuesday", "Wednesday"]
+    weatherDescriptionList = ["Clear", "Clouds", "Drizzle", "Fog", "Haze", "Mist", "Rain", "Snow"]
+
+    for description in weatherDescriptionList:
+        if description == inputs["main"]:
+            inputs["main_" + description] = 1
+        else:
+            inputs["main_" + description] = 0
+
+    for hour in range(24):
+        if hour == userHour:
+            inputs["hour_" + str(hour)] = 1
+        else:
+            inputs["hour_" + str(hour)] = 0 
+
+    
+    for day in weekDayList:
+        if day == userDay:
+            inputs["day_of_week_" + day] = 1
+        else:
+            inputs["day_of_week_" + day] = 0
+
+
+    df = pd.DataFrame(inputs)
+    dummy_fields = ["main", "hour", "day_of_week"]
+    df = df.drop(dummy_fields, axis=1)
+
+    print(df.columns)
+
+    for i in range(len(stationIds)):
+        fileName = "machine_learning/station_" + stationIds[i] + "_" + bikeOrSpace + "_model.pkl"
+        with open(fileName, "rb") as handle:
+            model = pickle.load(handle)
+            predictions.append(round(model.predict(df)[0]))
+            print(predictions)
+    
+    return jsonify(predictions)
+
+
+
+
+
 
 
 if __name__ == "__main__":
