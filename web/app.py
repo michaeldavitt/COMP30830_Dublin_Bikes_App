@@ -5,6 +5,8 @@ import pandas as pd
 from haversine import haversine
 import pickle
 import requests
+from datetime import date
+import calendar
 
 app = Flask(__name__)
 
@@ -155,7 +157,6 @@ def station(station_id):
     return render_template("specific_station.html", station_id=station_id)
 
 
-
 @app.route("/testWeather")
 def getWeatherInfo():
     weather_api = 'https://api.openweathermap.org/data/2.5/onecall?lat=53.3065282883422&lon=-6.225434257607019&exclude={part}&appid='
@@ -165,7 +166,22 @@ def getWeatherInfo():
         weather_key = str(weather_key).split()[0]
 
     r = (requests.get(weather_api + weather_key))
-    weather_data = json.loads(r.text).get("daily")
+    weather_data = json.loads(r.text)
+    weather_data_daily = weather_data.get("daily")
+    today = calendar.day_name[date.today().weekday()]
+    weekDayList = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    userDay = "Wednesday"
+    todayIndex = weekDayList.index(today)
+    userDayIndex = weekDayList.index(userDay)
+    if todayIndex > userDayIndex:
+        weatherDataIndex = (userDayIndex + 7) - todayIndex
+    else:
+        weatherDataIndex = userDayIndex - todayIndex
+
+    userDayData = weather_data_daily[weatherDataIndex]
+    vals = [int(userDayData.get("temp").get("day")) ,int(userDayData.get("pressure")), int(userDayData.get("humidity")), int(userDayData.get("clouds")), int(weather_data.get("current").get("visibility")), userDayData.get("weather")[0].get("main")]
+    return vals
+
 
 
 @app.route("/prediction/<bikeOrSpace>/<userDay>/<userHour>/<station1>/<station2>/<station3>/<station4>/<station5>")
