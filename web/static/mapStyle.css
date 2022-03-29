@@ -114,3 +114,13 @@ input {
     margin: 0 0 60% 200px; 
     z-index: 5;
 }
+
+select, #dateTimeLabel {
+    margin-left: 20px;
+}
+
+#errorMessage {
+    color: red;
+    display: none;
+    margin-left: 20px;
+}
