@@ -113,14 +113,16 @@ def get_distance(location_lat, location_lng):
 
     # Get the coordinates and name of each station
     rows = engine.execute(
-        "SELECT position_lat, position_lng, address FROM dbikes.station").fetchall()
+        "SELECT position_lat, position_lng, address, number FROM dbikes.station").fetchall()
     stations = [dict(row.items()) for row in rows]
 
     # Loop through each station and store the distance from the user location
     distance_station_to_location = {}
     for station in stations:
         distance_station_to_location[station["address"]] = [haversine((float(station["position_lat"]), float(
-            station["position_lng"])), (float(location_lat), float(location_lng))), [station["position_lat"], station["position_lng"]]]
+            station["position_lng"])), (float(location_lat),
+                                        float(location_lng))), [station["position_lat"], station["position_lng"]],
+            station["number"]]
 
     return jsonify(distance_station_to_location)
 
