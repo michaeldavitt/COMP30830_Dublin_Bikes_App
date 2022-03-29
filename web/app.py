@@ -3,6 +3,8 @@ from itsdangerous import json
 from sqlalchemy import create_engine
 import pandas as pd
 from haversine import haversine
+import pickle
+import requests
 
 app = Flask(__name__)
 
@@ -151,6 +153,35 @@ def stations():
 def station(station_id):
     """Function that outputs information for a specific station"""
     return render_template("specific_station.html", station_id=station_id)
+
+
+
+@app.route("/testWeather")
+def getWeatherInfo():
+    weather_api = 'https://api.openweathermap.org/data/2.5/onecall?lat=53.3065282883422&lon=-6.225434257607019&exclude={part}&appid='
+
+    with open('weather_key.txt') as f:
+        weather_key = ''.join(f.readlines())
+        weather_key = str(weather_key).split()[0]
+
+    r = (requests.get(weather_api + weather_key))
+    weather_data = json.loads(r.text).get("daily")
+
+
+@app.route("/prediction/<bikeOrSpace>/<userDay>/<userHour>/<station1>/<station2>/<station3>/<station4>/<station5>")
+def predictions(bikeOrSpace, userDay, userHour, station1, station2, station3, station4, station5):
+    """Function that outputs predictions for bike availability and space availability for a chosen time of the day"""
+    stationIds = [station1, station2, station3, station4 ,station5]
+    predictions = []
+    for i in range(len(stationIds)):
+        fileName = "station_" + stationIds[i] +"_" + bikeOrSpace + "_model.pkl"
+        with open(fileName, "rb") as handle:
+            model = pickle.load(handle)
+
+
+
+
+
 
 
 if __name__ == "__main__":
