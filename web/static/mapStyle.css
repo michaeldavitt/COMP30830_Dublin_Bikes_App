@@ -118,3 +118,9 @@ input {
 select, #dateTimeLabel {
     margin-left: 20px;
 }
+
+#errorMessage {
+    color: red;
+    display: none;
+    margin-left: 20px;
+}

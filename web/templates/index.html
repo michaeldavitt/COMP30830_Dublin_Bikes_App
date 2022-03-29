@@ -9,12 +9,13 @@
         <!-- Creates sidebar -->
         <div id="sideBar">
             <form action="">
-                <input type="text" id="departing" name="departingStation" placeholder="Enter a starting location..." value =""><br>
-                <input type="text" id="destination" name="destinationStation" placeholder="Enter your destination..." value=""><br>
+                <p id="errorMessage">Error: Invalid input</p>
+                <input type="text" id="departing" name="departingStation" placeholder="Enter a starting location..." value = ""><br>
+                <input type="text" id="destination" name="destinationStation" placeholder="Enter your destination..." value = ""><br>
                 <p id="dateTimeLabel">Please input the day and hour you wish to travel: </p>
                 <select id="daySelect"></select>
                 <select id="hourSelect"></select>
-                <input type="button" value="Plan Your Journey" onclick="showPopup()">
+                <input type="button" value="Plan Your Journey" onclick="userInputValidation()">
             </form>           
         </div>
 

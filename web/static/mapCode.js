@@ -6,8 +6,6 @@ let map;
 
 // List of marker objects
 var markerList = [];
-
-// 
 var markerCluster;
 var markers;
 
@@ -109,8 +107,8 @@ function initMap() {
 // Reference: https://www.youtube.com/watch?v=c3MjU9E9buQ
 // let autocomplete;
 // Store variables for the user input
-var userStartPlace;
-var userEndPlace;
+var userStartPlace = "invalid";
+var userEndPlace = "invalid";
 
 function initAutocomplete() {
     // Set up the options for the new Autocomplete
@@ -151,6 +149,8 @@ function initAutocomplete() {
             // User entered the name of a Place that was not suggested and
             // pressed the Enter key, or the Place Details request failed.
             window.alert("No details available for input: '" + place.name + "'");
+            userStartPlace = "invalid";
+            console.log(userStartPlace);
             return;
         } else {
             userStartPlace = [departingAutocomplete.getPlace().geometry.location.lat(),
@@ -166,12 +166,27 @@ function initAutocomplete() {
             // User entered the name of a Place that was not suggested and
             // pressed the Enter key, or the Place Details request failed.
             window.alert("No details available for input: '" + place.name + "'");
+            userEndPlace = "invalid";
+            console.log(userEndPlace);
             return;
         } else {
             userEndPlace = [arrivingAutocomplete.getPlace().geometry.location.lat(),
             arrivingAutocomplete.getPlace().geometry.location.lng()];
         }
     })
+}
+
+function userInputValidation(){
+    // Check user inputs and display popup if they are valid
+    // If the user inputs are invalid, display an error message
+    errorMessage = document.getElementById("errorMessage");
+    if (userStartPlace == "invalid" || userEndPlace == "invalid"){
+        errorMessage.style.display = "block";
+    } else {
+        errorMessage.style.display = "none";
+        showPopup();
+    }
+
 }
 
 
@@ -457,7 +472,6 @@ function populateHourSelectOptions(){
         var newOption = document.createElement("option");
         newOption.innerHTML = hour + ":00";
         newOption.value = hour;
-        console.log(newOption.value);
         hourSelect.appendChild(newOption);
     }
 }
