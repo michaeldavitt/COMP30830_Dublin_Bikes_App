@@ -266,62 +266,56 @@ async function showPopup() {
         });
     
         container.innerHTML = "";
-        var predictions = [5, 2, 3, 6, 7];
-        // Create checkboxes for the popups
-        for (i=0; i<5; i++) {
-    
-            // Create input element using Bootstrap
-            var radioboxDeparture = document.createElement('input');
-            radioboxDeparture.type = "radio";
-            radioboxDeparture.className = "btn-check";
-            radioboxDeparture.name = "startLocationSelection";
-            radioboxDeparture.autocomplete = "off";
-            radioboxDeparture.id = startToStationsArray[i][0];
-            radioboxDeparture.value = startToStationsArray[i][1][1];
-    
-            // Create label using Bootstrap
-            var departureLabel = document.createElement("label");
-            departureLabel.className = "btn btn-outline-primary";
-            departureLabel.for = startToStationsArray[i][0];
+
+        userDay = document.getElementById("daySelect").value;
+        userHour = document.getElementById("hourSelect").value;
+        var jqxhr = $.getJSON("prediction/bike/" + userDay + "/" + userHour + "/" + startToStationsArray[1][1][2] + "/" +  startToStationsArray[2][1][2] + "/" + startToStationsArray[3][1][2] + "/" + startToStationsArray[4][1][2] + "/" + startToStationsArray[5][1][2], function(data){
+            var predictions = data;
             
-            // Create availability
-            departureLabel.innerHTML = startToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
-    
-            // Create a div using Bootstrap
-            var departureHolder = document.createElement("div");
-            departureHolder.className = "form-check";
-    
-            // Add the new elements to the popup
-            departureLabel.appendChild(radioboxDeparture);
-            departureHolder.appendChild(departureLabel);
-            container.appendChild(departureHolder);
-        }
-    
-        // Create the confirm button
-        confirmButton = document.createElement("button");
-        confirmButton.id = "popupButton";
-        confirmButton.setAttribute("onclick", "updatePopup();")
-        confirmButton.innerHTML = "Confirm";
-    
-        // Isolate the container and put the confirm button in the container
-        popupContainer = document.getElementById("departurepopup").getElementsByClassName("content")[0];
-        popupContainer.appendChild(confirmButton);
-    });  
+            // Create checkboxes for the popups
+            for (i=0; i<5; i++) {
+        
+                // Create input element using Bootstrap
+                var radioboxDeparture = document.createElement('input');
+                radioboxDeparture.type = "radio";
+                radioboxDeparture.className = "btn-check";
+                radioboxDeparture.name = "startLocationSelection";
+                radioboxDeparture.autocomplete = "off";
+                radioboxDeparture.id = startToStationsArray[i][0];
+                radioboxDeparture.value = startToStationsArray[i][1][1];
+        
+                // Create label using Bootstrap
+                var departureLabel = document.createElement("label");
+                departureLabel.className = "btn btn-outline-primary";
+                departureLabel.for = startToStationsArray[i][0];
+                
+                // Create availability
+                stationID = startToStationsArray[i][1][2];
+                predictedBikes = getPrediction(stationID, "bike");
+                departureLabel.innerHTML = startToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
+        
+                // Create a div using Bootstrap
+                var departureHolder = document.createElement("div");
+                departureHolder.className = "form-check";
+        
+                // Add the new elements to the popup
+                departureLabel.appendChild(radioboxDeparture);
+                departureHolder.appendChild(departureLabel);
+                container.appendChild(departureHolder);
+            }
+        
+            // Create the confirm button
+            confirmButton = document.createElement("button");
+            confirmButton.id = "popupButton";
+            confirmButton.setAttribute("onclick", "updatePopup();")
+            confirmButton.innerHTML = "Confirm";
+        
+            // Isolate the container and put the confirm button in the container
+            popupContainer = document.getElementById("departurepopup").getElementsByClassName("content")[0];
+            popupContainer.appendChild(confirmButton);
+        });  
+    });
 }
-
-// function getDistances(station_coordinates, location_coordinates) {
-//     var distanceData;
-//     var jqxhr = $.getJSON("/distances/" + station_coordinates[0] + 
-//     "/" + station_coordinates[1] + "/" + location_coordinates[0] + "/" + 
-//     location_coordinates[1], function(data){
-//         distanceData = data;
-//     })
-//     .fail(function(){
-//         console.log("error in the getDistance function");
-//     });
-
-//     return distanceData;
-// }
 
 
 // Function to update the popup recommendation data. 
@@ -351,39 +345,41 @@ function updatePopup(){
             return a[1][0] - b[1][0];
         });
 
-        var predictions = [5, 2, 3, 6, 7];
+        var jqxhr = $.getJSON("prediction/stations/" + userDay + "/" + userHour + "/" + endToStationsArray[1][1][2] + "/" +  endToStationsArray[2][1][2] + "/" + endToStationsArray[3][1][2] + "/" + endToStationsArray[4][1][2] + "/" + endToStationsArray[5][1][2], function(data){
+            var predictions = data;
+            
+            // Create checkboxes for the popups
+            for (i=0; i<5; i++) {
 
-        // Create checkboxes for the popups
-        for (i=0; i<5; i++) {
+                // Create input element using Bootstrap
+                var radioboxDeparture = document.createElement('input');
+                radioboxDeparture.type = "radio";
+                radioboxDeparture.className = "btn-check";
+                radioboxDeparture.name = "endLocationSelection";
+                radioboxDeparture.autocomplete = "off";
+                radioboxDeparture.id = endToStationsArray[i][0];
+                radioboxDeparture.value = endToStationsArray[i][1][1];
 
-            // Create input element using Bootstrap
-            var radioboxDeparture = document.createElement('input');
-            radioboxDeparture.type = "radio";
-            radioboxDeparture.className = "btn-check";
-            radioboxDeparture.name = "endLocationSelection";
-            radioboxDeparture.autocomplete = "off";
-            radioboxDeparture.id = endToStationsArray[i][0];
-            radioboxDeparture.value = endToStationsArray[i][1][1];
+                // Create label using Bootstrap
+                var departureLabel = document.createElement("label");
+                departureLabel.className = "btn btn-outline-primary";
+                departureLabel.for = endToStationsArray[i][0];
+                departureLabel.innerHTML = endToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
 
-            // Create label using Bootstrap
-            var departureLabel = document.createElement("label");
-            departureLabel.className = "btn btn-outline-primary";
-            departureLabel.for = endToStationsArray[i][0];
-            departureLabel.innerHTML = endToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
+                // Create a div using Bootstrap
+                var departureHolder = document.createElement("div");
+                departureHolder.className = "form-check";
 
-            // Create a div using Bootstrap
-            var departureHolder = document.createElement("div");
-            departureHolder.className = "form-check";
+                // Add the new elements to the popup
+                departureLabel.appendChild(radioboxDeparture);
+                departureHolder.appendChild(departureLabel);
+                container.appendChild(departureHolder);
 
-            // Add the new elements to the popup
-            departureLabel.appendChild(radioboxDeparture);
-            departureHolder.appendChild(departureLabel);
-            container.appendChild(departureHolder);
-
-            // Change the onclick event for the confirm button to hidePopup function
-            confirmButton = document.getElementById("popupButton");
-            confirmButton.setAttribute("onclick", "getRoute();");
-        }
+                // Change the onclick event for the confirm button to hidePopup function
+                confirmButton = document.getElementById("popupButton");
+                confirmButton.setAttribute("onclick", "getRoute();");
+            }
+        });
     });
 }
 
