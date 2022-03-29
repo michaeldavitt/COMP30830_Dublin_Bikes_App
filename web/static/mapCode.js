@@ -201,6 +201,8 @@ function updateInfoWindow(station_id) {
 }
 var panel = document.getElementById("sideBar");
 panel.style.display = "none";
+
+
 // Function to display the side bar where the user will input their start/end location
 function getPanel(){
     // Opens the side bar
@@ -247,9 +249,6 @@ async function showPopup() {
         startToStationsArray.sort((a, b) => {
             return a[1][0] - b[1][0];
         });
-        // endToStationsArray.sort((a, b) => {
-        //     return a[1] - b[1];
-        // })
     
         container.innerHTML = "";
         var predictions = [5, 2, 3, 6, 7];
@@ -433,4 +432,32 @@ function toggleDisplayMarkers(){
         // Cluster markers together
         markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
     }    
+}
+
+function populateDaySelectOptions(){
+    // Function to add options to the day select option menu
+    var now = new Date();
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    // var today = days[now.getDay()];
+    daySelect = document.getElementById("daySelect");
+    for (i=0; i<4; i++){
+        var newOption = document.createElement("option");
+        newOption.innerHTML = days[now.getDay() + i];
+        newOption.value = days[now.getDay() + i];
+        daySelect.appendChild(newOption);
+    }
+}
+
+function populateHourSelectOptions(){
+    // Function to add options to the hour select option menu
+    var now = new Date();
+    hourNow = now.getHours();
+    hourSelect = document.getElementById("hourSelect");
+    for (hour = hourNow; hour < 24; hour++) {
+        var newOption = document.createElement("option");
+        newOption.innerHTML = hour + ":00";
+        newOption.value = hour;
+        console.log(newOption.value);
+        hourSelect.appendChild(newOption);
+    }
 }

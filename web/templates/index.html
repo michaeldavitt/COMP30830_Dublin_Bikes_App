@@ -11,7 +11,9 @@
             <form action="">
                 <input type="text" id="departing" name="departingStation" placeholder="Enter a starting location..." value =""><br>
                 <input type="text" id="destination" name="destinationStation" placeholder="Enter your destination..." value=""><br>
-                <input type="time" name="eta" value="">
+                <p id="dateTimeLabel">Please input the day and hour you wish to travel: </p>
+                <select id="daySelect"></select>
+                <select id="hourSelect"></select>
                 <input type="button" value="Plan Your Journey" onclick="showPopup()">
             </form>           
         </div>
@@ -27,7 +29,7 @@
         </div>
 
         <!-- container for both buttons displayed over google maps -->
-        <div id="mapButtons" >
+        <div id="mapButtons">
             <button id="planYourJourney" onclick="getPanel()">Plan Your Journey</button>
             <button id="displayMarkers" onclick="toggleDisplayMarkers()">Hide Stations</button>
         </div>
@@ -42,6 +44,8 @@
 
     <!-- JS code to create map and display station information -->
     <script src="{{ url_for('static', filename='mapCode.js') }}"></script>
+    <script>populateDaySelectOptions()</script>
+    <script>populateHourSelectOptions()</script>
 
     <!-- Connect to the google maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&libraries=places&callback=initMap"></script>
