@@ -111,7 +111,7 @@ input {
 
 #mapButtons{
     position:absolute;
-    margin:0 0 90vh 120vh; 
+    margin:0 0 90vh 0vh; 
     z-index: 5;
 }
 
