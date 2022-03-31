@@ -190,6 +190,7 @@ function userInputValidation(){
 }
 
 
+
 // Function which sends station information to the info window popup
 function updateInfoWindow(station_id) {
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){

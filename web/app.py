@@ -72,6 +72,15 @@ def get_specific_station(station_id):
     return jsonify([dict(row.items()) for row in rows])
 
 
+@app.route("/weather_info")
+def get_weather_data():
+    """Function to get the weather information"""
+    engine = get_db()
+    rows = engine.execute(
+        "SELECT temperature, description, icon FROM dbikes.real_time_weather ORDER BY dt ASC LIMIT 1")
+    return jsonify([dict(row.items()) for row in rows])
+
+
 @app.route("/availability/<int:station_id>")
 def get_specific_station_availability(station_id):
     """Function to get realtime availability information for a specific station"""
