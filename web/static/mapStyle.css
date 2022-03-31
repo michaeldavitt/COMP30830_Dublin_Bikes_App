@@ -2,7 +2,7 @@
 #container {
     height: 100vh;
     display: flex;
-    justify-content:center;
+    justify-content: center;
     align-items: center;
 }
 
@@ -11,32 +11,44 @@
     width: 100vw;
 }
 
-html, body {
+html,
+body {
     margin: 0;
     padding: 0;
 }
 
 /* plan your journey side bar style */
 
-#sideBar{
+#sideBar {
     display: none;
+    width: 358px;
+    height: 100vh;
+    background-color: #1F242B;
+}
+
+#sideBar form {
+    margin-top: 25vh;
+}
+
+#sideBar p {
+    color: white;
 }
 
 /* plan your journey popups style */
 /* Reference for the popup style - https://www.youtube.com/watch?v=iE_6pQ3RlZU&ab_channel=Codingflag */
 
-.popup .overlay{
+.popup .overlay {
     position: fixed;
     top: 0px;
     left: 0px;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0, 0, 0, 0.7);
     z-index: 1;
     display: none;
 }
 
-.popup .content{
+.popup .content {
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%) scale(0);
@@ -51,36 +63,33 @@ html, body {
     overflow-y: scroll;
 }
 
-.popup .close-btn{
+.popup .close-btn {
     cursor: pointer;
     position: absolute;
-    right: 20px;
-    top: 20px;
-    width: 30px;
+    right: 6px;
+    top: 8px;
+    width: 25px;
+    height: 25px;
     background: #222;
     color: #fff;
-    font-size: 25px;
+    font-size: 30px;
     font-weight: 600;
-    line-height: 30px;
+    line-height: 18px;
     text-align: center;
-    border-radius: 50%;
+    border-radius: 60%;
 }
 
-.popup.active .overlay{
-    display:block;
+.popup.active .overlay {
+    display: block;
 }
 
-.popup.active .content{
+.popup.active .content {
     transition: all 300ms ease-in-out;
     transform: translate(-50%, -50%) scale(1);
 }
 
-#testing{
+#testing {
     position: relative;
-}
-
-#sideBar {
-    width: 400px;
 }
 
 input {
@@ -90,7 +99,7 @@ input {
 
 /* Plan your jouruney button style */
 
-#popupButton{
+#popupButton {
     cursor: pointer;
     right: 20px;
     top: 20px;
@@ -109,9 +118,9 @@ input {
     width: 20rem;
 }
 
-#mapButtons{
-    position:absolute;
-    margin:0 0 90vh 0vh; 
+#mapButtons {
+    position: absolute;
+    margin: 0 0 90vh 0vh;
     z-index: 5;
 }
 
@@ -119,23 +128,25 @@ input {
     border-radius: 10px;
 }
 
-select, #dateTimeLabel {
+select,
+#dateTimeLabel {
     margin-left: 20px;
 }
 
 #errorMessage {
     color: red;
-    display: none;
+    visibility: hidden;
     margin-left: 20px;
 }
 
-#weatherDiv{
+#weatherDiv {
     display: flex;
     margin-left: 30%;
 }
 
-#weatherTemp, #weatherDesc{
+#weatherTemp,
+#weatherDesc {
     font-size: 20px;
     margin: 10px 10px 0 10px;
-    padding: 0 ;
+    padding: 0;
 }

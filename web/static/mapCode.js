@@ -35,6 +35,13 @@ function initMap() {
         let mapOptions = {
             center: dublin, 
             zoom: 14,
+            zoomControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_CENTER,
+            },
+            streetViewControlOptions: {
+                position: google.maps.ControlPosition.RIGHT_CENTER,
+            },
+            gestureHandling: 'greedy',
             styles: myStyles,
         }
 
@@ -181,9 +188,9 @@ function userInputValidation(){
     // If the user inputs are invalid, display an error message
     errorMessage = document.getElementById("errorMessage");
     if (userStartPlace == "invalid" || userEndPlace == "invalid"){
-        errorMessage.style.display = "block";
+        errorMessage.style.visibility = "visible";
     } else {
-        errorMessage.style.display = "none";
+        errorMessage.style.visibility = "hidden";
         showPopup();
     }
 
