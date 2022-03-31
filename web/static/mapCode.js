@@ -389,13 +389,14 @@ function updatePopup(){
 function hidePopup(){
     popup = document.getElementById("departurepopup");
     popup.classList.toggle("active");
+    
+    // gets rid of the button
+    document.getElementById("popupButton").remove();
 }
 
 var directionsRenderer;
 function getRoute(){
     // directionsRenderer.setMap(null);
-    // Get rid of popup button
-    document.getElementById("popupButton").remove();
 
     if (directionsRenderer != null) {
         directionsRenderer.setMap(null);
