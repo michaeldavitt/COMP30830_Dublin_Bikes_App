@@ -191,6 +191,24 @@ function userInputValidation(){
 
 
 
+function displayWeather(){
+    var jqxhr = $.getJSON("/weather_info", function(data){
+        var weatherInfo = data;
+        console.log(weatherInfo[0].icon);
+
+        var weatherTemp = document.getElementById("weatherTemp");
+        weatherTemp.innerHTML = weatherInfo[0].temperature;
+
+        // var weatherImg = document.getElementById("weatherimg");
+        // weatherImg.src = weatherInfo[0].icon;
+
+        var weatherDesc = document.getElementById("weatherDesc");
+        weatherDesc.innerHTML = weatherInfo[0].description
+
+    })
+}
+
+
 // Function which sends station information to the info window popup
 function updateInfoWindow(station_id) {
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
@@ -221,6 +239,7 @@ panel.style.display = "block";
 
 // Function to display the side bar where the user will input their start/end location
 function getPanel(){
+    displayWeather();
     // Opens the side bar
     if(panel.style.display === "none") {
         panel.style.display = "block";
