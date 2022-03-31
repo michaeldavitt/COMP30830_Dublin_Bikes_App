@@ -199,7 +199,7 @@ function displayWeather(){
         var currentImage = weatherInfo[0].icon;
 
         var weatherTemp = document.getElementById("weatherTemp");
-        weatherTemp.innerHTML = weatherInfo[0].temperature;
+        weatherTemp.innerHTML = (weatherInfo[0].temperature - 273.15).toFixed(0) + "°C";
 
         var weatherImg = document.getElementById("weatherImg");
         weatherImg.src = "static/icons/" + currentImage + ".png";
@@ -242,7 +242,6 @@ panel.style.display = "block";
 
 // Function to display the side bar where the user will input their start/end location
 function getPanel(){
-    displayWeather();
     // Opens the side bar
     if(panel.style.display === "none") {
         panel.style.display = "block";

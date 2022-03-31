@@ -77,7 +77,7 @@ def get_weather_data():
     """Function to get the weather information"""
     engine = get_db()
     rows = engine.execute(
-        "SELECT temperature, description, icon FROM dbikes.real_time_weather ORDER BY dt ASC LIMIT 1")
+        "SELECT temperature, description, icon FROM dbikes.real_time_weather ORDER BY dt DESC LIMIT 1")
     return jsonify([dict(row.items()) for row in rows])
 
 

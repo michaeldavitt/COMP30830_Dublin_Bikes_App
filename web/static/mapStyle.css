@@ -131,6 +131,7 @@ select, #dateTimeLabel {
 
 #weatherDiv{
     display: flex;
+    margin-left: 30%;
 }
 
 #weatherTemp, #weatherDesc{

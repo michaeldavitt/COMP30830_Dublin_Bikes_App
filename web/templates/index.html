@@ -49,6 +49,7 @@
     <script src="{{ url_for('static', filename='mapCode.js') }}"></script>
     <script>populateDaySelectOptions()</script>
     <script>populateHourSelectOptions()</script>
+    <script>displayWeather()</script>
 
     <!-- Connect to the google maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&libraries=places&callback=initMap"></script>
