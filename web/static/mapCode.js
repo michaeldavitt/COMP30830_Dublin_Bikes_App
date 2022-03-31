@@ -458,12 +458,18 @@ function populateDaySelectOptions(){
     // Function to add options to the day select option menu
     var now = new Date();
     var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    // var today = days[now.getDay()];
     daySelect = document.getElementById("daySelect");
     for (i=0; i<4; i++){
         var newOption = document.createElement("option");
-        newOption.innerHTML = days[now.getDay() + i];
-        newOption.value = days[now.getDay() + i];
+
+        // Allow for the case where the day index is greater than 6 (last element in our days array)
+        if (now.getDay() + i > 6){
+            newOption.innerHTML = days[now.getDay() + i - 7];
+            newOption.value = days[now.getDay() + i];
+        } else {
+            newOption.innerHTML = days[now.getDay() + i];
+            newOption.value = days[now.getDay() + i];
+        }
         daySelect.appendChild(newOption);
     }
 }
