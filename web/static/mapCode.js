@@ -279,7 +279,7 @@ async function showPopup() {
                 // Create input element using Bootstrap
                 var radioboxDeparture = document.createElement('input');
                 radioboxDeparture.type = "radio";
-                radioboxDeparture.className = "btn-check";
+                radioboxDeparture.className = "form-check-input";
                 radioboxDeparture.name = "startLocationSelection";
                 radioboxDeparture.autocomplete = "off";
                 radioboxDeparture.id = startToStationsArray[i][0];
@@ -287,7 +287,7 @@ async function showPopup() {
         
                 // Create label using Bootstrap
                 var departureLabel = document.createElement("label");
-                departureLabel.className = "btn btn-outline-primary";
+                departureLabel.className = "form-check-label";   
                 departureLabel.for = startToStationsArray[i][0];
                 
                 // Create availability
@@ -357,7 +357,7 @@ function updatePopup(){
                 // Create input element using Bootstrap
                 var radioboxDeparture = document.createElement('input');
                 radioboxDeparture.type = "radio";
-                radioboxDeparture.className = "btn-check";
+                radioboxDeparture.className = "form-check-input";
                 radioboxDeparture.name = "endLocationSelection";
                 radioboxDeparture.autocomplete = "off";
                 radioboxDeparture.id = endToStationsArray[i][0];
@@ -365,7 +365,7 @@ function updatePopup(){
 
                 // Create label using Bootstrap
                 var departureLabel = document.createElement("label");
-                departureLabel.className = "btn btn-outline-primary";
+                departureLabel.className = "form-check-label";
                 departureLabel.for = endToStationsArray[i][0];
                 departureLabel.innerHTML = endToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
 
@@ -392,6 +392,8 @@ function hidePopup(){
     
     // gets rid of the button
     document.getElementById("popupButton").remove();
+
+    getPanel();
 }
 
 var directionsRenderer;
