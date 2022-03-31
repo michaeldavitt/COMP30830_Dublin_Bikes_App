@@ -128,3 +128,13 @@ select, #dateTimeLabel {
     display: none;
     margin-left: 20px;
 }
+
+#weatherDiv{
+    display: flex;
+}
+
+#weatherTemp, #weatherDesc{
+    font-size: 20px;
+    margin: 10px 10px 0 10px;
+    padding: 0 ;
+}

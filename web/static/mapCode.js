@@ -196,15 +196,18 @@ function displayWeather(){
         var weatherInfo = data;
         console.log(weatherInfo[0].icon);
 
+        var currentImage = weatherInfo[0].icon;
+
         var weatherTemp = document.getElementById("weatherTemp");
         weatherTemp.innerHTML = weatherInfo[0].temperature;
 
-        // var weatherImg = document.getElementById("weatherimg");
-        // weatherImg.src = weatherInfo[0].icon;
+        var weatherImg = document.getElementById("weatherImg");
+        weatherImg.src = "static/icons/" + currentImage + ".png";
+        weatherImg.width="50";
+        weatherImg.height="50";
 
         var weatherDesc = document.getElementById("weatherDesc");
         weatherDesc.innerHTML = weatherInfo[0].description
-
     })
 }
 
