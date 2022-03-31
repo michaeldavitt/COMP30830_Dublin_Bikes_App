@@ -215,7 +215,7 @@ function updateInfoWindow(station_id) {
     })
 }
 var panel = document.getElementById("sideBar");
-panel.style.display = "none";
+panel.style.display = "block";
 
 
 // Function to display the side bar where the user will input their start/end location
