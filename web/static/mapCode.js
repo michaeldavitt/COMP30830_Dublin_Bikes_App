@@ -160,11 +160,11 @@ function initAutocomplete() {
 
     // Add onclick events to ensure that the user's input is a place object
     departingAutocomplete.addListener("place_changed", () => {
-       userPlaceInputValidation(departingAutocomplete);
+       userStartPlace = userPlaceInputValidation(departingAutocomplete);
     })
     
     arrivingAutocomplete.addListener("place_changed", () => {
-        userPlaceInputValidation(arrivingAutocomplete);
+        userEndPlace = userPlaceInputValidation(arrivingAutocomplete);
     })
 }
 
@@ -177,10 +177,10 @@ function userPlaceInputValidation(autocompleteObject){
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
         window.alert("No details available for input: '" + place.name + "'");
-        userEndPlace = "invalid";
-        return;
+        // userPlaceCoordinates = "invalid";
+        return "invalid";
     } else {
-        userEndPlace = [autocompleteObject.getPlace().geometry.location.lat(),
+        return [autocompleteObject.getPlace().geometry.location.lat(),
         autocompleteObject.getPlace().geometry.location.lng()];
     }
 }
@@ -228,20 +228,22 @@ function displayWeather(){
 
 // Function which sends station information to the info window popup
 function updateInfoWindow(station_id) {
+
+    // Sends a jQuery request to current bike and parking space availability information
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
         var availabilityData = data;
 
         // Isolates the popup for the specific station and stores in a variable
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
         bikeAvailabilityElement = infoWindowDiv.getElementsByClassName("bike_availability")[0];
+        parkingAvailabilityElement = infoWindowDiv.getElementsByClassName("parking_availability")[0];
 
-        // Input the realtime information
+        // Adds number of available bikes for the given station
         bikeAvailability = "Available Bikes: " + availabilityData[0]["available_bikes"];
         bikeAvailabilityElement.innerHTML = bikeAvailability;
         infoWindowDiv.appendChild(bikeAvailabilityElement);
 
         // Adds number of available parking spaces for the given station
-        parkingAvailabilityElement = infoWindowDiv.getElementsByClassName("parking_availability")[0];
         parkingAvailability = "Available Parking Spaces: " + availabilityData[0]["available_stands"];
         parkingAvailabilityElement.innerHTML = parkingAvailability;
         infoWindowDiv.appendChild(parkingAvailabilityElement);
@@ -250,12 +252,14 @@ function updateInfoWindow(station_id) {
         console.log("error in the updateInfoWindow function");
     })
 }
-var panel = document.getElementById("sideBar");
-panel.style.display = "block";
 
 
 // Function to display the side bar where the user will input their start/end location
 function getPanel(){
+
+    // Extracts the side bar and assigns it to a variable
+    var panel = document.getElementById("sideBar");
+
     // Opens the side bar
     if(panel.style.display === "none") {
         panel.style.display = "block";
@@ -267,76 +271,38 @@ function getPanel(){
     }
 }
 
-// Sleep function
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-var startToStationsArray;
-var endToStationsArray;
-
-// Function to display the centre popup when the user has submitted their start/end point in the journey planner
-async function showPopup() {
-
-    // Get the element where we will store the popup info
-    var container = document.getElementById("departureText");
-    container.innerHTML = "";
+// Function to display the bike recommendations popup when the user has submitted their start/end point in the journey planner
+function showPopup() {
 
     // Gets rid of the side bar
     getPanel();
 
-    // Reset global start and end arrays
-    startToStationsArray = [];
-    endToStationsArray = [];
+    // Resets start station recommendation array
+    var startToStationsArray = [];
 
-    // Display pop up
+    // Displays pop up
     document.getElementById("departurepopup").classList.toggle("active");
 
+    // Gets the distances from each station to the user start point
     var jqxhr = $.getJSON("/distances/" + userStartPlace[0] + "/" + userStartPlace[1], function(data){
 
         startToStationsArray = Object.entries(data);
 
+        // sorts the stations by distance to the users start point (closest to farthest)
         startToStationsArray.sort((a, b) => {
             return a[1][0] - b[1][0];
         });
-    
-        container.innerHTML = "";
 
+        // Get the users day an hour of travel values
         userDay = document.getElementById("daySelect").value;
         userHour = document.getElementById("hourSelect").value;
+
+        // Gets estimated number of bikes at each station
         var jqxhr = $.getJSON("prediction/bike/" + userDay + "/" + userHour + "/" + startToStationsArray[1][1][2] + "/" +  startToStationsArray[2][1][2] + "/" + startToStationsArray[3][1][2] + "/" + startToStationsArray[4][1][2] + "/" + startToStationsArray[5][1][2], function(data){
             var predictions = data;
             
-            // Create checkboxes for the popups
-            for (i=0; i<5; i++) {
-        
-                // Create input element using Bootstrap
-                var radioboxDeparture = document.createElement('input');
-                radioboxDeparture.type = "radio";
-                radioboxDeparture.className = "form-check-input";
-                radioboxDeparture.name = "startLocationSelection";
-                radioboxDeparture.autocomplete = "off";
-                radioboxDeparture.id = startToStationsArray[i][0];
-                radioboxDeparture.value = startToStationsArray[i][1][1];
-        
-                // Create label using Bootstrap
-                var departureLabel = document.createElement("label");
-                departureLabel.className = "form-check-label";   
-                departureLabel.for = startToStationsArray[i][0];
-                
-                // Create availability
-                stationID = startToStationsArray[i][1][2];
-                departureLabel.innerHTML = startToStationsArray[i][0] + " - Estimated available bikes: " + predictions[i];
-        
-                // Create a div using Bootstrap
-                var departureHolder = document.createElement("div");
-                departureHolder.className = "form-check";
-        
-                // Add the new elements to the popup
-                departureLabel.appendChild(radioboxDeparture);
-                departureHolder.appendChild(departureLabel);
-                container.appendChild(departureHolder);
-            }
+            // Displays bike stations recommendations to the user
+            createPopupCheckboxes(startToStationsArray, "startLocationSelection", " - Estimated available bikes: ", predictions);
         
             // Create the confirm button
             confirmButton = document.createElement("button");
@@ -355,6 +321,8 @@ async function showPopup() {
 // Function to update the popup recommendation data. 
 function updatePopup(){
 
+    var endToStationsArray = [];
+    
     // updating the popup header
     document.getElementById("popupHeader").innerHTML = "Recommended Parking Stations:";
 
@@ -363,15 +331,10 @@ function updatePopup(){
     // getting the value of the user choice.
     var radios = document.getElementsByName('startLocationSelection');
     addUserChoices(radios);
-    // for(i = 0; i < radios.length; i++){
-    //     if(radios[i].checked){
-    //         userChoices.push(radios[i].value);
-    //     }
-    // }
 
     // Setting the innerHTML of the popup to empty.
-    document.getElementById("departureText").innerHTML ="";
-    container = document.getElementById("departureText");
+    document.getElementById("stationRecommendations").innerHTML ="";
+    container = document.getElementById("stationRecommendations");
 
     var jqxhr = $.getJSON("/distances/" + userEndPlace[0] + "/" + userEndPlace[1], function(data){
 
@@ -386,39 +349,52 @@ function updatePopup(){
         var jqxhr = $.getJSON("prediction/station/" + userDay + "/" + userHour + "/" + endToStationsArray[1][1][2] + "/" +  endToStationsArray[2][1][2] + "/" + endToStationsArray[3][1][2] + "/" + endToStationsArray[4][1][2] + "/" + endToStationsArray[5][1][2], function(data){
             var predictions = data;
             
-            // Create checkboxes for the popups
-            for (i=0; i<5; i++) {
+            // Displays parking spaces recommendations to the user
+            createPopupCheckboxes(endToStationsArray, "endLocationSelection", " - Estimated available parking spaces: ", predictions);
 
-                // Create input element using Bootstrap
-                var radioboxDeparture = document.createElement('input');
-                radioboxDeparture.type = "radio";
-                radioboxDeparture.className = "form-check-input";
-                radioboxDeparture.name = "endLocationSelection";
-                radioboxDeparture.autocomplete = "off";
-                radioboxDeparture.id = endToStationsArray[i][0];
-                radioboxDeparture.value = endToStationsArray[i][1][1];
-
-                // Create label using Bootstrap
-                var departureLabel = document.createElement("label");
-                departureLabel.className = "form-check-label";
-                departureLabel.for = endToStationsArray[i][0];
-                departureLabel.innerHTML = endToStationsArray[i][0] + " - Estimated available parking spaces: " + predictions[i];
-
-                // Create a div using Bootstrap
-                var departureHolder = document.createElement("div");
-                departureHolder.className = "form-check";
-
-                // Add the new elements to the popup
-                departureLabel.appendChild(radioboxDeparture);
-                departureHolder.appendChild(departureLabel);
-                container.appendChild(departureHolder);
-
-                // Change the onclick event for the confirm button to hidePopup function
-                confirmButton = document.getElementById("popupButton");
-                confirmButton.setAttribute("onclick", "getRoute();");
-            }
+             // Change the onclick event for the confirm button to hidePopup function
+             confirmButton = document.getElementById("popupButton");
+             confirmButton.setAttribute("onclick", "getRoute();");
         });
     });
+}
+
+
+function createPopupCheckboxes(stationsArray, checkboxName, predictionText, predictions){
+
+    // Gets the element where we will store the popup info
+    var container = document.getElementById("stationRecommendations");
+    container.innerHTML = "";
+
+     // Create checkboxes for the popups
+     for (i=0; i<5; i++) {
+
+        // Create input element using Bootstrap
+        var radioboxDeparture = document.createElement('input');
+        radioboxDeparture.type = "radio";
+        radioboxDeparture.className = "form-check-input";
+        radioboxDeparture.name = checkboxName;
+        radioboxDeparture.autocomplete = "off";
+        radioboxDeparture.id = stationsArray[i][0];
+        radioboxDeparture.value = stationsArray[i][1][1];
+
+        // Create label using Bootstrap
+        var departureLabel = document.createElement("label");
+        departureLabel.className = "form-check-label";
+        departureLabel.for = stationsArray[i][0];
+        departureLabel.innerHTML = stationsArray[i][0] + predictionText + predictions[i];
+
+        // Create a div using Bootstrap
+        var departureHolder = document.createElement("div");
+        departureHolder.className = "form-check";
+
+        // Add the new elements to the popup
+        departureLabel.appendChild(radioboxDeparture);
+        departureHolder.appendChild(departureLabel);
+        container.appendChild(departureHolder);
+
+    }
+
 }
 
 function hidePopup(){
@@ -526,4 +502,9 @@ function populateHourSelectOptions(){
         newOption.value = hour;
         hourSelect.appendChild(newOption);
     }
+}
+
+function resetGlobals(){
+    userStartPlace = "invalid";
+    userEndPlace = "invalid";
 }

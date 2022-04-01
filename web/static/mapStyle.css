@@ -20,7 +20,7 @@ body {
 /* plan your journey side bar style */
 
 #sideBar {
-    display: none;
+    display: block;
     width: 358px;
     height: 100vh;
     background-color: #1F242B;
@@ -79,7 +79,7 @@ body {
     border-radius: 60%;
 }
 
-#departureText {
+#stationRecommendations {
     text-align: left;
     margin: 11vh 2vw;
 }
