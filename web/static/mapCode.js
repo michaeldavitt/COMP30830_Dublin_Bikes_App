@@ -1,16 +1,26 @@
 // Variable to store the map
+// use it in initMap, getRoute and toggleDisplaymarkers functions.
 let map;
 
-// List of marker objects
+// variable to cluster the markers
+// use it in initMap and toggleDisplaymarkers functions.
 var markerCluster;
+
+// List of marker objects
+// use it in initMap and toggleDisplaymarkers functions.
 var markers;
 
-// Variable where the user choices are stored
+// List where the user choices are stored
+// use it in updatePopup, getRoute, addUserChoices functions
 var userChoices = [];
 
 // Function to display a map of Dublin on the homepage
 function initMap() { 
+
+    // variable to keep track of the currently open popup
     var currentlyOpenPopup;
+
+    // variable to store maps styles
     var myStyles =[
         {
             featureType: "poi",
@@ -26,8 +36,10 @@ function initMap() {
         console.log("success", data);
         var stationInfo = data;
 
-        // Displays the map and zooms in on Dublin city center
+        // specifies the lat and lng of the city center
         const dublin = { lat: 53.345, lng: -6.266155 }; 
+
+        // specifies map options that will be provided to the Google Maps API
         let mapOptions = {
             center: dublin, 
             zoom: 14,
@@ -44,8 +56,10 @@ function initMap() {
         // Puts new map into HTML div
         map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
+        // variable that stores the location of the bike stations icon
         var image = "/static/bike-icon.png";
-        // Creates a marker on the map for each station
+
+        // for loop that creates a marker on the map for each station
         markers = stationInfo.map((position, i) => {
 
             // Creates new marker on map with position = station coordinates
@@ -87,9 +101,10 @@ function initMap() {
                     shouldFocus: false,
                 });
 
-                // Sets the currently opened popup to be the recently opened popup
+                // Updates the currently opened popup when the user clicks on a station
                 currentlyOpenPopup = marker;
             }); 
+            // returns the marker object for each station
             return marker;
         });
 
@@ -100,6 +115,7 @@ function initMap() {
         initAutocomplete();
 
     })
+    // Prints an error message when the jQuery requests fails
     .fail(function(){
         console.log("error in the initMap function");
     })        
