@@ -185,10 +185,14 @@ function userPlaceInputValidation(autocompleteObject){
     }
 }
 
+// Check user inputs and display popup if they are valid
+// If the user inputs are invalid, display an error message
 function userInputValidation(){
-    // Check user inputs and display popup if they are valid
-    // If the user inputs are invalid, display an error message
+
+    // Extracts error message from Index.html
     errorMessage = document.getElementById("errorMessage");
+
+    // Checks if the user start and end places are valid
     if (userStartPlace == "invalid" || userEndPlace == "invalid"){
         errorMessage.style.visibility = "visible";
     } else {
@@ -198,24 +202,26 @@ function userInputValidation(){
 
 }
 
-
-
+// Function that displays current weather information in the page header
 function displayWeather(){
+
+    // Makes jQuery request to get current weather data
     var jqxhr = $.getJSON("/weather_info", function(data){
         var weatherInfo = data;
 
-        var currentImage = weatherInfo[0].icon;
-
+        // Display the current temperature
         var weatherTemp = document.getElementById("weatherTemp");
         weatherTemp.innerHTML = (weatherInfo[0].temperature - 273.15).toFixed(0) + "°C";
 
+        // Display an icon representing the current weather status
         var weatherImg = document.getElementById("weatherImg");
-        weatherImg.src = "static/icons/" + currentImage + ".png";
+        weatherImg.src = "static/icons/" + weatherInfo[0].icon + ".png";
         weatherImg.width="50";
         weatherImg.height="50";
 
+        // Display the current weather description
         var weatherDesc = document.getElementById("weatherDesc");
-        weatherDesc.innerHTML = weatherInfo[0].description
+        weatherDesc.innerHTML = weatherInfo[0].description;
     })
 }
 
