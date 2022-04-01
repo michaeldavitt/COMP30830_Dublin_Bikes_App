@@ -232,7 +232,7 @@ def predictions(bikeOrSpace, userDay, userHour, station1, station2, station3, st
     df = df.drop(dummy_fields, axis=1)
 
     for i in range(len(stationIds)):
-        fileName = "machine_learning/station_" + \
+        fileName = "machine_learning/pickle_files/station_" + \
             stationIds[i] + "_" + bikeOrSpace + "_model.pkl"
         with open(fileName, "rb") as handle:
             model = pickle.load(handle)
