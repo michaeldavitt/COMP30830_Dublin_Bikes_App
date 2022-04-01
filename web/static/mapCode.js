@@ -5,7 +5,6 @@ var station_info;
 let map;
 
 // List of marker objects
-var markerList = [];
 var markerCluster;
 var markers;
 
@@ -94,10 +93,9 @@ function initMap() {
                 // Sets the currently opened popup to be the recently opened popup
                 currentlyOpenPopup = marker;
             }); 
-            markerList.push(marker);
             return marker;
         });
-        console.log(markers);
+
         // Cluster markers together
         markerCluster = new markerClusterer.MarkerClusterer({ map, markers }); 
         
@@ -357,11 +355,12 @@ function updatePopup(){
 
     // getting the value of the user choice.
     var radios = document.getElementsByName('startLocationSelection');
-    for(i = 0; i < radios.length; i++){
-        if(radios[i].checked){
-            userChoices.push(radios[i].value);
-        }
-    }
+    addUserChoices(radios);
+    // for(i = 0; i < radios.length; i++){
+    //     if(radios[i].checked){
+    //         userChoices.push(radios[i].value);
+    //     }
+    // }
 
     // Setting the innerHTML of the popup to empty.
     document.getElementById("departureText").innerHTML ="";
@@ -425,6 +424,15 @@ function hidePopup(){
     getPanel();
 }
 
+function addUserChoices(radios){
+    // Adds user selected station to a global list
+    for(i = 0; i < radios.length; i++){
+        if(radios[i].checked){
+            userChoices.push(radios[i].value);
+        }
+    }
+}
+
 var directionsRenderer;
 function getRoute(){
     // directionsRenderer.setMap(null);
@@ -444,11 +452,7 @@ function getRoute(){
 
     // Get the user's desired endpoint
     var radios = document.getElementsByName('endLocationSelection');
-    for(i = 0; i < radios.length; i++){
-        if(radios[i].checked){
-            userChoices.push(radios[i].value);
-        }
-    }
+    addUserChoices(radios);
 
     hidePopup();
 
@@ -472,14 +476,14 @@ function toggleDisplayMarkers(){
     displayMarkers = document.getElementById("displayMarkers");
     if(displayMarkers.innerHTML == "Hide Stations"){
         displayMarkers.innerHTML = "Show Stations";
-        for (marker in markerList){
-            markerList[marker].setVisible(false);
+        for (marker in markers){
+            markers[marker].setVisible(false);
         }
         markerCluster.clearMarkers();
     }else{
         displayMarkers.innerHTML = "Hide Stations";
-        for (marker in markerList){
-            markerList[marker].setVisible(true);
+        for (marker in markers){
+            markers[marker].setVisible(true);
         }
         // Cluster markers together
         markerCluster = new markerClusterer.MarkerClusterer({ map, markers });
@@ -493,11 +497,10 @@ function populateDaySelectOptions(){
     daySelect = document.getElementById("daySelect");
     for (i=0; i<4; i++){
         var newOption = document.createElement("option");
-
         // Allow for the case where the day index is greater than 6 (last element in our days array)
         if (now.getDay() + i > 6){
             newOption.innerHTML = days[now.getDay() + i - 7];
-            newOption.value = days[now.getDay() + i];
+            newOption.value = days[now.getDay() + i - 7];
         } else {
             newOption.innerHTML = days[now.getDay() + i];
             newOption.value = days[now.getDay() + i];
