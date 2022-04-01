@@ -53,9 +53,9 @@ body {
     top: 50%;
     transform: translate(-50%, -50%) scale(0);
     background-color: #fff;
-    width: 450px;
-    height: 400px;
-    z-index: 2;
+    width: 50vw;
+    height: 70vh;
+    z-index: 6;
     text-align: center;
     padding: 20px;
     box-sizing: border-box;
@@ -77,6 +77,11 @@ body {
     line-height: 18px;
     text-align: center;
     border-radius: 60%;
+}
+
+#departureText {
+    text-align: left;
+    margin: 11vh 2vw;
 }
 
 .popup.active .overlay {

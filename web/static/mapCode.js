@@ -321,7 +321,7 @@ async function showPopup() {
                 
                 // Create availability
                 stationID = startToStationsArray[i][1][2];
-                departureLabel.innerHTML = startToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
+                departureLabel.innerHTML = startToStationsArray[i][0] + " - Estimated available bikes: " + predictions[i];
         
                 // Create a div using Bootstrap
                 var departureHolder = document.createElement("div");
@@ -351,7 +351,7 @@ async function showPopup() {
 function updatePopup(){
 
     // updating the popup header
-    document.getElementById("popupHeader").innerHTML = "Choose a station for destination";
+    document.getElementById("popupHeader").innerHTML = "Recommended Parking Stations:";
 
     userChoices = [];
 
@@ -396,7 +396,7 @@ function updatePopup(){
                 var departureLabel = document.createElement("label");
                 departureLabel.className = "form-check-label";
                 departureLabel.for = endToStationsArray[i][0];
-                departureLabel.innerHTML = endToStationsArray[i][0] + " - " + predictions[i] + " bikes available";
+                departureLabel.innerHTML = endToStationsArray[i][0] + " - Estimated available parking spaces: " + predictions[i];
 
                 // Create a div using Bootstrap
                 var departureHolder = document.createElement("div");
