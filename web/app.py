@@ -231,15 +231,12 @@ def predictions(bikeOrSpace, userDay, userHour, station1, station2, station3, st
     dummy_fields = ["main", "hour", "day_of_week"]
     df = df.drop(dummy_fields, axis=1)
 
-    print(df.columns)
-
     for i in range(len(stationIds)):
         fileName = "machine_learning/station_" + \
             stationIds[i] + "_" + bikeOrSpace + "_model.pkl"
         with open(fileName, "rb") as handle:
             model = pickle.load(handle)
             predictions.append(round(model.predict(df)[0]))
-            print(predictions)
 
     return jsonify(predictions)
 
