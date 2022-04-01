@@ -20,6 +20,10 @@ var userChoices = [];
 var userStartPlace = "invalid";
 var userEndPlace = "invalid";
 
+// Variable that displays the route on the map
+// Needs to be global in order to reset the route when the user requests a new route
+var directionsRenderer;
+
 // Function to display a map of Dublin on the homepage
 function initMap() { 
 
@@ -321,12 +325,14 @@ function showPopup() {
 // Function to update the popup recommendation data. 
 function updatePopup(){
 
+    // resets the userChoices array
+    userChoices = [];
+
+    // resets the array that stores parking space recommendations
     var endToStationsArray = [];
     
     // updating the popup header
     document.getElementById("popupHeader").innerHTML = "Recommended Parking Stations:";
-
-    userChoices = [];
 
     // getting the value of the user choice.
     var radios = document.getElementsByName('startLocationSelection');
@@ -335,17 +341,22 @@ function updatePopup(){
     // Setting the innerHTML of the popup to empty.
     document.getElementById("stationRecommendations").innerHTML ="";
     container = document.getElementById("stationRecommendations");
-
+    
+    // Get distance from each station to the user end point
     var jqxhr = $.getJSON("/distances/" + userEndPlace[0] + "/" + userEndPlace[1], function(data){
 
         endToStationsArray = Object.entries(data);
 
+        // sort the stations by distances form the user endpoint
         endToStationsArray.sort((a, b) => {
             return a[1][0] - b[1][0];
         });
 
+        // get the hour and day that the user wants to travel
         userDay = document.getElementById("daySelect").value;
         userHour = document.getElementById("hourSelect").value;
+
+        // Get availability estimates for the parking spaces at each station
         var jqxhr = $.getJSON("prediction/station/" + userDay + "/" + userHour + "/" + endToStationsArray[1][1][2] + "/" +  endToStationsArray[2][1][2] + "/" + endToStationsArray[3][1][2] + "/" + endToStationsArray[4][1][2] + "/" + endToStationsArray[5][1][2], function(data){
             var predictions = data;
             
@@ -359,7 +370,7 @@ function updatePopup(){
     });
 }
 
-
+// Creates station recommendation checkboxes and displays them in the popup
 function createPopupCheckboxes(stationsArray, checkboxName, predictionText, predictions){
 
     // Gets the element where we will store the popup info
@@ -392,23 +403,26 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
         departureLabel.appendChild(radioboxDeparture);
         departureHolder.appendChild(departureLabel);
         container.appendChild(departureHolder);
-
     }
-
 }
 
+// Hides the station recommendation popup
 function hidePopup(){
+
+    // Hides the popup
     popup = document.getElementById("departurepopup");
     popup.classList.toggle("active");
     
-    // gets rid of the button
+    // Gets rid of the button
     document.getElementById("popupButton").remove();
 
+    // Opens the plan your journey sidebar
     getPanel();
 }
 
+// Adds user selected station to a global list
 function addUserChoices(radios){
-    // Adds user selected station to a global list
+
     for(i = 0; i < radios.length; i++){
         if(radios[i].checked){
             userChoices.push(radios[i].value);
@@ -416,53 +430,62 @@ function addUserChoices(radios){
     }
 }
 
-var directionsRenderer;
+// Displays a route from the users start point to the users end point
 function getRoute(){
-    // directionsRenderer.setMap(null);
 
+    // Resets the route
     if (directionsRenderer != null) {
         directionsRenderer.setMap(null);
     }
 
-    // Initialise services
+    // Initialise routing services
     var directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({
         polylineOptions: {
           strokeColor: "red"
         }
       });
+
     directionsRenderer.setMap(map);
 
     // Get the user's desired endpoint
     var radios = document.getElementsByName('endLocationSelection');
     addUserChoices(radios);
 
+    // Hide the recommendations popup
     hidePopup();
 
-
-    var start = userChoices[0];
-    var end = userChoices[1];
+    // Creates request to send to Google Direction Service
     var request = {
-        origin: start,
-        destination: end,
+        origin: userChoices[0],
+        destination: userChoices[1],
         travelMode: 'BICYCLING'
     };
+
+    // Sends request to Google Direction Service
     directionsService.route(request, function(result, status) {
         if (status == 'OK') {
-        directionsRenderer.setDirections(result);
+            directionsRenderer.setDirections(result);
         }
     });
 }
 
+// Function to show and hide station markers
+// Makes easier to see the route
 function toggleDisplayMarkers(){
+
+    // Extracts the button to toggle marker display
     displayMarkers = document.getElementById("displayMarkers");
+
+    // Condition to hide and display stations
     if(displayMarkers.innerHTML == "Hide Stations"){
         displayMarkers.innerHTML = "Show Stations";
         for (marker in markers){
             markers[marker].setVisible(false);
         }
         markerCluster.clearMarkers();
-    }else{
+    }
+    else {
         displayMarkers.innerHTML = "Hide Stations";
         for (marker in markers){
             markers[marker].setVisible(true);
@@ -472,11 +495,19 @@ function toggleDisplayMarkers(){
     }    
 }
 
+// Function to add options to the day select option menu
 function populateDaySelectOptions(){
-    // Function to add options to the day select option menu
+    
+    // Gets today's date
     var now = new Date();
+
+    // Creates an array of week day names from Sunday to Saturday
     var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+    // Extracts input field where the user selects a day of week to travel
     daySelect = document.getElementById("daySelect");
+    
+    // Creates a dropdown menu with week days that the user can select
     for (i=0; i<4; i++){
         var newOption = document.createElement("option");
         // Allow for the case where the day index is greater than 6 (last element in our days array)
@@ -491,11 +522,19 @@ function populateDaySelectOptions(){
     }
 }
 
+// Function to add options to the hour select option menu 
 function populateHourSelectOptions(){
-    // Function to add options to the hour select option menu
+    
+    // Get todays date
     var now = new Date();
+
+    // Gets the hour today
     hourNow = now.getHours();
+
+    // Extracts input field where the user selects the hour they want to travel
     hourSelect = document.getElementById("hourSelect");
+
+    // Creates a dropdown menu with hours that the user can select
     for (hour = hourNow; hour < 24; hour++) {
         var newOption = document.createElement("option");
         newOption.innerHTML = hour + ":00";
@@ -504,7 +543,12 @@ function populateHourSelectOptions(){
     }
 }
 
-function resetGlobals(){
-    userStartPlace = "invalid";
-    userEndPlace = "invalid";
-}
+// function resetGlobals(){
+//
+//     userStartPlace = "invalid";
+//     userEndPlace = "invalid";
+//     // inside updatePopup function
+//     userChoices = [];
+// }
+
+// We stopped at the updatePopupFunction
