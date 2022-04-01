@@ -1,3 +1,5 @@
+// Global Variables
+
 // Variable to store the map
 // use it in initMap, getRoute and toggleDisplaymarkers functions.
 let map;
@@ -13,6 +15,10 @@ var markers;
 // List where the user choices are stored
 // use it in updatePopup, getRoute, addUserChoices functions
 var userChoices = [];
+
+// Store variables for the user input
+var userStartPlace = "invalid";
+var userEndPlace = "invalid";
 
 // Function to display a map of Dublin on the homepage
 function initMap() { 
@@ -123,13 +129,7 @@ function initMap() {
 
 // Function for autocompleting addresses inside input fields
 // Reference: https://www.youtube.com/watch?v=c3MjU9E9buQ
-// let autocomplete;
-// Store variables for the user input
-var userStartPlace = "invalid";
-var userEndPlace = "invalid";
-
 function initAutocomplete() {
-    // Set up the options for the new Autocomplete
 
     // Centers the map in Dublin
     const center = { lat: 53.345, lng: -6.266155 };
@@ -142,7 +142,7 @@ function initAutocomplete() {
         west: center.lng - 0.1,
     };
 
-    // Gets input boxes
+    // Extracts input fields where the user has specified their journey start/end points
     const departing_input = document.getElementById("departing");
     const arriving_input = document.getElementById("destination");
 
@@ -154,42 +154,35 @@ function initAutocomplete() {
         strictBounds: true,
     };
 
-    // Makes API request
+    // Makes request to the autocomplete API
     departingAutocomplete = new google.maps.places.Autocomplete(departing_input, options);
     arrivingAutocomplete = new google.maps.places.Autocomplete(arriving_input, options);
 
-    // Add onclick events to store the user's input as a place object
+    // Add onclick events to ensure that the user's input is a place object
     departingAutocomplete.addListener("place_changed", () => {
-        // Extract the place when the user clicks on an item in the dropdown menu
-        var place = departingAutocomplete.getPlace();
-
-        if (!place.geometry || !place.geometry.location) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            userStartPlace = "invalid";
-            return;
-        } else {
-            userStartPlace = [departingAutocomplete.getPlace().geometry.location.lat(),
-            departingAutocomplete.getPlace().geometry.location.lng()];
-        }
+       userPlaceInputValidation(departingAutocomplete);
     })
-
+    
     arrivingAutocomplete.addListener("place_changed", () => {
-        // Extract the place when the user clicks on an item in the dropdown menu
-        var place = arrivingAutocomplete.getPlace();
-
-        if (!place.geometry || !place.geometry.location) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            userEndPlace = "invalid";
-            return;
-        } else {
-            userEndPlace = [arrivingAutocomplete.getPlace().geometry.location.lat(),
-            arrivingAutocomplete.getPlace().geometry.location.lng()];
-        }
+        userPlaceInputValidation(arrivingAutocomplete);
     })
+}
+
+// Function to validade that the user had input valid places
+function userPlaceInputValidation(autocompleteObject){
+    // Extract the place when the user clicks on an item in the dropdown menu
+    var place = autocompleteObject.getPlace();
+
+    if (!place.geometry || !place.geometry.location) {
+        // User entered the name of a Place that was not suggested and
+        // pressed the Enter key, or the Place Details request failed.
+        window.alert("No details available for input: '" + place.name + "'");
+        userEndPlace = "invalid";
+        return;
+    } else {
+        userEndPlace = [autocompleteObject.getPlace().geometry.location.lat(),
+        autocompleteObject.getPlace().geometry.location.lng()];
+    }
 }
 
 function userInputValidation(){
