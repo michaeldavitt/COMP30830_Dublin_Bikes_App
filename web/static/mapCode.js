@@ -1,6 +1,3 @@
-// Variable that displays the static station information
-var station_info;
-
 // Variable to store the map
 let map;
 
@@ -27,7 +24,7 @@ function initMap() {
     // Gets static station information to display on the map
     var jqxhr = $.getJSON("/station_info", function(data){
         console.log("success", data);
-        station_info = data;
+        var stationInfo = data;
 
         // Displays the map and zooms in on Dublin city center
         const dublin = { lat: 53.345, lng: -6.266155 }; 
@@ -49,22 +46,22 @@ function initMap() {
 
         var image = "/static/bike-icon.png";
         // Creates a marker on the map for each station
-        markers = station_info.map((position, i) => {
+        markers = stationInfo.map((position, i) => {
 
             // Creates new marker on map with position = station coordinates
             const marker = new google.maps.Marker({
-                position:  {lat: station_info[i].position_lat, lng: station_info[i].position_lng},
+                position:  {lat: stationInfo[i].position_lat, lng: stationInfo[i].position_lng},
                 map : map,
                 icon: image,
-                title : station_info[i].number.toString(),
+                title : stationInfo[i].number.toString(),
             });
 
             // Creates a pop-up window for each station
             marker.infowindow = new google.maps.InfoWindow({
                 content: '<div id="station_popup_' +
-                station_info[i].number +
+                stationInfo[i].number +
                 '" "class="station_popup"><h4>' + 
-                station_info[i].address + 
+                stationInfo[i].address + 
                 '</h4><p class="bike_availability"></p><p class="parking_availability"></p></div>',
             });
 
@@ -155,7 +152,6 @@ function initAutocomplete() {
             // pressed the Enter key, or the Place Details request failed.
             window.alert("No details available for input: '" + place.name + "'");
             userStartPlace = "invalid";
-            console.log(userStartPlace);
             return;
         } else {
             userStartPlace = [departingAutocomplete.getPlace().geometry.location.lat(),
@@ -172,7 +168,6 @@ function initAutocomplete() {
             // pressed the Enter key, or the Place Details request failed.
             window.alert("No details available for input: '" + place.name + "'");
             userEndPlace = "invalid";
-            console.log(userEndPlace);
             return;
         } else {
             userEndPlace = [arrivingAutocomplete.getPlace().geometry.location.lat(),
@@ -199,7 +194,6 @@ function userInputValidation(){
 function displayWeather(){
     var jqxhr = $.getJSON("/weather_info", function(data){
         var weatherInfo = data;
-        console.log(weatherInfo[0].icon);
 
         var currentImage = weatherInfo[0].icon;
 
@@ -268,7 +262,6 @@ var endToStationsArray;
 
 // Function to display the centre popup when the user has submitted their start/end point in the journey planner
 async function showPopup() {
-    console.log(userStartPlace, userEndPlace);
 
     // Get the element where we will store the popup info
     var container = document.getElementById("departureText");
@@ -298,7 +291,6 @@ async function showPopup() {
         userHour = document.getElementById("hourSelect").value;
         var jqxhr = $.getJSON("prediction/bike/" + userDay + "/" + userHour + "/" + startToStationsArray[1][1][2] + "/" +  startToStationsArray[2][1][2] + "/" + startToStationsArray[3][1][2] + "/" + startToStationsArray[4][1][2] + "/" + startToStationsArray[5][1][2], function(data){
             var predictions = data;
-            console.log(predictions);
             
             // Create checkboxes for the popups
             for (i=0; i<5; i++) {
@@ -456,7 +448,6 @@ function getRoute(){
 
     hidePopup();
 
-    console.log(userChoices);
 
     var start = userChoices[0];
     var end = userChoices[1];
