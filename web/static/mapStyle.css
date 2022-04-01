@@ -127,10 +127,23 @@ input {
     position: absolute;
     margin: 0 0 90vh 0vh;
     z-index: 5;
+    transition-duration: 0.4s;
 }
 
 #mapButtons button {
     border-radius: 10px;
+    background-color: #212529;
+    border: 2px solid #212529;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#planYourJourney:hover, #displayMarkers:hover{
+    transition-duration: 0.4s;
+    background-color: gray;
 }
 
 select,
