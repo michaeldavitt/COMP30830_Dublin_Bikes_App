@@ -24,6 +24,8 @@ var userEndPlace = "invalid";
 // Needs to be global in order to reset the route when the user requests a new route
 var directionsRenderer;
 
+var isDataAvailable = false;
+
 // Function to display a map of Dublin on the homepage
 function initMap() { 
 
@@ -287,6 +289,8 @@ function showPopup() {
     // Displays pop up
     document.getElementById("departurepopup").classList.toggle("active");
 
+
+
     // Gets the distances from each station to the user start point
     var jqxhr = $.getJSON("/distances/" + userStartPlace[0] + "/" + userStartPlace[1], function(data){
 
@@ -303,11 +307,24 @@ function showPopup() {
 
         // Gets estimated number of bikes at each station
         var jqxhr = $.getJSON("prediction/bike/" + userDay + "/" + userHour + "/" + startToStationsArray[1][1][2] + "/" +  startToStationsArray[2][1][2] + "/" + startToStationsArray[3][1][2] + "/" + startToStationsArray[4][1][2] + "/" + startToStationsArray[5][1][2], function(data){
-            var predictions = data;
+            var predictions=[];
+            console.log(isDataAvailable);
+            predictions = data;
+            console.log(predictions);
+            if(predictions.length!=0){
+                isDataAvailable=true;
+            }
+            console.log(isDataAvailable);
+
+            if(isDataAvailable){
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("stationRecommendations").style.display = "block";
+            } 
             
+            console.log(predictions);
             // Displays bike stations recommendations to the user
             createPopupCheckboxes(startToStationsArray, "startLocationSelection", " - Estimated available bikes: ", predictions);
-        
+            
             // Create the confirm button
             confirmButton = document.createElement("button");
             confirmButton.id = "popupButton";
@@ -405,7 +422,14 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
         container.appendChild(departureHolder);
     }
 }
+function myFunction() {
+    myVar = setTimeout(showPage, 3000);
+}
 
+function showPage() {
+    document.getElementById("stationRecommendations").style.display = "none";
+    document.getElementById("myDiv").style.display = "block";
+}
 // Hides the station recommendation popup
 function hidePopup(){
 

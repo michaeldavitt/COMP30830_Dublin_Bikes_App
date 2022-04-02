@@ -27,7 +27,8 @@
             <div class="content">
                 <div class="close-btn" onclick="hidePopup()">&times;</div>
                 <h1 id="popupHeader">Recommended Bike Stations:</h1>
-                <div id="stationRecommendations"></div>
+                <div id="loader"></div>
+                <div id="stationRecommendations" style="display:none;"></div>
             </div>
         </div>
 
@@ -41,6 +42,9 @@
         <div id="map"></div>    
         
     </div>
+
+    
+
 
     <!-- Adding the clustering library to the page -->
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
