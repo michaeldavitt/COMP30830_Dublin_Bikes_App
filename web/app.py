@@ -72,6 +72,15 @@ def get_specific_station(station_id):
     return jsonify([dict(row.items()) for row in rows])
 
 
+@app.route("/weather_info")
+def get_weather_data():
+    """Function to get the weather information"""
+    engine = get_db()
+    rows = engine.execute(
+        "SELECT temperature, description, icon FROM dbikes.real_time_weather ORDER BY dt DESC LIMIT 1")
+    return jsonify([dict(row.items()) for row in rows])
+
+
 @app.route("/availability/<int:station_id>")
 def get_specific_station_availability(station_id):
     """Function to get realtime availability information for a specific station"""
@@ -222,15 +231,12 @@ def predictions(bikeOrSpace, userDay, userHour, station1, station2, station3, st
     dummy_fields = ["main", "hour", "day_of_week"]
     df = df.drop(dummy_fields, axis=1)
 
-    print(df.columns)
-
     for i in range(len(stationIds)):
-        fileName = "machine_learning/station_" + \
+        fileName = "machine_learning/pickle_files/station_" + \
             stationIds[i] + "_" + bikeOrSpace + "_model.pkl"
         with open(fileName, "rb") as handle:
             model = pickle.load(handle)
             predictions.append(round(model.predict(df)[0]))
-            print(predictions)
 
     return jsonify(predictions)
 

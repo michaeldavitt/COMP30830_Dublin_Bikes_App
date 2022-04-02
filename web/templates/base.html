@@ -13,6 +13,11 @@
     <!-- Navigation bar reference: https://www.youtube.com/watch?v=23bpce-5s8I -->
     <nav class="navbar navbar-expand-xl navbar-dark bg-dark">
         <a href="{{ url_for('index') }}" class="navbar-brand" style="font-size: 35px; padding-left: 10px;">Dublin Bikes</a>
+        <div id="weatherDiv">
+            <p id="weatherTemp" class="navbar-brand"></p>
+            <img id="weatherImg" src="" alt="">
+            <p id="weatherDesc" class="navbar-brand"></p>
+        </div>
         <button class="navbar-toggler me-3" type="button" 
         data-bs-toggle="collapse" data-bs-target="#navbarMenu" 
         aria-controls="navbarMenu" aria-expanded="false" aria-label="Toggle Navigation"
@@ -21,7 +26,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarMenu">
             <ul class="navbar-nav text-center ms-auto me-5">
-                <li class="nav-item"><a id="planYourJourney" href="{{ url_for('index') }}" class="nav-link">View Map</a></li>
+                <li class="nav-item"
+                ><a id="viewMap" href="{{ url_for('index') }}" class="nav-link">View Map</a></li>
                 <li class="nav-item"><a href="{{ url_for('stations') }}" class="nav-link">View Stations</a></li>
             </ul>
         </div>

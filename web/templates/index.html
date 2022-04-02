@@ -9,8 +9,10 @@
         <!-- Creates sidebar -->
         <div id="sideBar">
             <form action="">
-                <p id="errorMessage">Error: Invalid input</p>
+                <strong id="errorMessage">Error: Invalid input</strong>
+                <p id="dateTimeLabel">Please enter your current location: </p>
                 <input type="text" id="departing" name="departingStation" placeholder="Enter a starting location..." value = ""><br>
+                <p id="dateTimeLabel">Please enter a destination location: </p>
                 <input type="text" id="destination" name="destinationStation" placeholder="Enter your destination..." value = ""><br>
                 <p id="dateTimeLabel">Please input the day and hour you wish to travel: </p>
                 <select id="daySelect"></select>
@@ -24,8 +26,8 @@
             <div class="overlay"></div>
             <div class="content">
                 <div class="close-btn" onclick="hidePopup()">&times;</div>
-                <h1 id="popupHeader">Choose a station for departure</h1>
-                <div id="departureText"></div>
+                <h1 id="popupHeader">Recommended Bike Stations:</h1>
+                <div id="stationRecommendations"></div>
             </div>
         </div>
 
@@ -47,6 +49,7 @@
     <script src="{{ url_for('static', filename='mapCode.js') }}"></script>
     <script>populateDaySelectOptions()</script>
     <script>populateHourSelectOptions()</script>
+    <script>displayWeather()</script>
 
     <!-- Connect to the google maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key={{ GMAPS_API_KEY }}&libraries=places&callback=initMap"></script>
