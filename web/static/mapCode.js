@@ -301,6 +301,8 @@ function showPopup() {
             return a[1][0] - b[1][0];
         });
 
+        document.getElementById("loader").style.display = "block";
+
         // Get the users day an hour of travel values
         userDay = document.getElementById("daySelect").value;
         userHour = document.getElementById("hourSelect").value;
@@ -308,20 +310,20 @@ function showPopup() {
         // Gets estimated number of bikes at each station
         var jqxhr = $.getJSON("prediction/bike/" + userDay + "/" + userHour + "/" + startToStationsArray[1][1][2] + "/" +  startToStationsArray[2][1][2] + "/" + startToStationsArray[3][1][2] + "/" + startToStationsArray[4][1][2] + "/" + startToStationsArray[5][1][2], function(data){
             var predictions=[];
-            console.log(isDataAvailable);
+            
             predictions = data;
-            console.log(predictions);
+            
             if(predictions.length!=0){
                 isDataAvailable=true;
             }
-            console.log(isDataAvailable);
+            
 
             if(isDataAvailable){
                 document.getElementById("loader").style.display = "none";
                 document.getElementById("stationRecommendations").style.display = "block";
             } 
             
-            console.log(predictions);
+            
             // Displays bike stations recommendations to the user
             createPopupCheckboxes(startToStationsArray, "startLocationSelection", " - Estimated available bikes: ", predictions);
             
@@ -350,6 +352,8 @@ function updatePopup(){
     
     // updating the popup header
     document.getElementById("popupHeader").innerHTML = "Recommended Parking Stations:";
+    
+    isDataAvailable = false;
 
     // getting the value of the user choice.
     var radios = document.getElementsByName('startLocationSelection');
@@ -368,15 +372,30 @@ function updatePopup(){
         endToStationsArray.sort((a, b) => {
             return a[1][0] - b[1][0];
         });
-
+        document.getElementById("loader").style.display = "block";
+            
         // get the hour and day that the user wants to travel
         userDay = document.getElementById("daySelect").value;
         userHour = document.getElementById("hourSelect").value;
 
         // Get availability estimates for the parking spaces at each station
         var jqxhr = $.getJSON("prediction/station/" + userDay + "/" + userHour + "/" + endToStationsArray[1][1][2] + "/" +  endToStationsArray[2][1][2] + "/" + endToStationsArray[3][1][2] + "/" + endToStationsArray[4][1][2] + "/" + endToStationsArray[5][1][2], function(data){
-            var predictions = data;
+            var predictions = [];
+            console.log(predictions);
             
+            predictions = data;
+            console.log(predictions);
+            if(predictions.length!=0){
+                isDataAvailable=true;
+            }
+            console.log();
+            
+            if(isDataAvailable){
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("stationRecommendations").style.display = "block";
+            } 
+
+
             // Displays parking spaces recommendations to the user
             createPopupCheckboxes(endToStationsArray, "endLocationSelection", " - Estimated available parking spaces: ", predictions);
 
