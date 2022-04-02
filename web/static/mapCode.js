@@ -485,8 +485,9 @@ function getRoute(){
     var directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({
         polylineOptions: {
-          strokeColor: "red"
-        }
+          strokeColor: "red",
+        },
+        suppressMarkers: true
       });
 
     directionsRenderer.setMap(map);
