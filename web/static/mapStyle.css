@@ -84,6 +84,11 @@ body {
     margin: 11vh 2vw;
 }
 
+.station_popup{
+    width: 200px;
+    height:200px;
+}
+
 .popup.active .overlay {
     display: block;
 }
@@ -169,7 +174,7 @@ select,
     padding: 0;
 }
 
-#loader {
+#loader,#infoLoader {
     position: absolute;
     left: 50%;
     top: 50%;

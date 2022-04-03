@@ -84,11 +84,12 @@ function initMap() {
 
             // Creates a pop-up window for each station
             marker.infowindow = new google.maps.InfoWindow({
-                content: '<div id="station_popup_' +
+                
+                content: '<div id="infoLoader" style="left: 52%;top: 54%;width: 78px;height: 78px;margin: -26px 0 0 -42px;"></div><div id="station_popup_' +
                 stationInfo[i].number +
-                '" "class="station_popup"><h4>' + 
+                '" "class="station_popup" style="display:block;height:150px; width:200px;"><h4>' + 
                 stationInfo[i].address + 
-                '</h4><p class="bike_availability"></p><p class="parking_availability"></p></div>',
+                '</h4><p class="bike_availability"> </p><p class="parking_availability"> </p></div>',
             });
 
             // Add function that displays pop-up window when a marker is clicked for each station marker
@@ -238,9 +239,19 @@ function updateInfoWindow(station_id) {
     // Sends a jQuery request to current bike and parking space availability information
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
         var availabilityData = []
-        console.log(availabilityData);
+
         availabilityData = data;
-        console.log(availabilityData);
+
+        if(availabilityData.length!=0){
+            isDataAvailable = true;
+        }
+
+        if(isDataAvailable){
+            document.getElementById("infoLoader").style.display="none";
+        }
+        
+        
+        
         // Isolates the popup for the specific station and stores in a variable
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
         bikeAvailabilityElement = infoWindowDiv.getElementsByClassName("bike_availability")[0];
@@ -275,6 +286,7 @@ function getPanel(){
 
     // Closes the side bar
     else {
+        
         panel.style.display = "none";
     }
 }
