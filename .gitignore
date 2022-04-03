@@ -6,3 +6,5 @@ Sprint_backlogs/
 Wireframe/
 nohup.out
 *.txt
+.vscode
+*.xlsx
