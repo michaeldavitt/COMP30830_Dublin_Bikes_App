@@ -6,37 +6,59 @@
     align-items: center;
 }
 
+/* sets width and height of the map */
 #map {
     height: 100vh;
     width: 100vw;
 }
 
+/* removed margin and padding on html and body */
 html,
 body {
     margin: 0;
     padding: 0;
 }
 
-/* plan your journey side bar style */
+/******* plan your journey side bar style *******/
 
+/* body of the sidebar */
 #sideBar {
     display: block;
     width: 358px;
     height: 100vh;
-    background-color: #1F242B;
+    background-color: #212529;
+    color: white;
 }
 
+/* shifts the user input down*/
 #sideBar form {
     margin-top: 25vh;
 }
 
-#sideBar p {
-    color: white;
+/* sets width and margin for the input field */
+input {
+    margin: 5px 20px 20px 20px;
+    width: 300px;
 }
 
-/* plan your journey popups style */
+/* sets a left margin for labels */
+select,
+.label {
+    margin-left: 20px;
+}
+
+/* sets styles for error message displayed when invalid input is entered */
+#errorMessage {
+    color: red;
+    visibility: hidden;
+    margin-left: 20px;
+}
+
+
+/******* plan your journey popups style *******/
 /* Reference for the popup style - https://www.youtube.com/watch?v=iE_6pQ3RlZU&ab_channel=Codingflag */
 
+/* greys out background when popup is displayed */
 .popup .overlay {
     position: fixed;
     top: 0px;
@@ -48,6 +70,7 @@ body {
     display: none;
 }
 
+/* displays popup container */
 .popup .content {
     position: absolute;
     top: 50%;
@@ -63,6 +86,7 @@ body {
     overflow-y: scroll;
 }
 
+/* close button of popup */
 .popup .close-btn {
     cursor: pointer;
     position: absolute;
@@ -79,36 +103,24 @@ body {
     border-radius: 60%;
 }
 
+/* moves station recommendations to the left and sets a margin */
 #stationRecommendations {
     text-align: left;
     margin: 11vh 2vw;
 }
 
-.station_popup{
-    width: 200px;
-    height:200px;
-}
-
+/* changed the display of the popup to block */
 .popup.active .overlay {
     display: block;
 }
 
+/* popup animation */
 .popup.active .content {
     transition: all 300ms ease-in-out;
     transform: translate(-50%, -50%) scale(1);
 }
 
-#testing {
-    position: relative;
-}
-
-input {
-    margin: 5px 20px 20px 20px;
-    width: 300px;
-}
-
-/* Plan your jouruney button style */
-
+/* sets dimensions of the confirm button */
 #popupButton {
     cursor: pointer;
     right: 20px;
@@ -120,14 +132,8 @@ input {
     text-align: center;
 }
 
-.popup .input {
-    min-width: 400px;
-}
-
-.btn-outline-primary {
-    width: 20rem;
-}
-
+/****** map buttons ******/
+/* sets location of map buttons */
 #mapButtons {
     position: absolute;
     margin: 0 0 90vh 40vh;
@@ -135,6 +141,7 @@ input {
     transition-duration: 0.4s;
 }
 
+/* sets styles for map buttons */
 #mapButtons button {
     border-radius: 10px;
     background-color: #212529;
@@ -146,27 +153,20 @@ input {
     display: inline-block;
 }
 
+/* changes background of buttons when hovering */
 #planYourJourney:hover, #displayMarkers:hover{
     transition-duration: 0.4s;
     background-color: gray;
 }
 
-select,
-#dateTimeLabel {
-    margin-left: 20px;
-}
-
-#errorMessage {
-    color: red;
-    visibility: hidden;
-    margin-left: 20px;
-}
-
+/****** navbar ******/
+/* div containing the weather data */
 #weatherDiv {
     display: flex;
     margin-left: 30%;
 }
 
+/* sets styles for temperature and weather description */
 #weatherTemp,
 #weatherDesc {
     font-size: 20px;
@@ -174,6 +174,8 @@ select,
     padding: 0;
 }
 
+/******* loading screen ******/
+/* sets styles for loading screen */
 #loader,#infoLoader {
     position: absolute;
     left: 50%;
@@ -187,14 +189,26 @@ select,
     border-top: 16px solid #3498db;
     -webkit-animation: spin 2s linear infinite;
     animation: spin 2s linear infinite;
-  }
-  
-  @-webkit-keyframes spin {
+}
+
+/* sets specific style for loader for infowindows */
+#infoLoader{
+    left: 52%;
+    top: 54%;
+    width: 78px;
+    height: 78px;
+    margin: -26px 0 0 -42px;
+}
+
+/* for loading screen spinner */
+@-webkit-keyframes spin {
     0% { -webkit-transform: rotate(0deg); }
     100% { -webkit-transform: rotate(360deg); }
-  }
-  
-  @keyframes spin {
+}
+
+
+@keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-  }
+}
+

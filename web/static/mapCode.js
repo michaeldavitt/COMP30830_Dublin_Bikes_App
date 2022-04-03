@@ -85,7 +85,7 @@ function initMap() {
             // Creates a pop-up window for each station
             marker.infowindow = new google.maps.InfoWindow({
                 
-                content: '<div id="infoLoader" style="left: 52%;top: 54%;width: 78px;height: 78px;margin: -26px 0 0 -42px;"></div><div id="station_popup_' +
+                content: '<div id="infoLoader"></div><div id="station_popup_' +
                 stationInfo[i].number +
                 '" "class="station_popup" style="display:block;height:150px; width:200px;"><h4>' + 
                 stationInfo[i].address + 
@@ -608,5 +608,3 @@ function populateHourSelectOptions(){
 //     // inside updatePopup function
 //     userChoices = [];
 // }
-
-// We stopped at the updatePopupFunction
