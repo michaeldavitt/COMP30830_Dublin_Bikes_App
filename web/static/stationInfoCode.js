@@ -47,13 +47,14 @@ function filterStationList() {
         }
     }
 }
+var isDataAvailable=false;
 
 function displayStationInfo() {
 
     var jqxhr = $.getJSON("/station_info/" + station_id, function(data){
         console.log("success", data);
         var stationInfo = data;
-
+        
         // Display header
         const stationHeader = document.createTextNode(stationInfo[0]["address"])
         document.getElementById("station_title").appendChild(stationHeader);
@@ -63,7 +64,18 @@ function displayStationInfo() {
         // Display real time availability information
         var jqxhr = $.getJSON("/availability/" + station_id, function(data){
             console.log("success", data);
-            var availability = data;
+            var availability = []
+            availability = data;
+
+            if(availability.length!=0){
+                isDataAvailable=true;
+            }
+            console.log();
+            
+            if(isDataAvailable){
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("information").style.display = "block";
+            }
 
             // Display currently available bikes
             var availableBikesElement = document.createElement("div");
@@ -103,7 +115,7 @@ function displayBikeAvailabilityChart(day){
     var day = day;
     var jqxhr = $.getJSON("/hourly_availability/available_bikes/" + station_id + "/" + day, function(data){
         var availabilityData = data;
-
+        
         // Create the data table.
         var chart_data = new google.visualization.DataTable();
         chart_data.addColumn("string", "Hour");

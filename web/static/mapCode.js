@@ -237,8 +237,10 @@ function updateInfoWindow(station_id) {
 
     // Sends a jQuery request to current bike and parking space availability information
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
-        var availabilityData = data;
-
+        var availabilityData = []
+        console.log(availabilityData);
+        availabilityData = data;
+        console.log(availabilityData);
         // Isolates the popup for the specific station and stores in a variable
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
         bikeAvailabilityElement = infoWindowDiv.getElementsByClassName("bike_availability")[0];
