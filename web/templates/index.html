@@ -1,22 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
     <!-- Load in the CSS -->
-    <link href="{{ url_for('static', filename='mapStyle.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
     
     <!-- Container for the map and for the side bar-->
     <div id="container">
 
         <!-- Creates sidebar -->
         <div id="sideBar">
+
+            <!-- user input section -->
             <form action="">
+                <!-- error message -->
                 <strong id="errorMessage">Error: Invalid input</strong>
-                <p id="dateTimeLabel">Please enter your current location: </p>
+                
+                <!-- starting location input -->
+                <p class="label">Please enter your starting location: </p>
                 <input type="text" id="departing" name="departingStation" placeholder="Enter a starting location..." value = ""><br>
-                <p id="dateTimeLabel">Please enter a destination location: </p>
+                
+                <!-- destination input -->
+                <p class="label">Please enter your destination: </p>
                 <input type="text" id="destination" name="destinationStation" placeholder="Enter your destination..." value = ""><br>
-                <p id="dateTimeLabel">Please input the day and hour you wish to travel: </p>
+                
+                <!-- date time input -->
+                <p class="label">Please input the day and hour you wish to travel: </p>
                 <select id="daySelect"></select>
                 <select id="hourSelect"></select>
+                
+                <!-- plan your journey button -->
                 <input type="button" value="Plan Your Journey" onclick="userInputValidation()">
             </form>           
         </div>
@@ -25,9 +36,15 @@
         <div class="popup" id="departurepopup">
             <div class="overlay"></div>
             <div class="content">
+                <!-- container for close button -->
                 <div class="close-btn" onclick="hidePopup()">&times;</div>
+                
                 <h1 id="popupHeader">Recommended Bike Stations:</h1>
-                <div id="stationRecommendations"></div>
+                <!-- container for the loading screen -->
+                <div id="loader"></div>
+                
+                <!-- container for station recommendations -->
+                <div id="stationRecommendations" style="display:none;"></div>
             </div>
         </div>
 
@@ -46,7 +63,7 @@
     <script src="https://unpkg.com/@googlemaps/markerclusterer/dist/index.min.js"></script>
 
     <!-- JS code to create map and display station information -->
-    <script src="{{ url_for('static', filename='mapCode.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/mapCode.js') }}"></script>
     <script>populateDaySelectOptions()</script>
     <script>populateHourSelectOptions()</script>
     <script>displayWeather()</script>

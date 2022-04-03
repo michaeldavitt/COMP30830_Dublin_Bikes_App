@@ -67,7 +67,7 @@ function initMap() {
         map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
         // variable that stores the location of the bike stations icon
-        var image = "/static/bike-icon.png";
+        var image = "/static/icons/bike-icon.png";
 
         // for loop that creates a marker on the map for each station
         markers = stationInfo.map((position, i) => {
@@ -82,11 +82,12 @@ function initMap() {
 
             // Creates a pop-up window for each station
             marker.infowindow = new google.maps.InfoWindow({
-                content: '<div id="station_popup_' +
+                
+                content: '<div id="infoLoader"></div><div id="station_popup_' +
                 stationInfo[i].number +
-                '" "class="station_popup"><h4>' + 
+                '" "class="station_popup" style="display:block;height:150px; width:200px;"><h4>' + 
                 stationInfo[i].address + 
-                '</h4><p class="bike_availability"></p><p class="parking_availability"></p></div>',
+                '</h4><p class="bike_availability"> </p><p class="parking_availability"> </p></div>',
             });
 
             // Add function that displays pop-up window when a marker is clicked for each station marker
@@ -235,8 +236,15 @@ function updateInfoWindow(station_id) {
 
     // Sends a jQuery request to current bike and parking space availability information
     var jqxhr = $.getJSON("/availability/" + station_id, function(data){
-        var availabilityData = data;
+        var availabilityData = []
 
+        availabilityData = data;
+        
+        // gets rid of loading screen once data has been obtained
+        if(availabilityData.length!=0){
+            document.getElementById("infoLoader").style.display="none";
+        }        
+        
         // Isolates the popup for the specific station and stores in a variable
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
         bikeAvailabilityElement = infoWindowDiv.getElementsByClassName("bike_availability")[0];
@@ -271,6 +279,7 @@ function getPanel(){
 
     // Closes the side bar
     else {
+        
         panel.style.display = "none";
     }
 }
@@ -287,6 +296,9 @@ function showPopup() {
     // Displays pop up
     document.getElementById("departurepopup").classList.toggle("active");
 
+    // displays loading screen until bike station recommendations are available
+    document.getElementById("loader").style.display = "block";
+
     // Gets the distances from each station to the user start point
     var jqxhr = $.getJSON("/distances/" + userStartPlace[0] + "/" + userStartPlace[1], function(data){
 
@@ -297,17 +309,27 @@ function showPopup() {
             return a[1][0] - b[1][0];
         });
 
+        
+
         // Get the users day an hour of travel values
         userDay = document.getElementById("daySelect").value;
         userHour = document.getElementById("hourSelect").value;
 
         // Gets estimated number of bikes at each station
         var jqxhr = $.getJSON("prediction/bike/" + userDay + "/" + userHour + "/" + startToStationsArray[1][1][2] + "/" +  startToStationsArray[2][1][2] + "/" + startToStationsArray[3][1][2] + "/" + startToStationsArray[4][1][2] + "/" + startToStationsArray[5][1][2], function(data){
-            var predictions = data;
+            var predictions=[];
+            
+            predictions = data;
+            
+            // gets rid of loading screen and displays station recommendations once data has been obtained
+            if(predictions.length!=0){
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("stationRecommendations").style.display = "block";
+            }            
             
             // Displays bike stations recommendations to the user
             createPopupCheckboxes(startToStationsArray, "startLocationSelection", " - Estimated available bikes: ", predictions);
-        
+            
             // Create the confirm button
             confirmButton = document.createElement("button");
             confirmButton.id = "popupButton";
@@ -330,10 +352,13 @@ function updatePopup(){
 
     // resets the array that stores parking space recommendations
     var endToStationsArray = [];
-    
+
+    // displays loading screen until parking space recommendations are available
+    document.getElementById("loader").style.display = "block";
+
     // updating the popup header
     document.getElementById("popupHeader").innerHTML = "Recommended Parking Stations:";
-
+    
     // getting the value of the user choice.
     var radios = document.getElementsByName('startLocationSelection');
     addUserChoices(radios);
@@ -351,15 +376,23 @@ function updatePopup(){
         endToStationsArray.sort((a, b) => {
             return a[1][0] - b[1][0];
         });
-
+        
         // get the hour and day that the user wants to travel
         userDay = document.getElementById("daySelect").value;
         userHour = document.getElementById("hourSelect").value;
 
         // Get availability estimates for the parking spaces at each station
         var jqxhr = $.getJSON("prediction/station/" + userDay + "/" + userHour + "/" + endToStationsArray[1][1][2] + "/" +  endToStationsArray[2][1][2] + "/" + endToStationsArray[3][1][2] + "/" + endToStationsArray[4][1][2] + "/" + endToStationsArray[5][1][2], function(data){
-            var predictions = data;
+            var predictions = [];
             
+            predictions = data;
+            
+            // gets rid of loading screen and adds station recommendations once data has been obtained
+            if(predictions.length!=0){
+                document.getElementById("loader").style.display = "none";
+                document.getElementById("stationRecommendations").style.display = "block";
+            }
+ 
             // Displays parking spaces recommendations to the user
             createPopupCheckboxes(endToStationsArray, "endLocationSelection", " - Estimated available parking spaces: ", predictions);
 
@@ -405,7 +438,14 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
         container.appendChild(departureHolder);
     }
 }
+function myFunction() {
+    myVar = setTimeout(showPage, 3000);
+}
 
+function showPage() {
+    document.getElementById("stationRecommendations").style.display = "none";
+    document.getElementById("myDiv").style.display = "block";
+}
 // Hides the station recommendation popup
 function hidePopup(){
 
@@ -442,8 +482,9 @@ function getRoute(){
     var directionsService = new google.maps.DirectionsService();
     directionsRenderer = new google.maps.DirectionsRenderer({
         polylineOptions: {
-          strokeColor: "red"
-        }
+          strokeColor: "red",
+        },
+        suppressMarkers: true
       });
 
     directionsRenderer.setMap(map);
@@ -550,5 +591,3 @@ function populateHourSelectOptions(){
 //     // inside updatePopup function
 //     userChoices = [];
 // }
-
-// We stopped at the updatePopupFunction

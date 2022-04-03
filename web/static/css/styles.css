@@ -1,0 +1,231 @@
+/* container to center map */
+#container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* sets width and height of the map */
+#map {
+    height: 100vh;
+    width: 100vw;
+}
+
+/* removed margin and padding on html and body */
+html,
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/******* plan your journey side bar style *******/
+
+/* body of the sidebar */
+#sideBar {
+    display: block;
+    width: 358px;
+    height: 100vh;
+    background-color: #212529;
+    color: white;
+}
+
+/* shifts the user input down*/
+#sideBar form {
+    margin-top: 25vh;
+}
+
+/* sets width and margin for the input field */
+input {
+    margin: 5px 20px 20px 20px;
+    width: 300px;
+}
+
+/* sets a left margin for labels */
+select,
+.label {
+    margin-left: 20px;
+}
+
+/* sets styles for error message displayed when invalid input is entered */
+#errorMessage {
+    color: red;
+    visibility: hidden;
+    margin-left: 20px;
+}
+
+
+/******* plan your journey popups style *******/
+/* Reference for the popup style - https://www.youtube.com/watch?v=iE_6pQ3RlZU&ab_channel=Codingflag */
+
+/* greys out background when popup is displayed */
+.popup .overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+    display: none;
+}
+
+/* displays popup container */
+.popup .content {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: #fff;
+    width: 50vw;
+    height: 70vh;
+    z-index: 6;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    margin-left: 50%;
+    overflow-y: scroll;
+}
+
+/* close button of popup */
+.popup .close-btn {
+    cursor: pointer;
+    position: absolute;
+    right: 6px;
+    top: 8px;
+    width: 25px;
+    height: 25px;
+    background: #222;
+    color: #fff;
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 18px;
+    text-align: center;
+    border-radius: 60%;
+}
+
+/* moves station recommendations to the left and sets a margin */
+#stationRecommendations {
+    text-align: left;
+    margin: 11vh 2vw;
+}
+
+/* changed the display of the popup to block */
+.popup.active .overlay {
+    display: block;
+}
+
+/* popup animation */
+.popup.active .content {
+    transition: all 300ms ease-in-out;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* sets dimensions of the confirm button */
+#popupButton {
+    cursor: pointer;
+    right: 20px;
+    top: 20px;
+    width: 50%;
+    font-size: 25px;
+    font-weight: 600;
+    line-height: 30px;
+    text-align: center;
+}
+
+/****** map buttons ******/
+/* sets location of map buttons */
+#mapButtons {
+    position: absolute;
+    margin: 0 0 90vh 40vh;
+    z-index: 5;
+    transition-duration: 0.4s;
+}
+
+/* sets styles for map buttons */
+#mapButtons button {
+    border-radius: 10px;
+    background-color: #212529;
+    border: 2px solid #212529;
+    color: white;
+    padding: 7px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* changes background of buttons when hovering */
+#planYourJourney:hover, #displayMarkers:hover{
+    transition-duration: 0.4s;
+    background-color: gray;
+}
+
+/****** navbar ******/
+/* div containing the weather data */
+#weatherDiv {
+    display: flex;
+    margin-left: 30%;
+}
+
+/* sets styles for temperature and weather description */
+#weatherTemp,
+#weatherDesc {
+    font-size: 20px;
+    margin: 10px 10px 0 10px;
+    padding: 0;
+}
+
+/******* loading screen ******/
+/* sets styles for loading screen */
+#loader,#infoLoader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 120px;
+    height: 120px;
+    margin: -40px 0 0 -56px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+/* sets specific style for loader for infowindows */
+#infoLoader{
+    left: 52%;
+    top: 54%;
+    width: 78px;
+    height: 78px;
+    margin: -26px 0 0 -42px;
+}
+
+/* for loading screen spinner */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/****** for specific_station.html ******/
+
+/* sets a bottom margin for rows */
+.row {
+    margin-bottom: 40px;
+}
+
+/* styles availability data */
+.availability_data {
+    border: 1px solid black;
+    padding: 10px;
+    font-size: large;
+    font-weight: bold;
+    background-color: rgb(226, 218, 218);
+    text-align: center;
+}
+
