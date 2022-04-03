@@ -24,8 +24,6 @@ var userEndPlace = "invalid";
 // Needs to be global in order to reset the route when the user requests a new route
 var directionsRenderer;
 
-var isDataAvailable = false;
-
 // Function to display a map of Dublin on the homepage
 function initMap() { 
 
@@ -241,16 +239,11 @@ function updateInfoWindow(station_id) {
         var availabilityData = []
 
         availabilityData = data;
-
+        
+        // gets rid of loading screen once data has been obtained
         if(availabilityData.length!=0){
-            isDataAvailable = true;
-        }
-
-        if(isDataAvailable){
             document.getElementById("infoLoader").style.display="none";
-        }
-        
-        
+        }        
         
         // Isolates the popup for the specific station and stores in a variable
         infoWindowDiv = document.getElementById("station_popup_" + station_id);
@@ -303,7 +296,8 @@ function showPopup() {
     // Displays pop up
     document.getElementById("departurepopup").classList.toggle("active");
 
-
+    // displays loading screen until bike station recommendations are available
+    document.getElementById("loader").style.display = "block";
 
     // Gets the distances from each station to the user start point
     var jqxhr = $.getJSON("/distances/" + userStartPlace[0] + "/" + userStartPlace[1], function(data){
@@ -315,7 +309,7 @@ function showPopup() {
             return a[1][0] - b[1][0];
         });
 
-        document.getElementById("loader").style.display = "block";
+        
 
         // Get the users day an hour of travel values
         userDay = document.getElementById("daySelect").value;
@@ -327,16 +321,11 @@ function showPopup() {
             
             predictions = data;
             
+            // gets rid of loading screen and displays station recommendations once data has been obtained
             if(predictions.length!=0){
-                isDataAvailable=true;
-            }
-            
-
-            if(isDataAvailable){
                 document.getElementById("loader").style.display = "none";
                 document.getElementById("stationRecommendations").style.display = "block";
-            } 
-            
+            }            
             
             // Displays bike stations recommendations to the user
             createPopupCheckboxes(startToStationsArray, "startLocationSelection", " - Estimated available bikes: ", predictions);
@@ -363,12 +352,13 @@ function updatePopup(){
 
     // resets the array that stores parking space recommendations
     var endToStationsArray = [];
-    
+
+    // displays loading screen until parking space recommendations are available
+    document.getElementById("loader").style.display = "block";
+
     // updating the popup header
     document.getElementById("popupHeader").innerHTML = "Recommended Parking Stations:";
     
-    isDataAvailable = false;
-
     // getting the value of the user choice.
     var radios = document.getElementsByName('startLocationSelection');
     addUserChoices(radios);
@@ -386,8 +376,7 @@ function updatePopup(){
         endToStationsArray.sort((a, b) => {
             return a[1][0] - b[1][0];
         });
-        document.getElementById("loader").style.display = "block";
-            
+        
         // get the hour and day that the user wants to travel
         userDay = document.getElementById("daySelect").value;
         userHour = document.getElementById("hourSelect").value;
@@ -395,21 +384,15 @@ function updatePopup(){
         // Get availability estimates for the parking spaces at each station
         var jqxhr = $.getJSON("prediction/station/" + userDay + "/" + userHour + "/" + endToStationsArray[1][1][2] + "/" +  endToStationsArray[2][1][2] + "/" + endToStationsArray[3][1][2] + "/" + endToStationsArray[4][1][2] + "/" + endToStationsArray[5][1][2], function(data){
             var predictions = [];
-            console.log(predictions);
             
             predictions = data;
-            console.log(predictions);
-            if(predictions.length!=0){
-                isDataAvailable=true;
-            }
-            console.log();
             
-            if(isDataAvailable){
+            // gets rid of loading screen and adds station recommendations once data has been obtained
+            if(predictions.length!=0){
                 document.getElementById("loader").style.display = "none";
                 document.getElementById("stationRecommendations").style.display = "block";
-            } 
-
-
+            }
+ 
             // Displays parking spaces recommendations to the user
             createPopupCheckboxes(endToStationsArray, "endLocationSelection", " - Estimated available parking spaces: ", predictions);
 
