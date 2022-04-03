@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 
-<link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 
     <!-- Main content -->
     <div id="loader"></div>  
@@ -82,7 +82,7 @@
     </script>
 
     <!-- Read in external JS and display realtime station information -->
-    <script src="{{ url_for('static', filename='stationInfoCode.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/stationInfoCode.js') }}"></script>
     <script>displayStationInfo()</script>
 
     <!--Load the AJAX API-->

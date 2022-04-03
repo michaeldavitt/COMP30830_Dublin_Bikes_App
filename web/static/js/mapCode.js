@@ -67,7 +67,7 @@ function initMap() {
         map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
         // variable that stores the location of the bike stations icon
-        var image = "/static/bike-icon.png";
+        var image = "/static/icons/bike-icon.png";
 
         // for loop that creates a marker on the map for each station
         markers = stationInfo.map((position, i) => {
