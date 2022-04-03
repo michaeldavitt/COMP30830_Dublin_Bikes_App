@@ -212,3 +212,20 @@ select,
     100% { transform: rotate(360deg); }
 }
 
+/****** for specific_station.html ******/
+
+/* sets a bottom margin for rows */
+.row {
+    margin-bottom: 40px;
+}
+
+/* styles availability data */
+.availability_data {
+    border: 1px solid black;
+    padding: 10px;
+    font-size: large;
+    font-weight: bold;
+    background-color: rgb(226, 218, 218);
+    text-align: center;
+}
+
