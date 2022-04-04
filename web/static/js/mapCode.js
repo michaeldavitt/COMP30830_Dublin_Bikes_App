@@ -455,14 +455,8 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
         container.appendChild(departureHolder);
     }
 }
-function myFunction() {
-    myVar = setTimeout(showPage, 3000);
-}
 
-function showPage() {
-    document.getElementById("stationRecommendations").style.display = "none";
-    document.getElementById("myDiv").style.display = "block";
-}
+
 // Hides the station recommendation popup
 function hidePopup(){
 
