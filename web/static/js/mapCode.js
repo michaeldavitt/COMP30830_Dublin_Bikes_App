@@ -418,6 +418,17 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
      for (i=0; i<5; i++) {
 
         // Create input element using Bootstrap
+        if( i == 0){
+        var radioboxDeparture = document.createElement('input');
+        radioboxDeparture.checked = true;
+        radioboxDeparture.type = "radio";
+        radioboxDeparture.className = "form-check-input";
+        radioboxDeparture.name = checkboxName;
+        radioboxDeparture.autocomplete = "off";
+        radioboxDeparture.id = stationsArray[i][0];
+        radioboxDeparture.value = stationsArray[i][1][1];
+        }
+        else{
         var radioboxDeparture = document.createElement('input');
         radioboxDeparture.type = "radio";
         radioboxDeparture.className = "form-check-input";
@@ -425,6 +436,8 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
         radioboxDeparture.autocomplete = "off";
         radioboxDeparture.id = stationsArray[i][0];
         radioboxDeparture.value = stationsArray[i][1][1];
+        }
+        
 
         // Create label using Bootstrap
         var departureLabel = document.createElement("label");
