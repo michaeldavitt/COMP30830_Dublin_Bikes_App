@@ -279,9 +279,13 @@ function getPanel(){
 
     // Closes the side bar
     else {
-        
+
         panel.style.display = "none";
     }
+
+    // Empty the the input fields from departing and destination inputs
+    document.getElementById("departing").value=""
+    document.getElementById("destination").value=""
 }
 
 // Function to display the bike recommendations popup when the user has submitted their start/end point in the journey planner
@@ -414,6 +418,17 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
      for (i=0; i<5; i++) {
 
         // Create input element using Bootstrap
+        if( i == 0){
+        var radioboxDeparture = document.createElement('input');
+        radioboxDeparture.checked = true;
+        radioboxDeparture.type = "radio";
+        radioboxDeparture.className = "form-check-input";
+        radioboxDeparture.name = checkboxName;
+        radioboxDeparture.autocomplete = "off";
+        radioboxDeparture.id = stationsArray[i][0];
+        radioboxDeparture.value = stationsArray[i][1][1];
+        }
+        else{
         var radioboxDeparture = document.createElement('input');
         radioboxDeparture.type = "radio";
         radioboxDeparture.className = "form-check-input";
@@ -421,6 +436,8 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
         radioboxDeparture.autocomplete = "off";
         radioboxDeparture.id = stationsArray[i][0];
         radioboxDeparture.value = stationsArray[i][1][1];
+        }
+        
 
         // Create label using Bootstrap
         var departureLabel = document.createElement("label");
@@ -438,14 +455,8 @@ function createPopupCheckboxes(stationsArray, checkboxName, predictionText, pred
         container.appendChild(departureHolder);
     }
 }
-function myFunction() {
-    myVar = setTimeout(showPage, 3000);
-}
 
-function showPage() {
-    document.getElementById("stationRecommendations").style.display = "none";
-    document.getElementById("myDiv").style.display = "block";
-}
+
 // Hides the station recommendation popup
 function hidePopup(){
 
@@ -455,6 +466,10 @@ function hidePopup(){
     
     // Gets rid of the button
     document.getElementById("popupButton").remove();
+
+    // resets the user input to valid, so when they press the plan your journey button again, it doesn't read the old start and end place
+    userStartPlace = "invalid";
+    userEndPlace = "invalid";
 
     // Opens the plan your journey sidebar
     getPanel();
@@ -576,7 +591,7 @@ function populateHourSelectOptions(){
     hourSelect = document.getElementById("hourSelect");
 
     // Creates a dropdown menu with hours that the user can select
-    for (hour = hourNow; hour < 24; hour++) {
+    for (hour = 5; hour < 25; hour++) { 
         var newOption = document.createElement("option");
         newOption.innerHTML = hour + ":00";
         newOption.value = hour;
