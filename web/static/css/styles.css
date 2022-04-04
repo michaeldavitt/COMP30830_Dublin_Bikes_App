@@ -47,13 +47,6 @@ select,
     margin-left: 20px;
 }
 
-/* sets a min height and width for hourSelect and centers text */
-#hourSelect {
-    min-height: 6em;
-    min-width: 6em;
-    text-align: center;
-}
-
 /* sets styles for error message displayed when invalid input is entered */
 #errorMessage {
     color: red;

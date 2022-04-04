@@ -591,18 +591,10 @@ function populateHourSelectOptions(){
     hourSelect = document.getElementById("hourSelect");
 
     // Creates a dropdown menu with hours that the user can select
-    for (hour = 5; hour < 25; hour++) { 
+    for (hour = 5; hour < 24; hour++) { 
         var newOption = document.createElement("option");
         newOption.innerHTML = hour + ":00";
         newOption.value = hour;
         hourSelect.appendChild(newOption);
     }
 }
-
-// function resetGlobals(){
-//
-//     userStartPlace = "invalid";
-//     userEndPlace = "invalid";
-//     // inside updatePopup function
-//     userChoices = [];
-// }
