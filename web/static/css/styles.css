@@ -47,6 +47,13 @@ select,
     margin-left: 20px;
 }
 
+/* sets a min height and width for hourSelect and centers text */
+#hourSelect {
+    min-height: 6em;
+    min-width: 6em;
+    text-align: center;
+}
+
 /* sets styles for error message displayed when invalid input is entered */
 #errorMessage {
     color: red;
@@ -75,7 +82,7 @@ select,
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%) scale(0);
-    background-color:#212529;
+    background-color: #212529;
     color: white;
     width: 50vw;
     height: 70vh;
@@ -158,7 +165,8 @@ select,
 }
 
 /* changes background of buttons when hovering */
-#planYourJourney:hover, #displayMarkers:hover{
+#planYourJourney:hover,
+#displayMarkers:hover {
     transition-duration: 0.4s;
     background-color: gray;
 }
@@ -180,7 +188,8 @@ select,
 
 /******* loading screen ******/
 /* sets styles for loading screen */
-#loader,#infoLoader {
+#loader,
+#infoLoader {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -196,7 +205,7 @@ select,
 }
 
 /* sets specific style for loader for infowindows */
-#infoLoader{
+#infoLoader {
     left: 52%;
     top: 54%;
     width: 78px;
@@ -206,14 +215,24 @@ select,
 
 /* for loading screen spinner */
 @-webkit-keyframes spin {
-    0% { -webkit-transform: rotate(0deg); }
-    100% { -webkit-transform: rotate(360deg); }
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
 }
 
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /****** for specific_station.html ******/
@@ -233,4 +252,3 @@ select,
     text-align: center;
     color: white;
 }
-
