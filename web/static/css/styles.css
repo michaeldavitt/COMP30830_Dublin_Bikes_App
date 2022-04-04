@@ -136,7 +136,7 @@ select,
 /* sets location of map buttons */
 #mapButtons {
     position: absolute;
-    margin: 0 0 90vh 40vh;
+    margin: 0 0 90vh -10vh;
     z-index: 5;
     transition-duration: 0.4s;
 }
