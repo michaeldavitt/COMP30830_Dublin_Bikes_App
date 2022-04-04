@@ -11,4 +11,9 @@ dependencies:
   - simplejson
   - requests
   - mysql-connector-python
+  - flask
+  - colorama
+  - ipykernel
+  - mysql
+  - matplotlib
 prefix: C:\Users\micha\anaconda3\envs\comp30830

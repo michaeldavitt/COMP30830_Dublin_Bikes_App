@@ -64,7 +64,7 @@ def main():
 
             write_to_file(r.text, now)
             availability_to_db(bike_data)
-            time.sleep(2*60)
+            time.sleep(5*60)
 
         except:
             print(traceback.format_exc())
