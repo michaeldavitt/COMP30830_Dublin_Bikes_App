@@ -75,7 +75,8 @@ select,
     position: absolute;
     top: 50%;
     transform: translate(-50%, -50%) scale(0);
-    background-color: #fff;
+    background-color:#212529;
+    color: white;
     width: 50vw;
     height: 70vh;
     z-index: 6;
@@ -94,7 +95,7 @@ select,
     top: 8px;
     width: 25px;
     height: 25px;
-    background: #222;
+    background: transparent;
     color: #fff;
     font-size: 30px;
     font-weight: 600;
@@ -130,6 +131,9 @@ select,
     font-weight: 600;
     line-height: 30px;
     text-align: center;
+    background-color: lightgray;
+    color: #212529;
+    border-radius: 10px;
 }
 
 /****** map buttons ******/
