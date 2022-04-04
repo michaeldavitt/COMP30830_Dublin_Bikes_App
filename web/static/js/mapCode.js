@@ -279,9 +279,13 @@ function getPanel(){
 
     // Closes the side bar
     else {
-        
+
         panel.style.display = "none";
     }
+
+    // Empty the the input fields from departing and destination inputs
+    document.getElementById("departing").value=""
+    document.getElementById("destination").value=""
 }
 
 // Function to display the bike recommendations popup when the user has submitted their start/end point in the journey planner
@@ -455,6 +459,10 @@ function hidePopup(){
     
     // Gets rid of the button
     document.getElementById("popupButton").remove();
+
+    // resets the user input to valid, so when they press the plan your journey button again, it doesn't read the old start and end place
+    userStartPlace = "invalid";
+    userEndPlace = "invalid";
 
     // Opens the plan your journey sidebar
     getPanel();
