@@ -6,6 +6,7 @@ import datetime
 import pandas as pd
 import sqlalchemy as sqla
 from sqlalchemy import create_engine
+import sys
 
 # Get API creds
 with open('bike_key.txt') as f:
@@ -31,17 +32,17 @@ engine = create_engine(
     "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
 
 
-def write_to_file(text, now):
+# def write_to_file(text, now):
 
-    # Replace the special characters with underscore for the filename
-    chars = " -:."
-    filename = "data/bikes_{}".format(now)
-    for c in chars:
-        filename = filename.replace(c, "_")
+#     # Replace the special characters with underscore for the filename
+#     chars = " -:."
+#     filename = "data/bikes_{}".format(now)
+#     for c in chars:
+#         filename = filename.replace(c, "_")
 
-    # Write the data into a text file
-    with open(filename, "w") as f:
-        f.write(text)
+#     # Write the data into a text file
+#     with open(filename, "w") as f:
+#         f.write(text)
 
 
 def availability_to_db(stations):
@@ -62,12 +63,13 @@ def main():
                              "apiKey": API_KEY, "contract": NAME})
             bike_data = json.loads(r.text)
 
-            write_to_file(r.text, now)
+            # write_to_file(r.text, now)
             availability_to_db(bike_data)
             time.sleep(5*60)
 
         except:
             print(traceback.format_exc())
+            sys.exit()
 
 
 if __name__ == "__main__":

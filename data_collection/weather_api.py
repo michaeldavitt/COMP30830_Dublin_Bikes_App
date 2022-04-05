@@ -32,17 +32,17 @@ engine = create_engine(
     "mysql+mysqlconnector://{}:{}@{}:{}/{}".format(USER, PASSWORD, URL, PORT, DB), echo=True)
 
 
-def write_to_file(text, now):
+# def write_to_file(text, now):
 
-    # Replace the special characters with underscore for the filename
-    chars = " -:."
-    filename = "data/weather_{}".format(now)
-    for c in chars:
-        filename = filename.replace(c, "_")
+#     # Replace the special characters with underscore for the filename
+#     chars = " -:."
+#     filename = "data/weather_{}".format(now)
+#     for c in chars:
+#         filename = filename.replace(c, "_")
 
-    # Write the data into a text file
-    with open(filename, "w") as f:
-        f.write(text)
+#     # Write the data into a text file
+#     with open(filename, "w") as f:
+#         f.write(text)
 
 
 def weather_to_db(weather):
@@ -60,7 +60,7 @@ def main():
             r = (requests.get(weather_api + weather_key))
             weather_data = json.loads(r.text)
 
-            write_to_file(r.text, now)
+            # write_to_file(r.text, now)
             weather_to_db(weather_data)
             time.sleep(60*60)
 
