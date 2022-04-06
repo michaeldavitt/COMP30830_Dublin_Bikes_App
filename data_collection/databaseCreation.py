@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS station (
 """
 
 try:
-    res = engine.execute("DROP TABLE IF EXISTS station")
     res = engine.execute(sql)
 except Exception as e:
     print(e)
@@ -68,7 +67,6 @@ CREATE TABLE IF NOT EXISTS availability (
 """
 
 try:
-    res = engine.execute("DROP TABLE IF EXISTS availability")
     res = engine.execute(sql)
 except Exception as e:
     print(e)
@@ -93,7 +91,6 @@ CREATE TABLE IF NOT EXISTS real_time_weather (
 """
 
 try:
-    res = engine.execute("DROP TABLE IF EXISTS real_time_weather")
     res = engine.execute(sql)
 except Exception as e:
     print(e)
